@@ -163,6 +163,7 @@ Regardless of which skill is active:
 - [ ] Core Web Vitals targets met (LCP < 2.5s, INP < 200ms, CLS < 0.1)
 - [ ] AI slop patterns avoided (see `skills/design-skill/references/ai-slop-banned.csv`)
 - [ ] Human-made design elements used (see `1000-human-made-design-elements.csv`)
+- [ ] Synthetic IDs valid and traceable to at least three parent IDs (if Recombination Protocol is used)
 - [ ] 2026 standards applied (CSS Scroll-Driven, Container Queries, OKLCH, Bento Grids)
 
 ---

@@ -94,9 +94,26 @@ This file contains 1000 documented human-made design elements across 50+ categor
 - Generic, AI-slop output is the enemy. The CSV is your weapon against it.
 - Every element you design should feel like a human made it — the CSV tells you exactly how.
 
-**CSV INTEGRITY CHECK — BEFORE SHIPPING:**
+**MANDATORY PRE-DELIVERY VERIFICATION LOOP:**
 
-Ask yourself: "Which CSV element(s) did I use for this design decision?" If you cannot answer, you have not done your job. Go back. Consult the CSV. Implement the human-made design element. Then ship.
+Before outputting any code, run this internal verification cycle:
+1. **CSV INTEGRITY CHECK:** "Which CSV element(s) did I use for this design decision?" If you cannot answer, you have not done your job.
+2. **SYNTHETIC ID RECOMBINATION CHECK:** If using a Synthetic ID, verify it links to at least three original parent IDs, respects category range mappings, and doesn't match any banned pattern in `references/ai-slop-banned.csv`.
+3. **SELF-REFINE PASS:** Fix every issue found before output.
+
+===================================================
+SYNTHETIC ID MERGING (RECOMBINATION PROTOCOL)
+===================================================
+
+To increase creative range while maintaining the "Zero Autonomy" standard, you may mathematically recombine existing IDs into session-specific "Synthetic IDs".
+
+**REQUIREMENTS & CONSTRAINTS:**
+1. **Zero Autonomy Rule:** You are strictly forbidden from generating visual patterns that cannot be traced back to verified library IDs. No "new" logic can be introduced outside of what is derivable from the existing 1,000 IDs.
+2. **Recombination Protocol:** You may blend at least two, but no more than four, parent IDs into a single composite variant (e.g., merging ID-405 and ID-112).
+3. **Triple-Reference Lineage Metadata:** Every synthetic ID must include a "Lineage Metadata" field tracking its source IDs. To satisfy triple-reference requirements (when applicable), this lineage must link back to at least three original parent IDs.
+4. **Range Mapping Compatibility:** The blending logic must respect mandatory task-to-ID range mappings (e.g., only blending IDs within compatible functional categories).
+5. **Transient Persistence:** Synthetic IDs exist only within the current session memory to keep the core library lean. They must never be saved to the global reference CSV and are cleared upon session termination.
+6. **Pre-Delivery Verification Loop:** All synthetic designs must be validated against `references/ai-slop-banned.csv`. The Verification Loop must successfully reject any synthetic blend that matches an entry in the banned registry.
 
 ===================================================
 
