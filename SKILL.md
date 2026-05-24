@@ -162,7 +162,7 @@ Regardless of which skill is active:
 - [ ] WCAG 2.2 AA accessibility compliance
 - [ ] Core Web Vitals targets met (LCP < 2.5s, INP < 200ms, CLS < 0.1)
 - [ ] AI slop patterns avoided (see `skills/design-skill/references/ai-slop-banned.csv`)
-- [ ] Human-made design elements used (see `1000-human-made-design-elements.csv`)
+- [ ] Human-made design elements used (see `1000-human-made-design-elements.csv`) OR justified via the **Design Evolution Lab (Laboratory Mode)** protocol for novel project-specific patterns
 - [ ] 2026 standards applied (CSS Scroll-Driven, Container Queries, OKLCH, Bento Grids)
 
 ---
