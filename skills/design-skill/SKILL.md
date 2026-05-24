@@ -185,11 +185,19 @@ Use this mental protocol for any task that involves:
 
 Skip the mental canvas only for trivial changes (fixing a single color value, adjusting one margin, renaming a class).
 
+### Phase 4: Unified Handoff Handshake (If Applicable)
+
+If your work is being handed off to an implementation agent (e.g., `web-dev-frontend-skill`), you MUST generate a formalized `handoff-report.md` artifact in the project root.
+- The report encapsulates intent, layout planning, and technical tokens.
+- It MUST include all four mandatory pillars: Brand Intent, Visual Tokens, Motion Personality, and Choreography.
+- Do NOT output this as a transient memory state; it must be a physical file to prevent context-window decay.
+
 ### Mental Canvas Rules
 
-- The canvas is entirely in your thought process.
-- Do not create `.design-canvas/` or any markdown files to track it.
+- The canvas is entirely in your thought process during exploration.
+- Do not create `.design-canvas/` or transient markdown files.
 - If the user asks "what did you decide?", answer from your mental model.
+- If handing off to implementation, ALWAYS write the `handoff-report.md` file.
 
 ---
 

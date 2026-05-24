@@ -597,13 +597,17 @@ The design-skill provides:
 
 Engineering discipline from this skill and choreography discipline from the design-skill work together — this skill ensures it's built correctly, the design-skill ensures it feels alive.
 
-When both skills apply:
-1. Run the design-skill's prompt interpretation engine first
-2. Select motion personality and choreography plan from design-skill
-3. Apply this skill's quality gates, accessibility checks, and performance budgets
-4. Apply design-skill's dopamine map and human touch protocol
-5. Build with this skill's engineering standards and design-skill's choreography
-6. **CONSULT THE CSV** — Cross-reference every visual decision with 1000-human-made-design-elements.csv
+When transitioning from the design-skill, execute the **Unified Handoff Bootstrapper**:
+
+1. **Check for Handoff Report**: Look for `handoff-report.md` in the root.
+   - *If found*: **SKIP** the 6-step prompt interpretation engine.
+   - *If missing*: Run the design-skill's prompt interpretation engine.
+2. **Automated Sanity Check**: Verify the `handoff-report.md` contains all four mandatory pillars: Brand Intent, Visual Tokens, Motion Personality, and Choreography (including dopamine mapping). If any are missing, HALT and request the missing data before proceeding.
+3. **State Lock Enforcement**: The data in `handoff-report.md` is your **absolute source of truth**. You are prohibited from modifying or re-evaluating the high-level design intent. You must build directly upon this foundation.
+4. **Implementation Plan**: Generate your implementation plan explicitly referencing the tokens, choreography, and dopamine map from the report.
+5. Apply this skill's quality gates, accessibility checks, and performance budgets.
+6. Build with this skill's engineering standards, fully trusting the inherited design-state.
+7. **CONSULT THE CSV** — Cross-reference every visual decision with 1000-human-made-design-elements.csv.
 
 ===================================================
 AI SLOP PROTOCOL — STRICTLY BANNED PATTERNS

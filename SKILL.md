@@ -112,19 +112,19 @@ All skills share these reference files:
 
 ## CROSS-SKILL INTEGRATION
 
-When a request spans multiple domains, activate skills in sequence:
+When a request spans multiple domains, activate skills in sequence and maintain state via handoff files:
 
 ### Complex Requests (Design + Engineering)
-1. First load: `skills/design-skill/SKILL.md` for creative direction
-2. Then load: `skills/web-dev-frontend-skill/SKILL.md` for engineering implementation
+1. First load: `skills/design-skill/SKILL.md` for creative direction. Ensure it generates `handoff-report.md`.
+2. Then load: `skills/web-dev-frontend-skill/SKILL.md` for engineering implementation. **Explicitly pass the design-state reference to the implementation agent** by instructing it to read `handoff-report.md` immediately upon activation.
 
 ### Full-Stack Requests (Frontend + Backend)
 1. First load: `skills/web-dev-frontend-skill/SKILL.md` for UI requirements
 2. Then load: `skills/web-dev-backend-skill/SKILL.md` for API implementation
 
 ### Immersive Full-Stack (Design + Frontend + Backend)
-1. Design skill for creative vision
-2. Frontend skill for UI implementation  
+1. Design skill for creative vision (outputs `handoff-report.md`)
+2. Frontend skill for UI implementation (reads `handoff-report.md`)
 3. Backend skill for API support
 
 ---
