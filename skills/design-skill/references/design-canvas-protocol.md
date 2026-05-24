@@ -285,13 +285,42 @@ Every professional designer sketches before they build. The canvas is that sketc
 ```
 1. Receive user request
 2. Run Prompt Interpretation Engine (Steps 1-5)
-3. Create .design-canvas/ directory
-4. Write intent.md, layout-plan.md, tokens.md, motion-plan.md
-5. Build code referencing canvas documents
-6. Write critique.md — self-review all checks
-7. Fix any issues found in critique
-8. Output final code to user
-9. Delete .design-canvas/ directory entirely
+3. Write intent, layout-plan, tokens, and motion-plan internally
+4. Build code referencing canvas decisions (if implementing directly)
+5. Write critique.md — self-review all checks
+6. Fix any issues found in critique
+7. If handing off to implementation agent: generate handoff-report.md in the project root
+8. Output final response to user
+```
+
+---
+
+## HANDOFF REPORT STRUCTURE (FOR AGENT HANDSHAKE)
+
+When completing a design phase that will be implemented by another agent, you MUST output a `handoff-report.md` file. The report MUST include these four mandatory pillars:
+
+```markdown
+# Unified Handoff Report
+
+## 1. Brand Intent
+- **Goal**: [Extracted intent]
+- **Mood**: [Primary and secondary mood]
+- **Audience**: [Target audience and technical comfort]
+
+## 2. Visual Tokens
+- **Color Palette**: [Background, surface, primary, accent, semantic]
+- **Typography**: [Fonts from CSV, type scale]
+- **Spacing & Radii**: [Spacing scale, border radii]
+
+## 3. Motion Personality
+- **Chosen Personality**: [Whisper / Breathe / Snap / Flow / Pulse]
+- **Easing Curves**: [Primary, secondary, emphasis]
+- **Duration Scale**: [Fast, normal, slow]
+
+## 4. Choreography
+- **Entry Patterns**: [Stagger, direction, duration per section]
+- **Interaction Sequences**: [Hover, press, submit cycles]
+- **Dopamine Mapping**: [Strategic reward moments]
 ```
 
 ---
