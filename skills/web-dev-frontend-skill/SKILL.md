@@ -680,3 +680,32 @@ Ask yourself: "Could this exact code appear in 100 other AI-generated projects?"
 The antidote to AI slop is the 1000-human-made-design-elements.csv. Every time you are tempted to use a generic pattern, consult the CSV. Find the human-made alternative. Implement it. The CSV contains 1000 specific, documented ways to make design feel handcrafted, intentional, and human — the exact opposite of slop.
 
 **THE CSV IS YOUR SHIELD AGAINST SLOP. USE IT.**
+
+---
+
+## THE DESIGN EVOLUTION LAB (LABORATORY MODE)
+
+**CONTEXT**: The static 1,000-ID reference library (`1000-human-made-design-elements.csv`) ensures baseline quality but may constrain project-specific innovation. The **Design Evolution Lab** empowers you to bypass strict adherence to the 1,000 IDs when a unique engineering or design challenge arises that cannot be solved by the existing library.
+
+### 1. Entering Laboratory Mode (Bypassing the Template Barrier)
+When a requirement exceeds the capability of the standard 1,000-ID library (e.g., a complex data-visualization component or a novel interaction pattern), you are authorized to enter **Laboratory Mode**. 
+
+### 2. Prototypal Composition Logic
+In Laboratory Mode, prototype a novel pattern based on first-principles design (motion, space, and emotion). You must formulate a clear justification based on specific project requirements demonstrating why the standard library cannot meet the challenge. Ensure that technical complexity remains capped within existing performance benchmarks (e.g., maintain 60fps, no increase in component render times).
+
+### 3. Self-Critique Validation Loop (No-Slop Guarantee)
+Every novel pattern MUST undergo a mandatory automated self-critique loop against established quality standards and specifically the banned patterns list in `references/ai-slop-banned.csv`. Any pattern that resembles known low-quality 'AI slop' must be rejected and reworked before being proposed. You guarantee zero slop.
+
+### 4. Project-Local Evolution Registry
+Once a novel pattern passes validation, persist its design definition locally to the current project context as part of the **Project-Local Evolution Registry** (typically saved as a `.design-evolution-registry.md` file in the project root). This allows the pattern to be queried, retrieved, and consistently reused across multiple sessions on the same project without modifying the global 1,000-ID reference library.
+
+### 5. Documentation Generation (Design Note)
+For every novel pattern registered, you MUST generate a rationalized 'Design Note' in the registry. The Design Note must detail:
+- The specific project requirements and deviation rationale from standard IDs.
+- The benefits and project-fit of the new pattern.
+- The validation check confirmation against the `ai-slop-banned` dataset.
+- Guidelines to ensure visual consistency when mixing standard ID references with the novel Lab patterns.
+
+### 6. Signature Moment Expansion
+Formalize the existing session-based 'Signature Moment' protocol (the one unforgettable interaction per project) into this durable framework. By registering the Signature Moment in the Project-Local Evolution Registry, it can be referenced just like standard IDs within the project scope, ensuring that innovative multi-page implementations remain flawlessly consistent.
+
