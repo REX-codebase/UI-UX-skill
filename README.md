@@ -1,4 +1,4 @@
-<![CDATA[<h1 align="center">
+<h1 align="center">
   <br>
   🎬 Avant-Garde Director Skill
   <br>
@@ -495,4 +495,3 @@ A well-built interface does not announce itself. It disappears into the task. Th
 MIT — Copyright (c) 2026 aggu000000-lgtm
 
 Do what you want with this. Just keep the license intact.
-]]>
