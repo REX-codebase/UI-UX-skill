@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <!-- Brutalist Raw Blueprint Background -->
+  <rect width="100%" height="100%" fill="#0c0e14"/>
+  
+  <!-- Technical blueprint background grid -->
+  <g stroke="rgba(255, 255, 255, 0.02)" stroke-width="1">
+    <line x1="50" y1="0" x2="50" y2="500"/>
+    <line x1="100" y1="0" x2="100" y2="500"/>
+    <line x1="150" y1="0" x2="150" y2="500"/>
+    <line x1="200" y1="0" x2="200" y2="500"/>
+    <line x1="250" y1="0" x2="250" y2="500"/>
+    <line x1="300" y1="0" x2="300" y2="500"/>
+    <line x1="350" y1="0" x2="350" y2="500"/>
+    <line x1="400" y1="0" x2="400" y2="500"/>
+    <line x1="450" y1="0" x2="450" y2="500"/>
+    
+    <line x1="0" y1="50" x2="500" y2="500"/>
+    <line x1="0" y1="100" x2="500" y2="100"/>
+    <line x1="0" y1="150" x2="500" y2="150"/>
+    <line x1="0" y1="200" x2="500" y2="200"/>
+    <line x1="0" y1="250" x2="500" y2="250"/>
+    <line x1="0" y1="300" x2="500" y2="300"/>
+    <line x1="0" y1="350" x2="500" y2="350"/>
+    <line x1="0" y1="400" x2="500" y2="400"/>
+    <line x1="0" y1="450" x2="500" y2="450"/>
+  </g>
+
+  <!-- Circular Radar Blueprint Rings -->
+  <g stroke="rgba(255, 255, 255, 0.05)" stroke-width="1" fill="none">
+    <circle cx="250" cy="200" r="120"/>
+    <circle cx="250" cy="200" r="90"/>
+    <circle cx="250" cy="200" r="60"/>
+    <!-- Outer tick marks -->
+    <path d="M 250,60 L 250,70 M 250,330 L 250,340 M 110,200 L 120,200 M 380,200 L 390,200" stroke="oklch(0.78 0.15 140)" stroke-width="2"/>
+  </g>
+
+  <!-- Mathematically Calculated 3D Isometric Wireframe Cube -->
+  <g stroke="#ffffff" stroke-width="1.5" fill="none">
+    <!-- Top Face -->
+    <polygon points="250,110 320,150 250,190 180,150" fill="rgba(255, 255, 255, 0.02)"/>
+    <!-- Left Face -->
+    <polygon points="180,150 250,190 250,270 180,230" fill="rgba(255, 255, 255, 0.04)"/>
+    <!-- Right Face -->
+    <polygon points="250,190 320,150 320,230 250,270" fill="rgba(255, 255, 255, 0.06)"/>
+    
+    <!-- Accent Core Vectors -->
+    <line x1="250" y1="190" x2="250" y2="270" stroke="oklch(0.78 0.15 140)" stroke-width="2.5"/>
+    <line x1="250" y1="190" x2="180" y2="150" stroke="oklch(0.78 0.15 140)" stroke-width="2.5"/>
+    <line x1="250" y1="190" x2="320" y2="150" stroke="oklch(0.78 0.15 140)" stroke-width="2.5"/>
+  </g>
+  
+  <!-- Technical blueprint crosshair ticks -->
+  <g stroke="oklch(0.78 0.15 140)" stroke-width="1">
+    <line x1="250" y1="180" x2="250" y2="200"/>
+    <line x1="240" y1="190" x2="260" y2="190"/>
+  </g>
+
+  <!-- Brutalist Monospace Industrial Wordmark -->
+  <g font-family="'Space Grotesk', monospace" fill="#ffffff" font-weight="700">
+    <text x="250" y="415" text-anchor="middle" font-size="30" letter-spacing="0.3em">SYSCONTROL</text>
+    <text x="250" y="445" text-anchor="middle" font-size="10" letter-spacing="0.5em" fill="oklch(0.78 0.15 140)" font-weight="500">SYS_COORDINATES // v2.0</text>
+  </g>
+</svg>

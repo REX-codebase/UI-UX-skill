@@ -45,29 +45,87 @@ Most AI skill files are static instruction sheets. This one is a **living cognit
 
 ## 🖼️ Demo Showcase
 
+### SVG Logo Generation Engine — Real Output
+
+Generated with `node skills/utils/svg-generator.js`. These are **real SVGs** from the engine, not mockups:
+
+<table>
+<tr>
+<td align="center" width="50%">
+<img src="assets/showcase-bento.svg" alt="Bento Style Logo" width="400"><br>
+<strong>Bento</strong> — Geometric grid, OKLCH gradients, glassmorphic shield
+</td>
+<td align="center" width="50%">
+<img src="assets/showcase-organic.svg" alt="Organic Style Logo" width="400"><br>
+<strong>Organic</strong> — Paper grain, wobble displacement, botanical leaf
+</td>
+</tr>
+<tr>
+<td align="center" width="50%">
+<img src="assets/showcase-brutalist.svg" alt="Brutalist Style Logo" width="400"><br>
+<strong>Brutalist</strong> — Blueprint grid, isometric wireframe, radar rings
+</td>
+<td align="center" width="50%">
+<img src="assets/showcase-cinematic.svg" alt="Cinematic Style Logo" width="400"><br>
+<strong>Cinematic</strong> — Portal loop curves, gaussian glow, serif italic
+</td>
+</tr>
+</table>
+
+> One command: `node skills/utils/svg-generator.js --type bento --name "Brand" --output logo.svg`
+
+### Cognitive Design Simulator — Real Output
+
+The simulator audits any HTML file and outputs spatial analysis:
+
+```
+🧠 COGNITIVE DESIGN SIMULATOR & AUDITOR
+📁 File: "index.html"
+
+--- VISUAL DENSITY BALANCE CANVAS ---
+
+  = = = = = = = = = = = = = = = = = = = = = = =
+  = = = = = = = = = = = = = = = = = = = = = = =
+  @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @
+  * * * * * * *   : : : : : : :
+  * * * * * * *   : : : : : : :
+  * * * * * * *   : : : : : : :
+
+--- COGNITIVE METRICS REPORT ---
+- Visual Weight Centroid: (0.342, 0.323) | Total Weight Mass: 6207
+- Cognitive Load Index: 82 | Rating: Visual Overload (Friction High)
+  [Elements Count: 10 | Interactive Count: 2 | Colors: 39]
+- Layout Balance Advice: Warning: Too many colors or interactive targets.
+
+--- STRUCTURAL DESIGN CRITIQUE ---
+- Visual Weight Centroid is skewed significantly LEFT.
+- Typographic Rhythm warning: No max-width: 65ch paragraph boundary detected.
+```
+
+> Run it: `node skills/utils/design-simulator.js --file ./index.html`
+
+### Font Search Engine — Real Output
+
+```
+$ node skills/utils/search.js --fonts "elegant" --classification "Serif"
+
+| NAME               | CLASSIFICATION | USE_CASE              | MOOD                            | PAIRING         |
+| ------------------ | -------------- | --------------------- | ------------------------------- | --------------- |
+| Instrument Serif   | Serif          | Editorial headlines   | Elegant authority               | Instrument Sans |
+| DM Serif Display   | Serif          | Display serif headers | Elegant display serif           | DM Sans         |
+| Cormorant Garamond | Serif          | Elegant Garamond body | Elegant Garamond sophistication | Work Sans       |
+| Arapey             | Serif          | Elegant serif body    | Elegant serif warmth            | Open Sans       |
+```
+
+> Searches 1000 underrated fonts without burning tokens parsing CSV files.
+
 ### Bento Grid Visual Explorer
 
 <p align="center">
   <img src="assets/demo-bento-dashboard.png" alt="Bento Grid Visual Explorer Dashboard" width="800">
 </p>
 
-> A glassmorphic Bento dashboard with live font previewing, image search, and design element browsing. Launch it with `node skills/explorer/server.js` and open `http://localhost:3000`.
-
-### Terminal Vision System — AI Eyes Without Multimodality
-
-<p align="center">
-  <img src="assets/demo-terminal-vision.png" alt="Terminal Vision System" width="800">
-</p>
-
-> Text-only agents can "see" what they build. The screenshot tool captures headless browser renders and converts them to truecolor ANSI blocks + ASCII luminance blueprints in stdout — with dominant color palette extraction in RGB, HSL, and OKLCH.
-
-### SVG Logo Generation Engine
-
-<p align="center">
-  <img src="assets/demo-svg-logos.png" alt="SVG Logo Styles" width="800">
-</p>
-
-> Four mathematically precise logo styles generated with zero external dependencies. **Bento** (geometric grid), **Organic** (hand-crafted watercolor), **Brutalist** (isometric wireframe), **Cinematic** (portal glow). One command: `node skills/utils/svg-generator.js --type bento --name "Brand"`.
+> Launch with `node skills/explorer/server.js` and open `http://localhost:3000`. Features glassmorphic Bento cards, live Google Fonts previewing, masonry image grid, and dark/light mood toggle.
 
 ### Self-Evolving Agent Loop
 
@@ -75,7 +133,7 @@ Most AI skill files are static instruction sheets. This one is a **living cognit
   <img src="assets/demo-self-evolving-loop.png" alt="Self-Evolving Agent Loop" width="800">
 </p>
 
-> Agents don't just build — they **iterate**. The self-evolver coordinates screenshots and design simulation to generate mutation recipes that fix layout balance, reduce cognitive load, and enforce typographic rhythm. Even GPT-3.5 class models can use this loop.
+> Agents build → screenshot → analyze → mutate in an autonomous reflexion cycle. The self-evolver generates `evolution-prompt.md` with specific CSS repair recipes. Even GPT-3.5 class models can use this loop.
 
 ---
 
