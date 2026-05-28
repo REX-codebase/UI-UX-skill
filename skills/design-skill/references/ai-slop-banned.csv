@@ -1147,3 +1147,8 @@ id,category,ai_slop_pattern,severity,description
 1146,copy,Missing specific numbers and data in claims,high,Marketing copy with no concrete statistics or measurable results
 1147,copy,No brand voice or personality,high,Generic corporate tone that could belong to any company
 1148,copy,Missing benefit-oriented headlines,medium,Headlines focused on features instead of user benefits
+1149,color,Defaulting to flat HEX instead of Eclipse oklch spaces,critical,Using raw static hex colors instead of low-luminance warm OKLCH hue schemes
+1150,animation,Generic cubic-bezier transitions instead of spring physics,critical,Standard mechanical easing instead of Newtonian Mass/Stiffness/Damping variables
+1151,layout,Cramped grid boxes deficient in Shibui margins,high,Squeezing bento grid cells without Ma negative space or asymmetrical confidence
+1152,ai-ui,Sparkle or star emojis as lazy AI signifiers,critical,Slapping sparkle emoji icons as a quick shortcut for intelligent features
+

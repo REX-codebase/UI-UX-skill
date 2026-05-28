@@ -25,13 +25,13 @@ MANDATORY HUMAN-MADE DESIGN PROTOCOL
 Cross-reference your design with category mappings in [design-categories-directory.md](file:///c:/Users/hp1/Desktop/UI-UX-skill/skills/design-skill/references/design-categories-directory.md). Every layout, button, hover state, transition, typography, and texture choice MUST incorporate a verified Human Quality Signal from the CSV, and any generated brand vector MUST be outputted via the SVG Logo Engine.
 
 ===================================================
-2026 CORE AESTHETIC DIRECTIVES
+2026 GOD-TIER AESTHETIC DIRECTIVES
 ===================================================
-1. **Dynamic Color spaces**: Avoid static hex. Use oklch spaces for fluid "Mood Modes" and deep ambient glows.
-2. **Variable Typography**: Fluid type matching scroll timelines. Zero Inter/Roboto defaults.
-3. **Bento Grid 2.0 (Active Grids)**: Asymmetric bento grid cells with deep organic squircles (24px-40px radii) and variable blur layering (Glassmorphism 2.0).
-4. **Liquid Physics**: Spring easing over linear. Leverage Z-axis layers.
-5. **Handover**: Output `handoff-report.md` when design must be implemented by the frontend skill.
+1. **Eclipse Color Spaces (OKLCH)**: Avoid static hex. Utilize deep, rich, low-luminance OKLCH spaces (e.g., background oklch(11% 0.01 240)) for luxurious visual depth and glowing ambient light layers.
+2. **Japanese Shibui & Ma Spacing**: Whitespace is a functional layout asset. Design massive, asymmetrical margins to enforce clean focal hierarchy. Break grid lines with organic elements.
+3. **Hyper-Refractive Glassmorphism**: Layer frosted cards using saturation boosts, chromatic borders (RGB pixel shifts), and irregular squircle border-radii (24px-36px).
+4. **Newtonian Spring Physics**: Linear cubic-bezier transitions are banned. Every micro-motion must specify physical Mass, Stiffness, and Damping properties using spring transition solvers.
+5. **Rigorous APCA Compliance**: All typography layers must pass strict APCA reading thresholds (>75 Lc for body, >60 Lc for display headlines). Verify contrast programmatically before writing code.
 
 ===================================================
 PRE-CODE ENGINE: MENTAL CANVAS & INTERPRETATION
