@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const orchestrator = require('./agents/orchestrator');
 
 const WORKSPACE_DIR = path.join(process.cwd(), '.vg-canvas');
 const STATE_FILE = path.join(WORKSPACE_DIR, 'state.json');
@@ -217,6 +218,87 @@ const server = http.createServer((req, res) => {
     const results = getCliAudits();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(results));
+    return;
+  }
+
+  // --- API Endpoint: Get registered subagent personas ---
+  if (pathname === '/api/agents/personas' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(orchestrator.PERSONAS));
+    return;
+  }
+
+  // --- API Endpoint: Read active markdown handoff content ---
+  if (pathname === '/api/agents/handoff' && req.method === 'GET') {
+    const role = parsedUrl.query.role;
+    if (!role) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: '"role" is required.' }));
+      return;
+    }
+    const handoffPath = path.join(WORKSPACE_DIR, 'agents', `handoff-${role.toLowerCase()}.md`);
+    if (!fs.existsSync(handoffPath)) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Handoff file not found.' }));
+      return;
+    }
+    const raw = fs.readFileSync(handoffPath, 'utf8');
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end(raw);
+    return;
+  }
+
+  // --- API Endpoint: Get subagent task queue list ---
+  if (pathname === '/api/agents/tasks' && req.method === 'GET') {
+    const tasks = orchestrator.loadTasks();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(tasks));
+    return;
+  }
+
+  // --- API Endpoint: Create a subagent handoff task ---
+  if (pathname === '/api/agents/handoff' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body);
+        if (!parsed.role || !parsed.task) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Both "role" and "task" are required.' }));
+          return;
+        }
+        const result = orchestrator.createHandoff(parsed.role, parsed.task);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(result));
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid JSON payload: ' + e.message }));
+      }
+    });
+    return;
+  }
+
+  // --- API Endpoint: Complete a subagent task ---
+  if (pathname === '/api/agents/complete' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body);
+        if (!parsed.role) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: '"role" is required.' }));
+          return;
+        }
+        const result = orchestrator.completeHandoff(parsed.role, parsed.output || '');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(result));
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid JSON payload: ' + e.message }));
+      }
+    });
     return;
   }
 

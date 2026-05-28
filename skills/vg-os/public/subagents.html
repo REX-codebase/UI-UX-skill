@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vg-agents: Cognitive Subagent Mesh Dashboard</title>
+  <!-- Load Premium typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <style>
+    /* Specialized mesh layout rules extending standard dashboard.css styling */
+    .mesh-grid {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: relative;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 30px;
+      border-radius: 16px;
+      margin-top: 15px;
+      min-height: 240px;
+    }
+    
+    .agent-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+      position: relative;
+      background: rgba(15, 22, 36, 0.8);
+      border: 1px solid var(--panel-border);
+      border-radius: 16px;
+      padding: 16px;
+      width: 130px;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .agent-node.active {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 25px rgba(0, 245, 160, 0.2);
+      transform: translateY(-4px);
+    }
+    
+    .agent-node.active .agent-avatar {
+      background: rgba(0, 245, 160, 0.1);
+      border-color: var(--accent-cyan);
+      animation: agentPulse 2s infinite;
+    }
+    
+    .agent-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      transition: all 0.3s;
+    }
+    
+    .agent-node h3 {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-primary);
+    }
+    
+    .agent-status-lbl {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      border-radius: 10px;
+      text-transform: uppercase;
+    }
+    
+    .agent-node.active .agent-status-lbl {
+      background: rgba(0, 245, 160, 0.15);
+      color: var(--accent-cyan);
+    }
+    
+    /* Connective mesh lines overlay */
+    .mesh-svg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    .mesh-link {
+      stroke: rgba(255, 255, 255, 0.05);
+      stroke-width: 2;
+      stroke-dasharray: 6;
+      transition: stroke 0.3s, stroke-width 0.3s;
+    }
+    
+    .mesh-link.active {
+      stroke: var(--accent-cyan);
+      stroke-width: 3;
+      animation: dashScroll 20s linear infinite;
+    }
+    
+    /* Forms inside sidebar bento */
+    .form-box {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 15px;
+    }
+    
+    .styled-input, .styled-textarea {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      color: var(--text-primary);
+      padding: 12px;
+      font-family: var(--font-family);
+      font-size: 13px;
+      transition: all 0.3s;
+    }
+    
+    .styled-input:focus, .styled-textarea:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+      background: rgba(0, 245, 160, 0.01);
+    }
+    
+    .styled-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .btn-full {
+      width: 100%;
+    }
+    
+    /* Markdown Viewer cells */
+    .markdown-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 16px;
+      padding: 20px;
+      max-height: 480px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    
+    @keyframes agentPulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 245, 160, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(0, 245, 160, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 245, 160, 0); }
+    }
+    
+    @keyframes dashScroll {
+      to { stroke-dashoffset: -1000; }
+    }
+    
+    .back-btn-wrapper {
+      margin-left: 20px;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-outline:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      box-shadow: 0 0 15px rgba(0, 245, 160, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Glowing backdrops -->
+  <div class="ambient-glow glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow glow-2" aria-hidden="true"></div>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <div class="app-container">
+    <!-- Header Bento Card -->
+    <header class="bento-card hero-card">
+      <div class="hero-brand">
+        <span class="badge">vg-agents ORCHESTRATION</span>
+        <h1>vg-agents</h1>
+        <p class="subtitle">AVANT-GARDE COGNITIVE SYSTEM & MULTI-AGENT Whiteboard</p>
+      </div>
+      <div class="hero-description">
+        <p>A filesystems-based concurrent multi-agent router. Split design objectives, generate structured Markdown Handoff files, and coordinate persona switching on standard developer sandboxes.</p>
+        <div class="quick-status">
+          <div class="status-indicator">
+            <span class="pulse-dot"></span>
+            <span id="agentsStatus">Orchestrator Mesh Synchronized</span>
+          </div>
+          <div class="back-btn-wrapper">
+            <a href="/index.html"><button class="btn-outline">← Back to Previewer</button></a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Side Control Bento Cell (Bento Cell 2: Task Genesis) -->
+    <aside class="bento-card control-card">
+      <h2>Generate Handoff Task</h2>
+      <div class="form-box">
+        <div class="form-group">
+          <label for="agentRoleSelect">Target Subagent Role</label>
+          <select id="agentRoleSelect" class="styled-select" style="width:100%;">
+            <option value="researcher">🔍 Researcher Subagent</option>
+            <option value="designer" selected>📐 Designer Subagent</option>
+            <option value="auditor">🛡️ Auditor Subagent</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="taskDescriptionInput">Task Objective</label>
+          <textarea id="taskDescriptionInput" class="styled-textarea" placeholder="Describe the layout elements, gradients, or audits required..."></textarea>
+        </div>
+        <button id="spawnTaskBtn" class="btn-primary btn-full">Generate Handoff Packet</button>
+      </div>
+
+      <h2 class="sub-h">Registered Subagent Grid</h2>
+      <div class="layers-container" id="personasRegistryList">
+        <!-- Dyn details -->
+      </div>
+    </aside>
+
+    <!-- Visual Mesh Board (Bento Cell 3: Main Layout Map) -->
+    <main class="bento-card preview-card" style="gap:24px;">
+      <h2>Active Cognitive Agent Map</h2>
+      
+      <div class="mesh-container" style="position:relative;">
+        <div class="mesh-grid" id="meshStage">
+          <!-- Connective SVG Overlay -->
+          <svg class="mesh-svg-overlay">
+            <line id="linkOrchRes" class="mesh-link" x1="50%" y1="20%" x2="20%" y2="70%"></line>
+            <line id="linkOrchDes" class="mesh-link" x1="50%" y1="20%" x2="50%" y2="70%"></line>
+            <line id="linkOrchAud" class="mesh-link" x1="50%" y1="20%" x2="80%" y2="70%"></line>
+          </svg>
+          
+          <!-- Master Node -->
+          <div class="agent-node" id="nodeOrchestrator" style="position:absolute; top:-10px; left:calc(50% - 65px);">
+            <div class="agent-avatar">👑</div>
+            <h3>Orchestrator</h3>
+            <span class="agent-status-lbl" id="statusOrchestrator">SYNCED</span>
+          </div>
+
+          <!-- Researcher Node -->
+          <div class="agent-node" id="nodeResearcher" style="margin-top: 100px;">
+            <div class="agent-avatar">🔍</div>
+            <h3>Researcher</h3>
+            <span class="agent-status-lbl" id="statusResearcher">IDLE</span>
+          </div>
+
+          <!-- Designer Node -->
+          <div class="agent-node" id="nodeDesigner" style="margin-top: 100px;">
+            <div class="agent-avatar">📐</div>
+            <h3>Designer</h3>
+            <span class="agent-status-lbl" id="statusDesigner">IDLE</span>
+          </div>
+
+          <!-- Auditor Node -->
+          <div class="agent-node" id="nodeAuditor" style="margin-top: 100px;">
+            <div class="agent-avatar">🛡️</div>
+            <h3>Auditor</h3>
+            <span class="agent-status-lbl" id="statusAuditor">IDLE</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:20px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:12px;">Handoff Packet Live Stream</h2>
+      <div class="markdown-box" id="handoffViewerBox">Select a task in the queue to preview its raw Markdown handoff file stream...</div>
+    </main>
+
+    <!-- Task queue Sidebar (Bento Cell 4) -->
+    <section class="bento-card diagnostic-card">
+      <h2>Mesh Task Queue</h2>
+      <div class="layers-container" id="agentTasksQueueList" style="max-height: 480px;">
+        <div class="empty-layers">No active visual tasks in the shared queue.</div>
+      </div>
+      
+      <h2 class="sub-h" style="margin-top:20px;">Orchestrator Console Logs</h2>
+      <div class="audit-logs" id="orchestratorConsoleLogs" style="max-height: 180px; font-family: monospace; font-size: 11px;">
+        <div class="audit-success-banner" style="padding:10px; font-size:11px;">
+          ⚡ System ready. Awaiting handoff commands...
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="subagents.js"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
+const orchestrator = require('./agents/orchestrator');
 
 const WORKSPACE_DIR = path.join(process.cwd(), '.vg-canvas');
 const STATE_FILE = path.join(WORKSPACE_DIR, 'state.json');
@@ -646,6 +647,60 @@ Options:
       const serverScript = path.join(__dirname, 'server.js');
       console.log(`Launching visual server: node ${serverScript}...`);
       spawn('node', [serverScript], { stdio: 'inherit' });
+      break;
+
+    case 'agent':
+      const subCmd = args[1];
+      if (subCmd === 'list') {
+        const tasks = orchestrator.loadTasks();
+        console.log('\n=============================================================');
+        console.log('🤖 AVANT-GARDE COGNITIVE SUBAGENT MESH - ACTIVE QUEUE');
+        console.log('=============================================================\n');
+        if (tasks.length === 0) {
+          console.log('🏜️ No active or pending tasks in queue.');
+        } else {
+          tasks.forEach(t => {
+            const icon = t.status === 'ACTIVE' ? '⚡' : '✅';
+            console.log(`${icon} [${t.status}] Role: ${t.role.toUpperCase()} | Task: ${t.task}`);
+            console.log(`   Handoff File: ${t.handoffPath}`);
+            if (t.completed) console.log(`   Completed: ${t.completed}`);
+          });
+        }
+        console.log('');
+      } else if (subCmd === 'handoff') {
+        const role = params.role;
+        const task = params.task;
+        if (!role || !task) {
+          console.error('Error: Both --role <researcher|designer|auditor> and --task "<description>" are required.');
+          process.exit(1);
+        }
+        const { taskId, handoffPath } = orchestrator.createHandoff(role, task);
+        console.log(`\n=============================================================`);
+        console.log(`⚡ COGNITIVE HANDOFF GENESIS - TASK "${taskId}" STARTED`);
+        console.log(`=============================================================\n`);
+        console.log(`📂 Styled handoff markdown folder generated successfully!`);
+        console.log(`📁 File Location: ${handoffPath}`);
+        console.log(`\n*Instruct the running agent to read this file, shift its persona, resolve the task, and stage output.*`);
+        console.log('');
+      } else if (subCmd === 'complete') {
+        const role = params.role;
+        const outText = params.output || '';
+        if (!role) {
+          console.error('Error: --role <researcher|designer|auditor> is required.');
+          process.exit(1);
+        }
+        const result = orchestrator.completeHandoff(role, outText);
+        console.log(`\n=============================================================`);
+        console.log(`✅ SUBAGENT WORK INTEGRATED - ROLE "${role.toUpperCase()}"`);
+        console.log(`=============================================================\n`);
+        console.log(`Extracted Deliverables:\n`);
+        console.log(result.deliverables);
+        console.log(`\nTask status updated to COMPLETED. Memory buffers cleared!`);
+        console.log('');
+      } else {
+        console.error('Error: Unknown agent command. Supported: list, handoff, complete.');
+        process.exit(1);
+      }
       break;
 
     default:
