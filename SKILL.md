@@ -141,6 +141,11 @@ Zero-dependency headless page capture tool that allows non-multimodal and text-o
   - `--height <pixels>`: Headless browser viewport height (default: 800)
 - **Vision Loop**: Enables agents to visually evaluate contrast, colors, and layout structure in real time, and ensures all designs align with HSL/OKLCH palette standards without requiring multimodal APIs.
 
+### 5. Cognitive Layout Simulator & Auditor
+Zero-dependency programmatic layout auditor that analyzes structural DOM geometry, visual centroids, cognitive noise coefficients, Fitts's Law interactive targets, and APCA reading contrast levels:
+- **Command**: `node skills/utils/design-simulator.js --file <filepath>`
+- **Directives**: Audits every created/modified HTML layout file, outputs an ASCII layout weight canvas, and generates a structured design critique to enforce spatial balance and Gestalt spacing.
+
 ---
 
 ## CROSS-SKILL INTEGRATION

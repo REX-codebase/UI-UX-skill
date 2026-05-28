@@ -87,10 +87,11 @@ QUALITY GATE CHECKLIST — VERIFY BEFORE SHIPPING
 - [ ] Component states (default, hover, focus, active, loading, error) handled.
 - [ ] Every element references at least one entry from 1000-human-made-elements.csv (via search CLI).
 - [ ] Headless browser rendering verification completed via CLI (run `node skills/utils/screenshot.js --url <file> --output <png> --view` to visually inspect color contrast, structural alignment, and layout grids in your console).
+- [ ] Cognitive design layout audit completed (run `node skills/utils/design-simulator.js --file <file>` to verify visual gravity centroid, Hick's Law cognitive friction index, and typographic rhythm line-widths). You MUST analyze the simulator's critique and apply mathematical balance corrections to your CSS rules.
 
 ===================================================
 DESIGN INTEGRATION & REFERENCE DIRECTORIES
 ===================================================
-- References: [typography-scale.md](references/typography-scale.md) | [color-systems.md](references/color-systems.md) | [design-tokens.md](references/design-tokens.md) | [accessibility-checklist.md](references/accessibility-checklist.md) | [wcag-3-reference.md](references/wcag-3-reference.md) | [performance-budgets.md](references/performance-budgets.md) | [bento-grid-layouts.md](references/bento-grid-layouts.md) | [interaction-physics.md](references/interaction-physics.md) | [css-2026-features.md](references/css-2026-features.md)
+- References: [design-cognition-calculus.md](../design-skill/references/design-cognition-calculus.md) | [typography-scale.md](references/typography-scale.md) | [color-systems.md](references/color-systems.md) | [design-tokens.md](references/design-tokens.md) | [accessibility-checklist.md](references/accessibility-checklist.md) | [wcag-3-reference.md](references/wcag-3-reference.md) | [performance-budgets.md](references/performance-budgets.md) | [bento-grid-layouts.md](references/bento-grid-layouts.md) | [interaction-physics.md](references/interaction-physics.md) | [css-2026-features.md](references/css-2026-features.md)
 - Industry Benchmarks: [industry-benchmarks.md](references/industry-benchmarks.md) (Emulate: Linear, Stripe, Apple, Pitch, Lusion, Vercel, Notion)
 - Design Choreography: If the user requires immersive visual choreography or motion site structure, run the **Unified Handoff Bootstrapper** to read `handoff-report.md` in the root before executing.
