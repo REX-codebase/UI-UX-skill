@@ -472,6 +472,23 @@ function runAudits(state) {
   };
 }
 
+// Run the Programmatic L5 Planning Auditor
+function auditPlanning(params = {}) {
+  if (params['skip-planning']) {
+    console.log('⚠️ [PLANNING_BYPASS] Skipping L5 SWE Planning Audit (Experimental bypass).');
+    return true;
+  }
+  
+  const auditorScript = path.join(process.cwd(), 'skills', 'utils', 'planning-auditor.js');
+  try {
+    require('child_process').execSync(`node "${auditorScript}"`, { stdio: 'inherit' });
+    return true;
+  } catch (e) {
+    console.error(`\n❌ [L5_PLANNING_LOCK] Execution blocked due to insufficient L5 SWE planning.`);
+    process.exit(1);
+  }
+}
+
 // OS Command Coordinator Main shell
 async function main() {
   const args = process.argv.slice(2);
@@ -600,6 +617,7 @@ Options:
       break;
 
     case 'compile':
+      auditPlanning(params);
       const compiledPath = compileCanvas(state);
       console.log(`Compiled responsive vector canvas layout successfully:`);
       console.log(`📁 File written: ${compiledPath}`);
@@ -612,6 +630,7 @@ Options:
       break;
 
     case 'test':
+      auditPlanning(params);
       // 1. Compile current canvas state to index.html first
       const compiledHtml = compileCanvas(state);
       
