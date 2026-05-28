@@ -33,13 +33,13 @@
 Most AI skill files are static instruction sheets. This one is a **living cognitive system** — it gives AI agents the ability to *see*, *reason about*, and *self-correct* their own designs.
 
 | Capability | What It Does |
-|-----------|-------------|
-| **🧠 Design Cognition** | Agents understand *why* designs work using Gestalt laws, Hick's Law cognitive budgets, and APCA contrast calculus |
-| **👁️ Terminal Vision** | Non-multimodal agents can "see" their output via truecolor ANSI rendering and ASCII luminance maps |
-| **🔄 Self-Evolving Loop** | Agents build → screenshot → analyze → mutate in an autonomous reflexion cycle until design passes audit |
-| **🎯 SVG Precision Engine** | Mathematical vector logo generation in 4 styles — no external APIs needed |
-| **🔍 Built-in Search** | CLI search across 1000 design elements, 1000 fonts, and royalty-free images — saving thousands of tokens |
-| **🛡️ Anti-AI-Slop** | 1000 documented banned patterns from 2025-2026. No generic gradients, no card soup, no Inter/Roboto |
+|-----------------------------|-------------------------------------------------------------------------------------------------------------------|
+| **🧠 Design Cognition**     | Agents understand *why* designs work using Gestalt laws, Hick's Law cognitive budgets, and APCA contrast calculus |
+| **👁️ Terminal Vision**      | Non-multimodal agents can "see" their output via truecolor ANSI rendering and ASCII luminance maps               |
+| **🔄 Self-Evolving Loop**   | Agents build → screenshot → analyze → mutate in an autonomous reflexion cycle until design passes audit           |
+| **🎯 SVG Precision Engine** | Mathematical vector logo generation in 4 styles — no external APIs needed                                         |
+| **🔍 Built-in Search**      | CLI search across 1000 design elements, 1000 fonts, and royalty-free images — saving thousands of tokens          |
+| **🛡️ Anti-AI-Slop**         | 1000 documented banned patterns from 2025-2026. No generic gradients, no card soup, no Inter/Roboto               |
 
 ---
 
@@ -173,13 +173,13 @@ $ node skills/utils/search.js --fonts "elegant" --classification "Serif"
 
 The orchestrator detects request intent and loads **only the relevant skill** to conserve tokens:
 
-| Your Request | Skill Loaded |
-|---|---|
-| "Build a stunning hero with scroll animations" | `design-skill` |
-| "Create a responsive landing page" | `web-dev-frontend-skill` |
-| "Add OAuth to our API" | `web-dev-backend-skill` |
-| "Award-winning SaaS landing page" | `design-skill` → `web-dev-frontend-skill` |
-| "Fix this typo" | No skill loaded (token optimization) |
+| Your Request                                    | Skill Loaded                              |
+|-------------------------------------------------|-------------------------------------------|
+| "Build a stunning hero with scroll animations"  | `design-skill`                            |
+| "Create a responsive landing page"              | `web-dev-frontend-skill`                  |
+| "Add OAuth to our API"                          | `web-dev-backend-skill`                   |
+| "Award-winning SaaS landing page"               | `design-skill` → `web-dev-frontend-skill` |
+| "Fix this typo"                                 | No skill loaded (token optimization)       |
 
 ---
 
@@ -240,12 +240,12 @@ node skills/utils/svg-generator.js --type brutalist --name "SysControl" --output
 node skills/utils/svg-generator.js --type cinematic --name "Infinite" --output logo.svg
 ```
 
-| Style | Visual DNA |
-|-------|-----------|
-| **Bento** | OKLCH gradients, concentric mesh, glassmorphic shield, squircle rotation |
-| **Organic** | Paper grain texture, wobble displacement, botanical leaf, watercolor washes |
-| **Brutalist** | Blueprint grid, radar rings, 3D isometric wireframe cube, crosshair ticks |
-| **Cinematic** | Portal loop curves, gradient glow, gaussian blur, serif italic typography |
+| Style         | Visual DNA                                                                    |
+|---------------|-------------------------------------------------------------------------------|
+| **Bento**     | OKLCH gradients, concentric mesh, glassmorphic shield, squircle rotation      |
+| **Organic**   | Paper grain texture, wobble displacement, botanical leaf, watercolor washes   |
+| **Brutalist** | Blueprint grid, radar rings, 3D isometric wireframe cube, crosshair ticks      |
+| **Cinematic** | Portal loop curves, gradient glow, gaussian blur, serif italic typography    |
 
 ### 📸 Screenshot & Vision Bridge
 
@@ -310,15 +310,15 @@ node skills/explorer/server.js
 
 This isn't blind token prediction. Agents using this skill understand the **mathematics** behind why designs work:
 
-| Principle | Formula / Rule | Application |
-|-----------|---------------|-------------|
-| **Visual Weight** | `W = S × ΔL × (1 + C)` | Size × lightness contrast × chroma determines visual gravity |
-| **Hick's Law** | `T = b × log₂(n + 1)` | Max 7 interactive elements per section, max 3 color hues |
-| **APCA Contrast** | Lc > 75 for body text | Size-dependent perceptual contrast replacing outdated 4.5:1 ratios |
-| **Gestalt Spacing** | 8pt modular grid | Proximity groups, similarity via CSS variables, continuity via subgrid |
-| **Typography Rhythm** | `max-width: 65ch` | Line-height inverse scale: 1.1 display → 1.5 body → 1.8 captions |
-| **Spring Physics** | `cubic-bezier(0.34, 1.56, 0.64, 1)` | Natural motion feel — no linear easing, no jQuery defaults |
-| **Dopamine Budget** | 3 reward moments max | Strategic delight placement based on neuroscience |
+| Principle             | Formula / Rule                        | Application                                                              |
+|-----------------------|---------------------------------------|--------------------------------------------------------------------------|
+| **Visual Weight**     | `W = S × ΔL × (1 + C)`                 | Size × lightness contrast × chroma determines visual gravity             |
+| **Hick's Law**        | `T = b × log₂(n + 1)`                 | Max 7 interactive elements per section, max 3 color hues                 |
+| **APCA Contrast**     | Lc > 75 for body text                 | Size-dependent perceptual contrast replacing outdated 4.5:1 ratios       |
+| **Gestalt Spacing**   | 8pt modular grid                      | Proximity groups, similarity via CSS variables, continuity via subgrid   |
+| **Typography Rhythm** | `max-width: 65ch`                     | Line-height inverse scale: 1.1 display → 1.5 body → 1.8 captions         |
+| **Spring Physics**    | `cubic-bezier(0.34, 1.56, 0.64, 1)`   | Natural motion feel — no linear easing, no jQuery defaults               |
+| **Dopamine Budget**   | 3 reward moments max                  | Strategic delight placement based on neuroscience                        |
 
 ---
 
@@ -326,13 +326,13 @@ This isn't blind token prediction. Agents using this skill understand the **math
 
 Every interface gets ONE motion personality. This drives all animation choices:
 
-| Personality | Best For | Easing | Duration | Character |
-|-------------|---------|--------|----------|-----------|
-| **Whisper** | Luxury, editorial | `cubic-bezier(0.25, 0.1, 0.25, 1)` | 400-600ms | Subtle fades, gentle slides |
-| **Breathe** | Wellness, lifestyle | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 300-500ms | Organic expansions |
-| **Snap** | SaaS, fintech | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 150-300ms | Quick, elastic |
-| **Flow** | Creative agencies | `cubic-bezier(0.4, 0, 0.2, 1)` | 400-800ms | Liquid, connected |
-| **Pulse** | Social, real-time | `cubic-bezier(0.4, 0, 0.6, 1)` | 200-400ms | Rhythmic, heartbeat |
+| Personality | Best For            | Easing                              | Duration  | Character                    |
+|-------------|---------------------|-------------------------------------|-----------|------------------------------|
+| **Whisper** | Luxury, editorial   | `cubic-bezier(0.25, 0.1, 0.25, 1)`  | 400-600ms | Subtle fades, gentle slides  |
+| **Breathe** | Wellness, lifestyle | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 300-500ms | Organic expansions           |
+| **Snap**    | SaaS, fintech       | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 150-300ms | Quick, elastic               |
+| **Flow**    | Creative agencies   | `cubic-bezier(0.4, 0, 0.2, 1)`      | 400-800ms | Liquid, connected            |
+| **Pulse**   | Social, real-time   | `cubic-bezier(0.4, 0, 0.6, 1)`      | 200-400ms | Rhythmic, heartbeat          |
 
 ---
 
@@ -340,14 +340,14 @@ Every interface gets ONE motion personality. This drives all animation choices:
 
 **1000 documented banned patterns.** Non-negotiable.
 
-| Category | ❌ Banned | ✅ Use Instead |
-|----------|----------|---------------|
-| Layout | 12-column grids, centered heroes | Bento grids, asymmetric layouts |
-| Color | Light-only, purple-blue gradients | Dark mode first, OKLCH perceptual color |
-| Animation | Linear easing, GSAP-only | CSS Scroll-Driven, spring physics |
-| Typography | Inter / Roboto / Poppins | Underrated fonts from curated CSV |
-| Components | Card soup, generic modals | Contextual surfaces, bento cells |
-| Icons | Font Awesome defaults | Custom SVG, brand-specific marks |
+| Category   | ❌ Banned                         | ✅ Use Instead                            |
+|------------|-----------------------------------|-------------------------------------------|
+| Layout     | 12-column grids, centered heroes  | Bento grids, asymmetric layouts           |
+| Color      | Light-only, purple-blue gradients | Dark mode first, OKLCH perceptual color   |
+| Animation  | Linear easing, GSAP-only          | CSS Scroll-Driven, spring physics         |
+| Typography | Inter / Roboto / Poppins          | Underrated fonts from curated CSV         |
+| Components | Card soup, generic modals         | Contextual surfaces, bento cells          |
+| Icons      | Font Awesome defaults             | Custom SVG, brand-specific marks          |
 
 ---
 
@@ -355,30 +355,30 @@ Every interface gets ONE motion personality. This drives all animation choices:
 
 ### Skills (3 complementary)
 
-| Skill | Purpose | References |
-|-------|---------|-----------|
-| **design-skill** | Creative choreography, motion, dopamine mapping | 18 reference docs |
-| **web-dev-frontend-skill** | Production UI engineering, accessibility, performance | 16 reference docs |
-| **web-dev-backend-skill** | API design, security, database architecture | 8 reference docs |
+| Skill                       | Purpose                                                | References        |
+|-----------------------------|--------------------------------------------------------|-------------------|
+| **design-skill**            | Creative choreography, motion, dopamine mapping        | 18 reference docs |
+| **web-dev-frontend-skill**  | Production UI engineering, accessibility, performance  | 16 reference docs |
+| **web-dev-backend-skill**   | API design, security, database architecture            | 8 reference docs  |
 
 ### Data Assets
 
-| Asset | Size | Content |
-|-------|------|---------|
-| `1000-human-made-design-elements.csv` | 93 KB | 1000 handcrafted elements across 50+ categories |
-| `1000-underrated-google-fonts.csv` | 176 KB | 1000 fonts with mood profiles, pairing suggestions |
-| `ai-slop-banned.csv` | 111 KB | Anti-AI-slop pattern library |
+| Asset                                 | Size   | Content                                           |
+|---------------------------------------|--------|---------------------------------------------------|
+| `1000-human-made-design-elements.csv` | 93 KB  | 1000 handcrafted elements across 50+ categories   |
+| `1000-underrated-google-fonts.csv`    | 176 KB | 1000 fonts with mood profiles, pairing suggestions|
+| `ai-slop-banned.csv`                  | 111 KB | Anti-AI-slop pattern library                      |
 
 ### Tools (6 zero-dependency)
 
-| Tool | Purpose |
-|------|---------|
-| `search.js` | CLI search across elements, fonts, images |
-| `svg-generator.js` | Mathematical vector logo generation |
-| `screenshot.js` | Headless browser capture + terminal vision |
-| `design-simulator.js` | Cognitive layout auditor |
-| `image-analyzer.js` | Raw PNG decoder + visual analyzer |
-| `self-evolver.js` | Autonomous reflexion loop coordinator |
+| Tool                  | Purpose                                      |
+|-----------------------|----------------------------------------------|
+| `search.js`           | CLI search across elements, fonts, images    |
+| `svg-generator.js`    | Mathematical vector logo generation          |
+| `screenshot.js`       | Headless browser capture + terminal vision   |
+| `design-simulator.js` | Cognitive layout auditor                     |
+| `image-analyzer.js`   | Raw PNG decoder + visual analyzer            |
+| `self-evolver.js`     | Autonomous reflexion loop coordinator        |
 
 ---
 
@@ -459,16 +459,16 @@ UI-UX-Skill/
 
 ## 🏆 2026 Standards Enforced
 
-| Standard | Implementation |
-|----------|---------------|
-| **Bento Grid 2.0** | Asymmetric, dynamic card layouts with deep organic squircles |
-| **Generative UI** | 4-state AI lifecycle: `idle` → `thinking` → `streaming` → `stabilizing` |
-| **APCA & WCAG 3.0** | Advanced Perceptual Contrast replacing outdated 4.5:1 ratios |
-| **CSS Scroll-Driven** | Native scroll-linked animations via `animation-timeline: view()` |
-| **Container Queries** | Component-level responsiveness via `@container` |
-| **OKLCH Colors** | Perceptually uniform color adjustments and "Mood Modes" |
-| **WebGPU** | Three.js compute shaders for high-framerate 3D |
-| **Sustainable UX** | Eco-brutalism, edge rendering, carbon-aware budgets |
+| Standard              | Implementation                                                          |
+|-----------------------|-------------------------------------------------------------------------|
+| **Bento Grid 2.0**    | Asymmetric, dynamic card layouts with deep organic squircles            |
+| **Generative UI**     | 4-state AI lifecycle: `idle` → `thinking` → `streaming` → `stabilizing` |
+| **APCA & WCAG 3.0**   | Advanced Perceptual Contrast replacing outdated 4.5:1 ratios            |
+| **CSS Scroll-Driven** | Native scroll-linked animations via `animation-timeline: view()`        |
+| **Container Queries** | Component-level responsiveness via `@container`                         |
+| **OKLCH Colors**      | Perceptually uniform color adjustments and "Mood Modes"                  |
+| **WebGPU**            | Three.js compute shaders for high-framerate 3D                           |
+| **Sustainable UX**    | Eco-brutalism, edge rendering, carbon-aware budgets                     |
 
 ---
 
@@ -492,6 +492,6 @@ A well-built interface does not announce itself. It disappears into the task. Th
 
 ## 📄 License
 
-MIT — Copyright (c) 2026 aggu000000-lgtm
+MIT — Copyright (c) 2026 aggu000000-lgtm (X: [@silent_butagrim](https://x.com/silent_butagrim))
 
 Do what you want with this. Just keep the license intact.

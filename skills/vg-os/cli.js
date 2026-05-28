@@ -612,20 +612,33 @@ Options:
       break;
 
     case 'test':
+      // 1. Compile current canvas state to index.html first
+      const compiledHtml = compileCanvas(state);
+      
+      // 2. Run local canvas coordinate audits
       const auditResult = runAudits(state);
       console.log('\n=============================================================');
-      console.log('🤖 AVANT-GARDE SPATIAL AUDITOR AND AUTO-TEST RUNNER');
+      console.log('🤖 AVANT-GARDE SPATIAL AUDITOR AND CANVAS CHECK');
       console.log(`Status: ${auditResult.status} | Score: ${auditResult.score}/100`);
       console.log('=============================================================\n');
       if (auditResult.logs.length === 0) {
-        console.log('✅ Standard compliant! Zero layout or APCA contrast violations.');
+        console.log('✅ Bounding layout compliant! Zero coordinate or APCA contrast violations.');
       } else {
         auditResult.logs.forEach(log => {
           const prefix = log.severity === 'high' ? '❌' : '⚠️';
           console.log(`${prefix} [${log.type}] ${log.message}`);
         });
       }
-      console.log('');
+      
+      // 3. Spawns design-simulator.js to execute deep taste audits on the compiled page
+      const simScript = path.join(process.cwd(), 'skills', 'utils', 'design-simulator.js');
+      console.log('\n--- EXECUTING DEEP TASTE & COGNITIVE AUDITS ---');
+      try {
+        const tasteOutput = require('child_process').execSync(`node "${simScript}" --file "${compiledHtml}"`, { encoding: 'utf8' });
+        console.log(tasteOutput);
+      } catch (e) {
+        console.error('Error running taste audits:', e.message);
+      }
       break;
 
     case 'search':

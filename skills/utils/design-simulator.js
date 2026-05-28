@@ -287,6 +287,97 @@ Example:
   `);
 }
 
+// Programmatic Taste & Anti-Slop Audit
+function runTasteAudits(cssText, htmlContent) {
+  const warnings = [];
+  let tasteScoreDeduction = 0;
+
+  // 1. Color Taste Check
+  const bannedColors = [
+    { value: '#3b82f6', name: 'Tailwind Blue-500' },
+    { value: '#2563eb', name: 'Tailwind Blue-600' },
+    { value: '#1d4ed8', name: 'Tailwind Blue-700' },
+    { value: '#4f46e5', name: 'Tailwind Indigo-600' },
+    { value: '#6366f1', name: 'Tailwind Indigo-500' },
+    { value: '#4338ca', name: 'Tailwind Indigo-700' },
+    { value: '#121212', name: 'Flat Dark (#121212)' },
+    { value: '#1a1a1a', name: 'Flat Dark (#1a1a1a)' },
+    { value: '#212121', name: 'Flat Dark (#212121)' }
+  ];
+
+  bannedColors.forEach(color => {
+    const regex = new RegExp(color.value, 'gi');
+    if (regex.test(cssText) || regex.test(htmlContent)) {
+      tasteScoreDeduction += 10;
+      warnings.push({
+        type: 'SLOP_COLOR_WARN',
+        severity: 'high',
+        message: `Banned generic color [${color.name} (${color.value})] detected. Flat static hexes are strictly forbidden. Use oklch() color spaces for custom lux-depth ambient lighting.`
+      });
+    }
+  });
+
+  // Check for purple-to-blue gradient slop
+  if (/linear-gradient\(.*(#4f46e5|#6366f1|indigo).*#3b82f6.*\)/gi.test(cssText) || 
+      /linear-gradient\(.*#3b82f6.*(#4f46e5|#6366f1|indigo).*\)/gi.test(cssText)) {
+    tasteScoreDeduction += 15;
+    warnings.push({
+      type: 'SLOP_COLOR_WARN',
+      severity: 'critical',
+      message: `Banned purple-to-blue gradient detected. This is a generic AI confort-zone cliché. Swap for multi-stop conic glow meshes or low-luminance OKLCH background surfaces.`
+    });
+  }
+
+  // 2. Typography Taste Check
+  const bannedFonts = ['Inter', 'Roboto', 'Poppins', 'Montserrat'];
+  bannedFonts.forEach(font => {
+    const regex = new RegExp(`font-family\\s*:\\s*[^;]*['"]?${font}['"]?`, 'gi');
+    if (regex.test(cssText)) {
+      tasteScoreDeduction += 10;
+      warnings.push({
+        type: 'SLOP_TYPOGRAPHY_WARN',
+        severity: 'high',
+        message: `Banned default typography [${font}] detected. Standard template body fonts are overused. Pull elegant underrated fonts from the CSV (e.g. Outfit, Space Grotesk, Instrument Serif).`
+      });
+    }
+  });
+
+  // 3. Animation Taste Check
+  const bannedAnimations = [
+    { pattern: /transition\s*:\s*all\s+0\.3s\s+ease-in-out/gi, name: 'transition-all duration-300 ease-in-out' },
+    { pattern: /transition\s*:\s*all\s+0\.3s\s+ease\b/gi, name: 'transition-all duration-300 ease' },
+    { pattern: /transition-duration\s*:\s*300ms/gi, name: 'duration-300' },
+    { pattern: /transition-duration\s*:\s*200ms/gi, name: 'duration-200' }
+  ];
+
+  bannedAnimations.forEach(anim => {
+    if (anim.pattern.test(cssText)) {
+      tasteScoreDeduction += 8;
+      warnings.push({
+        type: 'SLOP_ANIMATION_WARN',
+        severity: 'medium',
+        message: `Banned mechanical transition [${anim.name}] detected. Banned cubic-bezier curves are prohibited. Model natural physical acceleration using spring physics (e.g. var(--spring-flow) / cubic-bezier(0.25, 1.25, 0.25, 1)).`
+      });
+    }
+  });
+
+  // 4. Layout Symmetry Check (cardocalypse / simple grids)
+  if (/grid-template-columns\s*:\s*repeat\(\s*3\s*,\s*1fr\s*\)/gi.test(cssText) ||
+      /grid-template-columns\s*:\s*1fr\s+1fr\s+1fr/gi.test(cssText)) {
+    tasteScoreDeduction += 10;
+    warnings.push({
+      type: 'SLOP_LAYOUT_WARN',
+      severity: 'medium',
+      message: `Predictable 3-column symmetrical grid detected. Sterile layouts are overused. Elevate your design using asymmetrical Kinetic Bento configurations (e.g. 1.618fr 1fr 0.9fr).`
+    });
+  }
+
+  return {
+    deduction: Math.min(30, tasteScoreDeduction), // Cap taste deduction at 30 points
+    warnings
+  };
+}
+
 // Main coordinator
 function main() {
   const args = process.argv.slice(2);
@@ -353,6 +444,21 @@ function main() {
       structuralWarnings.push('- Interaction Physics: Linear transitions or non-spring ease curves detected. Integrate spring easing `cubic-bezier(0.34, 1.56, 0.64, 1)`.');
     }
 
+    // Programmatic Taste & Slop Audit
+    const tasteAudit = runTasteAudits(cssText, htmlContent);
+    
+    // Calculate final taste score (base 100)
+    let tasteScore = 100;
+    tasteScore -= tasteAudit.deduction;
+    if (structuralWarnings.length > 0) {
+      tasteScore -= (structuralWarnings.length * 5); // deduct 5 points per structural issue
+    }
+    tasteScore = Math.max(0, tasteScore);
+
+    const tasteRating = tasteScore >= 90 ? 'God-Tier Taste (Zenith)' : 
+                        tasteScore >= 75 ? 'Mainstream Average (Passable)' : 
+                        'AI-Slop Detected (Failing)';
+
     // Print ASCII gravity visual canvas
     console.log('--- VISUAL DENSITY BALANCE CANVAS ---');
     console.log(asciiMap);
@@ -365,11 +471,26 @@ function main() {
     console.log(`- APCA Contrast Verification: Perceptual Lightness Compliance Checked.`);
     console.log(`- Layout Balance Advice: ${friction.advice}\n`);
 
+    console.log('--- GOD-TIER TASTE AUDIT ---');
+    console.log(`- Taste & Aesthetic Score: ${tasteScore}/100 | Rating: ${tasteRating}`);
+    if (tasteAudit.warnings.length === 0 && structuralWarnings.length === 0) {
+      console.log('✅ Absolute design compliance! Zero layout, color slop, or typography violations.');
+    } else {
+      tasteAudit.warnings.forEach(warn => {
+        const prefix = warn.severity === 'critical' ? '❌' : '⚠️';
+        console.log(`${prefix} [${warn.type}] ${warn.message}`);
+      });
+      structuralWarnings.forEach(w => {
+        console.log(`⚠️ [STRUCTURAL_WARN] ${w.replace('- ', '')}`);
+      });
+    }
+    console.log('');
+
     console.log('--- STRUCTURAL DESIGN CRITIQUE ---');
-    if (structuralWarnings.length === 0) {
+    if (tasteAudit.warnings.length === 0 && structuralWarnings.length === 0) {
       console.log('✨ Clean design compliance! All visual weights, Gestalt spacing patterns, and typographic rhythm rules pass.');
     } else {
-      structuralWarnings.forEach(w => console.log(w));
+      console.log('Defects were detected in the layout code. Apply the dedicated CSS repair directives to achieve God-Tier taste.');
     }
     console.log('\n*Design Calculus Complete. Reason about the results above to perfect the code layout!*');
 

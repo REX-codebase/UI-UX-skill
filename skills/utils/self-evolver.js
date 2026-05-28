@@ -104,11 +104,38 @@ function compileMutationRecipes(simulatorOutput, screenshotOutput) {
   }
 
   // Spring physics logic
-  if (simulatorOutput.includes('Interaction Physics') || simulatorOutput.includes('spring')) {
+  if (simulatorOutput.includes('Interaction Physics') || simulatorOutput.includes('spring') || simulatorOutput.includes('SLOP_ANIMATION_WARN')) {
     recipes.push({
-      metric: 'Robotic Interaction physics',
+      metric: 'Robotic Interaction Physics',
       issue: 'Linear transitions or low-quality easing curves detected. Visual movement feels flat and mechanical.',
-      action: 'ACTION: Emulate the physical universe! Update all hover, scale, and active animation timers to use standard spring easing bezier curves: `transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);`.'
+      action: 'ACTION: Newtonian Spring Physics! Replace linear transitions or static cubic-beziers with physical spring easing tokens: `transition: all 0.5s cubic-bezier(0.25, 1.25, 0.25, 1);` or button hover spring snap `transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);`.'
+    });
+  }
+
+  // Programmatic Taste: Color Slop recipe
+  if (simulatorOutput.includes('SLOP_COLOR_WARN')) {
+    recipes.push({
+      metric: 'Banned Color Slop Detected',
+      issue: 'Your stylesheet contains generic default Tailwind colors (e.g. blue-500, indigo-600) or a standard purple-to-blue gradient overlay.',
+      action: 'ACTION: Cleanse the palette! Remove flat hexes and replace them with warm, hue-shifted low-luminance OKLCH values (e.g., background: `oklch(11% 0.01 240)`, panels: `oklch(15% 0.015 240)`, accents: `oklch(85% 0.16 160)`). Introduce multi-stop conic ambient glow meshes (`conic-gradient`) blurred at 80px.'
+    });
+  }
+
+  // Programmatic Taste: Typography Slop recipe
+  if (simulatorOutput.includes('SLOP_TYPOGRAPHY_WARN')) {
+    recipes.push({
+      metric: 'Banned Typography Slop Detected',
+      issue: 'Your stylesheet specifies generic default body fonts (e.g. Inter, Roboto, Poppins) which lack custom character and premium aesthetic pairing.',
+      action: 'ACTION: Upgrade font-families! Swap default fonts for underrated visual pairings: `Outfit` or `Space Grotesk` for geometric labels/metadata, and elegance `Instrument Serif` (italicized) for large displays.'
+    });
+  }
+
+  // Programmatic Taste: Layout Slop recipe
+  if (simulatorOutput.includes('SLOP_LAYOUT_WARN')) {
+    recipes.push({
+      metric: 'Symmetrical Layout Slop Detected',
+      issue: 'Your grid layout uses sterile, repeating equal-width columns (e.g. grid-cols-3) which lack editorial rhythm and hierarchy.',
+      action: 'ACTION: Kinetic Bento Layout! Replace equal columns with asymmetric fractional tracks matching the Golden Ratio (e.g. `grid-template-columns: 1.618fr 1fr 0.9fr;`) and add subtle 3D hover rotation transforms (`transform: translateZ(24px) rotateX(2deg) rotateY(-2deg);`).'
     });
   }
 

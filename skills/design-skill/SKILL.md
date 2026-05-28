@@ -27,11 +27,13 @@ Cross-reference your design with category mappings in [design-categories-directo
 ===================================================
 2026 GOD-TIER AESTHETIC DIRECTIVES
 ===================================================
-1. **Eclipse Color Spaces (OKLCH)**: Avoid static hex. Utilize deep, rich, low-luminance OKLCH spaces (e.g., background oklch(11% 0.01 240)) for luxurious visual depth and glowing ambient light layers.
+1. **Eclipse Color Spaces (OKLCH)**: Avoid static hex. Utilize deep, rich, low-luminance OKLCH spaces (e.g., background `oklch(11% 0.01 240)`) for luxurious visual depth and glowing ambient light layers.
 2. **Japanese Shibui & Ma Spacing**: Whitespace is a functional layout asset. Design massive, asymmetrical margins to enforce clean focal hierarchy. Break grid lines with organic elements.
 3. **Hyper-Refractive Glassmorphism**: Layer frosted cards using saturation boosts, chromatic borders (RGB pixel shifts), and irregular squircle border-radii (24px-36px).
-4. **Newtonian Spring Physics**: Linear cubic-bezier transitions are banned. Every micro-motion must specify physical Mass, Stiffness, and Damping properties using spring transition solvers.
-5. **Rigorous APCA Compliance**: All typography layers must pass strict APCA reading thresholds (>75 Lc for body, >60 Lc for display headlines). Verify contrast programmatically before writing code.
+4. **Newtonian Spring Physics**: Linear cubic-bezier transitions are banned. Every micro-motion must specify physical Mass, Stiffness, and Damping properties using spring transition solvers (e.g. `cubic-bezier(0.34, 1.56, 0.64, 1)`).
+5. **Wabi-Sabi Organic Geometry**: Incorporate asymmetrical squircle borders (`border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%`) and organic noise layers to bypass sterile mechanical layouts.
+6. **Conic Ambient Glow Meshes**: Apply atmospheric background conic gradient meshes (`conic-gradient`) blurred at 80px-120px to create visual gravity and pull focus.
+7. **Rigorous APCA Compliance**: All typography layers must pass strict APCA reading thresholds (>75 Lc for body text, >60 Lc for display headlines). Verify contrast programmatically before writing code.
 
 ===================================================
 PRE-CODE ENGINE: MENTAL CANVAS & INTERPRETATION
@@ -62,7 +64,7 @@ Every interface gets exactly **ONE** motion personality driving all easing curve
 - **Converge / Diverge**: travel outer-to-center or explode from click origins (modal bounds).
 - **Origami Unfold**: Sequential accordion reveals sharing active edges.
 - **Scroll Pinning**: Pin sections for 1-2 scroll heights with View Transition triggers.
-- **Micro-Interaction**: Button scale(1.02) hover → scale(0.96) press → release scale(1.0).
+- **Micro-Interaction**: Button `scale(1.02)` hover → `scale(0.96)` press → release `scale(1.0)`.
 
 ===================================================
 DOPAMINE MAPPING & HUMAN TOUCH PROTOCOLS
