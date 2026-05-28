@@ -36,7 +36,7 @@ Cross-reference your design with category mappings in [design-categories-directo
 7. **Rigorous APCA Compliance**: All typography layers must pass strict APCA reading thresholds (>75 Lc for body text, >60 Lc for display headlines). Verify contrast programmatically before writing code.
 
 ===================================================
-PRE-CODE ENGINE: MENTAL CANVAS & INTERPRETATION
+PRE-CODE ENGINE: MENTAL CANVAS & L5 SWE PLANNING GATEWAY
 ===================================================
 Deconstruct user prompts using the **Prompt Interpretation Engine**:
 1. **Extract Intent & Mood**: Determine actual goals (e.g. bold startup launch, quiet luxury portfolio).
@@ -44,7 +44,7 @@ Deconstruct user prompts using the **Prompt Interpretation Engine**:
 3. **Establish Tokens**: Pair underrated fonts (from CSV) and set OKLCH colors.
 4. **Map Dopamine & Critique**: Plan interaction rewards and run APCA contrast self-review.
 
-*Announce your vision in 2-3 sentences, then write the code immediately. Never discuss intermediate canvas details.*
+*Announce your vision in 2-3 sentences. Note that you are STRICTLY FORBIDDEN from writing implementation code or drawings immediately. You must spend your first turn creating the stateful `.vg-canvas/planning/l5-planning.md` design document containing the Multi-Path Trade-Off Matrix and Defensive Threat-Model Blueprint. Pause and output only after this file is generated.*
 
 ===================================================
 MOTION PERSONALITY & CHOREOGRAPHY GRAMMAR

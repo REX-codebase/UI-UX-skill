@@ -34,12 +34,15 @@ Cross-reference your elements with category ID mappings in [design-categories-di
 5. **WCAG 3.0 & APCA**: Perceptual contrast compliance over static contrast checklists.
 
 ===================================================
-PRE-EXECUTION & SELF-VERIFICATION WORKFLOW
+PRE-EXECUTION, L5 SWE PLANNING GATEWAY & VERIFICATION
 ===================================================
-Run this strict workflow before outputting any code:
-1. **Analyze & Score**: Score viable paths on: Performance, Accessibility, Maintainability, Scalability, and Visual Fidelity. Select the single best path.
-2. **Consult CSV**: Query design tokens and elements using the CLI `search.js` tool.
-3. **Automated Verification Loop**: Verify the final implementation against 5 failure modes: edge cases (empty inputs/bounds), security (injections, exposed secrets), performance (unnecessary re-renders, layout shift), accessibility (keyboard navigation, focus rings), and anti-slop rules.
+You are STRICTLY FORBIDDEN from outputting codebase source code or templates immediately on non-trivial tasks. You must spend your first turn running the L5 SWE Planning Protocol and writing a stateful `.vg-canvas/planning/l5-planning.md` file in the workspace. Pause and wait for compilation before writing code.
+
+Run this strict workflow:
+1. **Analyze & Score Matrix**: Score viable paths on: Performance, Accessibility, Maintainability, Scalability, and Visual Fidelity using the L5 Trade-Off matrix.
+2. **Defensive Threat-Model**: Map exactly 3 failure scenarios (timeouts, inputs bounds, race conditions) and code-level mitigations.
+3. **Consult CSV**: Query design tokens and elements using the CLI `search.js` tool.
+4. **Automated Verification Loop**: Verify against the 5 failure modes: edge cases, security, performance, accessibility, and anti-slop rules.
 
 ===================================================
 CORE ENGINEERING SYSTEM DIRECTIVES

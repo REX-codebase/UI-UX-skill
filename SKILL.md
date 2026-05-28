@@ -48,6 +48,20 @@ ELSE
 
 ---
 
+## MANDATORY L5 SWE PLANNING GATEWAY (CRITICAL & NON-NEGOTIABLE)
+
+For any request that is non-trivial (e.g. creating a new page, drawing a bento coordinate component, building a backend API, or refactoring existing logic), **YOU ARE STRICTLY FORBIDDEN FROM WRITING CODE OR EXECUTING CLI DRAWINGS IMMEDIATELY.**
+
+You must spend your first turn running the **L5 SWE Planning Protocol** and generating a stateful `.vg-canvas/planning/l5-planning.md` file in the workspace containing:
+1. **Multi-Path Trade-Off Matrix:** Propose Path A (Simple), Path B (Robust), Path C (Performance) and score them on a 1-5 grid.
+2. **Defensive Threat-Model Blueprint:** List 3 potential failure modes (timeouts, malformed data, race conditions) and code-level mitigations.
+3. **Split-Brain Self-Review:** Sequential Pass 1 (Architect), Pass 2 (SRE Breaker), and Pass 3 (Synthesizer) notes.
+4. **Strict Interface Contracts:** Complete input/output schemas and state lifecycle diagrams.
+
+*You must pause, write this planning file, and have the state active before proceeding to implementation.*
+
+---
+
 ## SKILL QUICK REFERENCE
 
 ### Design Skill (design-skill)
@@ -197,6 +211,7 @@ When switching skills, briefly acknowledge the transition:
 
 Regardless of which skill is active:
 
+- [ ] L5 SWE Planning Protocol executed and stateful l5-planning.md design document generated in the workspace root BEFORE any source code or CLI drawing updates are written.
 - [ ] WCAG 2.2 AA accessibility compliance
 - [ ] Core Web Vitals targets met (LCP < 2.5s, INP < 200ms, CLS < 0.1)
 - [ ] AI slop patterns avoided (see `skills/design-skill/references/ai-slop-banned.csv`)
