@@ -4,3 +4,4 @@ gha-creds-*.json
 .edge-profile/
 .chrome-profile-*/
 .edge-profile-*/
+evolution-prompt.md
