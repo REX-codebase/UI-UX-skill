@@ -94,6 +94,26 @@ Paste the contents of `SKILL.md` at the start of your conversation, then describ
 
 ---
 
+## 🔎 Interactive CLI Search & Visual Bento Explorer
+
+To conserve tokens and preserve context window space for AI agents, this skill system includes built-in programmatic query tools and a gorgeous local web dashboard:
+
+### 1. Zero-Dependency CLI Search Engine
+Directly search through elements, fonts, and images using standard Node.js:
+- **Search Handcrafted Elements**: `node skills/utils/search.js --elements "<query>"` (optional filter: `--category "<Category>"`)
+- **Search Underrated Google Fonts**: `node skills/utils/search.js --fonts "<query>"` (optional filters: `--classification "<Serif|Sans Serif|...>"`, `--mood "<Mood>"`)
+- **Search Royalty-Free Images**: `node skills/utils/search.js --images "<query>"` (Returns direct Unsplash CDN URLs and photographer credits; automatically triggers offline fallbacks).
+
+### 2. Bento Grid 2.0 Visual Explorer Dashboard
+Launch a premium local web interface featuring glassmorphic Bento cards, live Google Fonts previewing, and a masonry layout of real royalty-free images:
+```bash
+# Start the lightweight static HTTP server
+node skills/explorer/server.js
+```
+Open **`http://localhost:3000`** in your browser to interact with the system visually.
+
+---
+
 ## 🎯 Automatic Skill Routing
 
 The orchestrator automatically detects which skill to load:

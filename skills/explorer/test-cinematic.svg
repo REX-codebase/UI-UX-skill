@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Elegant Linear Gradient portals -->
+    <linearGradient id="cine-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="oklch(0.65 0.16 300)"/>
+      <stop offset="100%" stop-color="oklch(0.78 0.15 140)"/>
+    </linearGradient>
+    <linearGradient id="cine-grad-2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="oklch(0.78 0.15 140)"/>
+      <stop offset="100%" stop-color="oklch(0.65 0.16 300)"/>
+    </linearGradient>
+    <filter id="cine-portal-glow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Rich Dark Slate Background -->
+  <rect width="100%" height="100%" fill="#08080c" rx="40"/>
+  
+  <!-- Concentric cinematic light rings -->
+  <circle cx="250" cy="200" r="160" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+  <circle cx="250" cy="200" r="130" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1.5"/>
+
+  <!-- High-Precision Typographic Portal Loop (Infinite geometry) -->
+  <g filter="url(#cine-portal-glow)" stroke-linecap="round">
+    <!-- Infinite Portal Loop path -->
+    <path d="M 200,200 C 140,140 140,260 200,200 C 260,140 340,260 290,200" 
+          fill="none" stroke="url(#cine-grad-1)" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M 300,200 C 360,140 360,260 300,200 C 240,140 160,260 210,200" 
+          fill="none" stroke="url(#cine-grad-2)" stroke-width="6" stroke-linejoin="round" opacity="0.8"/>
+  </g>
+  
+  <!-- Portal light beads -->
+  <circle cx="250" cy="200" r="4" fill="#ffffff" filter="drop-shadow(0 0 8px #ffffff)"/>
+
+  <!-- Cinematic Wordmark Typography -->
+  <text x="250" y="415" text-anchor="middle" 
+        fill="#ffffff" 
+        font-family="'Instrument Serif', serif" 
+        font-size="44" 
+        letter-spacing="0.12em" 
+        font-weight="300" 
+        font-style="italic">Infinite</text>
+  <line x1="180" y1="435" x2="320" y2="435" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <text x="250" y="455" text-anchor="middle" 
+        fill="rgba(255, 255, 255, 0.35)" 
+        font-family="'Outfit', sans-serif" 
+        font-size="9" 
+        letter-spacing="0.5em" 
+        font-weight="600">CINEMATIC CHOREOGRAPHY</text>
+</svg>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avant-Garde UI-UX Visual Explorer & Media Engine</title>
+  <!-- Load Premium typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="explorer.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎨</text></svg>">
+</head>
+<body>
+  <!-- Ambient glowing background textures (Glassmorphism 2.0 layer) -->
+  <div class="ambient-glow glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow glow-2" aria-hidden="true"></div>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <div class="app-container">
+    <!-- Header Hero Card (Bento Cell 1) -->
+    <header class="bento-card hero-card">
+      <div class="hero-brand">
+        <span class="badge">ESTD 2026</span>
+        <h1>Avant-Garde</h1>
+        <p class="subtitle">UI-UX DESIGN SYSTEM EXPLORER & MEDIA SUITE</p>
+      </div>
+      <div class="hero-description">
+        <p>A disciplined discipline for building interfaces that breathe. Search handcrafted design elements, query underrated Google Fonts, and fetch live royalty-free photography instantly.</p>
+        <div class="quick-status">
+          <div class="status-indicator">
+            <span class="pulse-dot"></span>
+            <span>Local Media Server Active</span>
+          </div>
+          <div class="mode-toggle-container">
+            <button id="themeToggle" class="btn-icon" aria-label="Toggle Mood Mode">🌗</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Dynamic Navigation Bento Columns (Bento Cell 2) -->
+    <aside class="bento-card nav-card">
+      <h2>Ecosystem Tools</h2>
+      <nav id="mainNav" role="navigation">
+        <button class="nav-btn active" data-tab="elements" id="tabElementsBtn">
+          <span class="nav-icon">🎭</span>
+          <span class="nav-text">Design Elements</span>
+        </button>
+        <button class="nav-btn" data-tab="fonts" id="tabFontsBtn">
+          <span class="nav-icon">🔤</span>
+          <span class="nav-text">Underrated Fonts</span>
+        </button>
+        <button class="nav-btn" data-tab="images" id="tabImagesBtn">
+          <span class="nav-icon">🖼️</span>
+          <span class="nav-text">Image Engine</span>
+        </button>
+      </nav>
+      <div class="nav-footer">
+        <p class="ref-license">MIT — 2026 Standards compliant</p>
+      </div>
+    </aside>
+
+    <!-- Interactive Search Command Center (Bento Cell 3) -->
+    <main class="bento-card search-card">
+      <div class="search-bar-container">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search across design elements..." aria-label="Database Search">
+          <button id="clearSearchBtn" class="btn-clear" aria-label="Clear Search">✕</button>
+        </div>
+      </div>
+
+      <!-- Elements Category Filters -->
+      <div class="filter-bar" id="elementsFilters">
+        <label for="categorySelect" class="sr-only">Filter by Category</label>
+        <select id="categorySelect" class="styled-select">
+          <option value="">All Categories</option>
+          <option value="Typography">Typography</option>
+          <option value="Texture">Texture</option>
+          <option value="Color">Color</option>
+          <option value="Layout">Layout</option>
+          <option value="Micro-interaction">Micro-interactions</option>
+          <option value="Illustration">Illustration</option>
+          <option value="UI Component">UI Components</option>
+          <option value="Navigation">Navigation</option>
+          <option value="Scroll Effect">Scroll Effects</option>
+          <option value="Hover State">Hover States</option>
+          <option value="Loading State">Loading States</option>
+          <option value="Form Design">Form Design</option>
+          <option value="Button">Buttons</option>
+          <option value="Card Design">Card Design</option>
+          <option value="Animation">Animation</option>
+          <option value="Transition">Transitions</option>
+          <option value="Empty State">Empty States</option>
+          <option value="Error State">Error States</option>
+          <option value="Success State">Success States</option>
+          <option value="Accessibility">Accessibility</option>
+        </select>
+      </div>
+
+      <!-- Fonts Specialized Filters -->
+      <div class="filter-bar hidden" id="fontsFilters">
+        <label for="classificationSelect" class="sr-only">Classification</label>
+        <select id="classificationSelect" class="styled-select">
+          <option value="">All Classifications</option>
+          <option value="Serif">Serif</option>
+          <option value="Sans Serif">Sans Serif</option>
+          <option value="Monospace">Monospace</option>
+          <option value="Script">Script</option>
+          <option value="Display">Display</option>
+        </select>
+
+        <label for="moodSelect" class="sr-only">Mood / Personality</label>
+        <select id="moodSelect" class="styled-select">
+          <option value="">All Moods</option>
+          <option value="warm">Warmth</option>
+          <option value="elegance">Elegance / Sophistication</option>
+          <option value="technical">Technical / Precise</option>
+          <option value="friendly">Friendly / Rounded</option>
+          <option value="geometric">Geometric</option>
+          <option value="historical">Historical / Vintage</option>
+          <option value="artistic">Artistic / Dramatic</option>
+        </select>
+      </div>
+
+      <!-- Dynamic Interactive Search Results Container -->
+      <section class="results-container" id="resultsSection">
+        <div class="loading-state" id="loadingIndicator">
+          <div class="spinner"></div>
+          <p>Querying the database...</p>
+        </div>
+        <div class="grid-layout elements-grid" id="elementsGrid"></div>
+        <div class="grid-layout fonts-grid hidden" id="fontsGrid"></div>
+        <div class="grid-layout images-grid hidden" id="imagesGrid"></div>
+        <div class="empty-state hidden" id="emptyState">
+          <span>🏜️</span>
+          <h3>No matches found</h3>
+          <p>Try adjusting your search criteria or category filters.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Font Live Previewer Bento Card (Right Sidebar - Bento Cell 4) -->
+    <section class="bento-card preview-card hidden" id="fontPreviewCard">
+      <h2>Live Font Canvas</h2>
+      <div class="preview-text-box">
+        <label for="previewTextInput">Customize Preview Text</label>
+        <input type="text" id="previewTextInput" value="Elegance is not about adding beauty. It is about removing friction.">
+      </div>
+      <div class="font-stage" id="fontStage">
+        <p id="fontStageText">Elegance is not about adding beauty. It is about removing friction.</p>
+      </div>
+      <div class="font-meta-details">
+        <h3 id="previewFontName">Instrument Serif</h3>
+        <p id="previewFontUseCase">Luxury brand headers and editorial storytelling.</p>
+        <div class="code-generator">
+          <pre><code id="fontCodeSnippet">@import url('https://fonts.googleapis.com/...');</code></pre>
+          <button id="copyFontSnippetBtn" class="btn-copy">Copy Import CSS</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Photo details preview Card (Right Sidebar - Bento Cell 5) -->
+    <section class="bento-card media-preview-card hidden" id="mediaPreviewCard">
+      <h2>Selected Photo Specs</h2>
+      <div class="media-stage">
+        <img id="mediaStageImg" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==" alt="Preview placeholder">
+      </div>
+      <div class="media-meta-details">
+        <p class="photographer-credit">Captured by <a href="#" id="mediaAuthorLink" target="_blank">Milad Fakurian</a> on Unsplash</p>
+        <p class="photo-desc" id="mediaPhotoDesc">A serene abstract fluid wave texture ideal for design overlays.</p>
+        <div class="code-generator">
+          <button id="copyImageMarkdownBtn" class="btn-copy">Copy Markdown Link</button>
+          <button id="copyImageUrlBtn" class="btn-copy">Copy Direct URL</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="explorer.js"></script>
+</body>
+</html>

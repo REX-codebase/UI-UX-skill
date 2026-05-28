@@ -1,2 +1,6 @@
 .gemini/
 gha-creds-*.json
+.chrome-profile/
+.edge-profile/
+.chrome-profile-*/
+.edge-profile-*/

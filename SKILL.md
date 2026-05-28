@@ -110,6 +110,39 @@ All skills share these reference files:
 
 ---
 
+## SEARCH & MEDIA TOOLING SYSTEM
+
+To optimize token consumption and prevent context window decay, loading agents MUST NOT parse the massive reference CSV files manually. You are equipped with direct CLI tools and an interactive visual browser:
+
+### 1. The Design & Media Search Engine (CLI)
+Query elements, fonts, and images programmatically. It runs with zero external dependencies:
+- **Search Design Elements**: `node skills/utils/search.js --elements "<query>"` (optional filter: `--category "<Category>"`)
+- **Search Underrated Fonts**: `node skills/utils/search.js --fonts "<query>"` (optional filters: `--classification "<Serif|Sans Serif|...>"`, `--mood "<Mood>"`)
+- **Royalty-Free Image Search**: `node skills/utils/search.js --images "<query>"` (Returns direct Unsplash CDN URLs and photographer credits; automatically triggers resilient offline fallback modes).
+
+### 2. Precise SVG Logo Generation Engine
+Construct mathematically perfect vector logo files programmatically using raw JS:
+- **Command**: `node skills/utils/svg-generator.js --type <bento|organic|brutalist|cinematic> --name "<brand>" --output "<file.svg>"`
+- Focuses on gradient meshes, organic displacements, brutalist wireframes, and cinematic marks with complete responsive vector scaling.
+
+### 3. The Bento Grid Visual Explorer (GUI)
+Start the local HTTP web explorer to visually browse, search, and live-preview all assets:
+- **Launch Server**: `node skills/explorer/server.js`
+- **Access App**: Open `http://localhost:3000` (or `http://localhost:3001`) in your browser to interact with the responsive glassmorphic dashboard.
+
+### 4. Multimodal Terminal Vision System
+Zero-dependency headless page capture tool that allows non-multimodal and text-only AI agents to "see" what they build by rendering truecolor ANSI blocks and an ASCII luminance blueprint in stdout:
+- **Command**: `node skills/utils/screenshot.js --url <target> --output <filepath> --view`
+- **Options**:
+  - `--url <target>`: A web address or absolute path to a local HTML file (e.g., `skills/explorer/index.html` or `http://localhost:3000`)
+  - `--output <filepath>`: Destination file path for the captured PNG screenshot (e.g., `skills/explorer/screenshot-test.png`)
+  - `--view`: Decodes and visualizes the captured screenshot live in the terminal
+  - `--width <pixels>`: Headless browser viewport width (default: 1280)
+  - `--height <pixels>`: Headless browser viewport height (default: 800)
+- **Vision Loop**: Enables agents to visually evaluate contrast, colors, and layout structure in real time, and ensures all designs align with HSL/OKLCH palette standards without requiring multimodal APIs.
+
+---
+
 ## CROSS-SKILL INTEGRATION
 
 When a request spans multiple domains, activate skills in sequence and maintain state via handoff files:
