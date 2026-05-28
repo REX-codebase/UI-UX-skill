@@ -8,7 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const { spawn, execSync } = require('child_process');
 
 // Standard Windows paths for Google Chrome and Microsoft Edge executables
 const BROWSER_PATHS = [
@@ -22,10 +22,47 @@ const BROWSER_PATHS = [
   path.join('C:', 'Program Files', 'Microsoft', 'Edge', 'Application', 'msedge.exe')
 ];
 
-// Scan Windows file system to find a valid headless browser executable path
+// Scan file system or executables to find a valid headless browser executable path (Windows, Linux, macOS)
 function findBrowserPath() {
-  for (const bp of BROWSER_PATHS) {
-    if (fs.existsSync(bp)) return bp;
+  if (process.platform === 'win32') {
+    for (const bp of BROWSER_PATHS) {
+      if (fs.existsSync(bp)) return bp;
+    }
+  } else {
+    // Linux or macOS
+    const candidates = [
+      'google-chrome',
+      'google-chrome-stable',
+      'chromium-browser',
+      'chromium',
+      '/usr/bin/google-chrome',
+      '/usr/bin/google-chrome-stable',
+      '/usr/bin/chromium',
+      '/usr/bin/chromium-browser',
+      '/usr/local/bin/google-chrome'
+    ];
+
+    if (process.platform === 'darwin') {
+      candidates.push('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome');
+      candidates.push('/Applications/Chromium.app/Contents/MacOS/Chromium');
+    }
+
+    for (const candidate of candidates) {
+      if (candidate.startsWith('/')) {
+        if (fs.existsSync(candidate)) return candidate;
+      } else {
+        try {
+          const resolvedPath = execSync(`which ${candidate}`, { stdio: ['ignore', 'pipe', 'ignore'] })
+            .toString()
+            .trim();
+          if (resolvedPath && fs.existsSync(resolvedPath)) {
+            return resolvedPath;
+          }
+        } catch (e) {
+          // command lookup failed, try next
+        }
+      }
+    }
   }
   return null;
 }
@@ -33,21 +70,36 @@ function findBrowserPath() {
 // Launches headless browser child process to capture visual screenshot
 function captureHeadless(browserPath, targetUrl, outputPath, width = 1280, height = 800) {
   return new Promise((resolve, reject) => {
-    const tempProfileDir = path.join(path.dirname(outputPath), '.chrome-profile');
+    // Generate a unique chrome profile directory to prevent concurrency lockouts
+    const uniqueSuffix = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+    const tempProfileDir = path.join(path.dirname(outputPath), `.chrome-profile-${uniqueSuffix}`);
+    
     try {
       if (!fs.existsSync(tempProfileDir)) {
         fs.mkdirSync(tempProfileDir, { recursive: true });
       }
     } catch (e) {
-      // fallback if permission issues, though local workspace should be writable
+      // fallback if permission issues
     }
+
+    const cleanup = () => {
+      try {
+        if (fs.existsSync(tempProfileDir)) {
+          fs.rmSync(tempProfileDir, { recursive: true, force: true });
+        }
+      } catch (err) {
+        // Safe catch if files are temporarily locked
+      }
+    };
+
+    const cleanOutputPath = outputPath.replace(/\\/g, '/');
 
     // Standard Chromium headless screenshot parameters
     const args = [
-      '--headless=new',
+      '--headless',
       '--no-sandbox',
-      '--window-position=-2400,-2400',
       '--disable-gpu',
+      '--virtual-time-budget=3000',
       '--disable-software-rasterizer',
       '--disable-gpu-compositing',
       '--disable-gpu-sandbox',
@@ -56,7 +108,7 @@ function captureHeadless(browserPath, targetUrl, outputPath, width = 1280, heigh
       '--disable-dev-shm-usage',
       '--disable-setuid-sandbox',
       '--hide-scrollbars',
-      `--user-data-dir=${tempProfileDir}`,
+      `--user-data-dir=${tempProfileDir.replace(/\\/g, '/')}`,
       '--remote-debugging-port=0',
       '--disable-background-networking',
       '--disable-default-apps',
@@ -64,11 +116,15 @@ function captureHeadless(browserPath, targetUrl, outputPath, width = 1280, heigh
       '--disable-sync',
       '--no-first-run',
       `--window-size=${width},${height}`,
-      `--screenshot=${outputPath}`,
+      `--screenshot=${cleanOutputPath}`,
       targetUrl
     ];
 
-    const child = spawn(browserPath, args, { stdio: 'ignore' });
+    const child = spawn(browserPath, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    let stderrData = '';
+    child.stderr.on('data', (data) => {
+      stderrData += data.toString();
+    });
 
     // Active polling to check if the screenshot file is written, allowing instant exit
     let resolved = false;
@@ -80,7 +136,10 @@ function captureHeadless(browserPath, targetUrl, outputPath, width = 1280, heigh
             clearInterval(pollInterval);
             resolved = true;
             child.kill(); // clean up and terminate browser
-            resolve(outputPath);
+            setTimeout(() => {
+              cleanup();
+              resolve(outputPath);
+            }, 150); // small delay to release process file-locks
           }
         } catch (e) {
           // stats read could fail if file is locked during write, ignore and try next tick
@@ -91,11 +150,14 @@ function captureHeadless(browserPath, targetUrl, outputPath, width = 1280, heigh
     child.on('close', (code) => {
       clearInterval(pollInterval);
       if (resolved) return;
-      if (fs.existsSync(outputPath)) {
-        resolve(outputPath);
-      } else {
-        reject(new Error(`Headless process closed with exit code ${code} without writing file.`));
-      }
+      setTimeout(() => {
+        cleanup();
+        if (fs.existsSync(outputPath)) {
+          resolve(outputPath);
+        } else {
+          reject(new Error(`Headless process closed with exit code ${code} without writing file.\nStderr:\n${stderrData}`));
+        }
+      }, 150);
     });
 
     // Enforce 15-second timeout safeguard to prevent hanging
@@ -103,7 +165,10 @@ function captureHeadless(browserPath, targetUrl, outputPath, width = 1280, heigh
       clearInterval(pollInterval);
       if (resolved) return;
       child.kill();
-      reject(new Error('Headless browser screenshot capture timed out (15s limit reached).'));
+      setTimeout(() => {
+        cleanup();
+        reject(new Error(`Headless browser screenshot capture timed out (15s limit reached).\nStderr:\n${stderrData}`));
+      }, 150);
     }, 15000);
   });
 }

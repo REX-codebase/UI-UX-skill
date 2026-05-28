@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avant-Garde UI-UX Virtual Design OS Dashboard</title>
+  <!-- Load Premium typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖥️</text></svg>">
+</head>
+<body>
+  <!-- Ambient glowing background textures (Glassmorphism 2.0 layer) -->
+  <div class="ambient-glow glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow glow-2" aria-hidden="true"></div>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <div class="app-container">
+    <!-- Header Bento Card -->
+    <header class="bento-card hero-card">
+      <div class="hero-brand">
+        <span class="badge">SYSTEM KERNEL ACTIVE</span>
+        <h1>vg-os</h1>
+        <p class="subtitle">AVANT-GARDE VECTOR CANVAS & RESPONSIBILITY AUDITOR</p>
+      </div>
+      <div class="hero-description">
+        <p>A headless visual compiler and testing dashboard built for AI-driven layout drafting. Predict shapes, build responsive code, and run pixel audits without leaving the command line.</p>
+        <div class="quick-status">
+          <div class="status-indicator">
+            <span class="pulse-dot"></span>
+            <span id="connectionStatus">CLI Node Connection Synced</span>
+          </div>
+          <button id="recompileBtn" class="btn-primary">Recompile Layout</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation / Control Sidebar (Bento Cell 2) -->
+    <aside class="bento-card control-card">
+      <h2>Canvas Settings</h2>
+      <div class="canvas-details-form">
+        <div class="form-group">
+          <label>Dimensions</label>
+          <div class="input-row">
+            <span id="canvasWidthVal">1280</span> <span class="lbl-x">×</span> <span id="canvasHeightVal">800</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Background Fill</label>
+          <div class="color-preview-wrapper">
+            <div id="canvasBgIndicator" class="color-circle"></div>
+            <span id="canvasBgVal">#0b0c10</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sub-h">FigmaML Layer Inspect</h2>
+      <div class="layers-container" id="layersList">
+        <div class="empty-layers">No active visual layers found. Draw elements via CLI.</div>
+      </div>
+    </aside>
+
+    <!-- Viewport Preview Center (Bento Cell 3 - Main) -->
+    <main class="bento-card preview-card">
+      <div class="preview-header">
+        <div class="viewport-toggles">
+          <button class="view-btn active" data-size="desktop">
+            <span class="icon">🖥️</span> Desktop
+          </button>
+          <button class="view-btn" data-size="tablet">
+            <span class="icon">📱</span> Tablet
+          </button>
+          <button class="view-btn" data-size="mobile">
+            <span class="icon">🔌</span> Mobile
+          </button>
+        </div>
+        <div class="grid-controls">
+          <label class="switch-container">
+            <input type="checkbox" id="gridToggle">
+            <span class="switch-slider"></span>
+            <span class="switch-label">Show 8px Grid</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="iframe-container" id="iframeWrapper">
+        <iframe id="previewFrame" src="/compiled/index.html" title="Compiled App View"></iframe>
+      </div>
+    </main>
+
+    <!-- Diagnostics / Auto-Tester Panel (Bento Cell 4) -->
+    <section class="bento-card diagnostic-card">
+      <h2>Layout Auditor Diagnostics</h2>
+      <div class="score-container">
+        <div class="radial-score-wrapper">
+          <svg class="radial-ring" viewBox="0 0 100 100">
+            <circle class="ring-bg" cx="50" cy="50" r="40"></circle>
+            <circle id="scoreRing" class="ring-fill" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="0"></circle>
+          </svg>
+          <div class="score-text">
+            <span id="auditScoreVal" class="score-number">100</span>
+            <span class="score-total">/100</span>
+          </div>
+        </div>
+        <div class="score-summary">
+          <h3 id="auditStatusVal" class="status-pass">PASS</h3>
+          <p id="auditTimeVal" class="meta-desc">Checked just now</p>
+        </div>
+      </div>
+
+      <h2 class="sub-h">Programmatic Layout Audits</h2>
+      <div class="audit-logs" id="auditLogsList">
+        <div class="audit-success-banner">
+          <span class="check-icon">✓</span> Perfect spatial standards. 0 warnings detected.
+        </div>
+      </div>
+    </section>
+  </div>
+  
+  <script src="dashboard.js"></script>
+</body>
+</html>
