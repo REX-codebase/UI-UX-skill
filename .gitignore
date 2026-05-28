@@ -1,7 +1,15 @@
 .gemini/
 gha-creds-*.json
+node_modules/
+
+# Headless browser profiles (auto-generated)
 .chrome-profile/
 .edge-profile/
 .chrome-profile-*/
 .edge-profile-*/
+
+# Self-evolver output (auto-generated per run)
 evolution-prompt.md
+
+# Test artifacts
+screenshot-test.png

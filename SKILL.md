@@ -214,56 +214,38 @@ UI-UX-Skill/
 ├── 1000-underrated-google-fonts.csv
 ├── LICENSE
 ├── README.md
-└── skills/
-    ├── design-skill/
-    │   ├── SKILL.md
-    │   └── references/
-    │       ├── ai-slop-banned.csv
-    │       ├── bento-grid-layouts.md
-    │       ├── css-2026-features.md
-    │       ├── design-canvas-protocol.md
-    │       ├── motionsites-analysis.md
-    │       ├── stunning-web-patterns.md
-    │       ├── 3d-web-integration.md
-    │       ├── ai-first-ui-patterns.md
-    │       ├── ethical-privacy-ux.md
-    │       ├── hero-video-cdn-resources.md
-    │       ├── sustainable-ux.md
-    │       └── wcag-3-reference.md
-    ├── web-dev-frontend-skill/
-    │   ├── SKILL.md
-    │   ├── 1000-human-made-design-elements.csv
-    │   └── references/
-    │       ├── accessibility-checklist.md
-    │       ├── bento-grid-layouts.md
-    │       ├── color-systems.md
-    │       ├── css-2026-features.md
-    │       ├── design-tokens.md
-    │       ├── industry-benchmarks.md
-    │       ├── interaction-physics.md
-    │       ├── performance-budgets.md
-    │       ├── responsive-engineering.md
-    │       ├── typography-scale.md
-    │       ├── 3d-web-integration.md
-    │       ├── ai-first-ui-patterns.md
-    │       ├── ethical-privacy-ux.md
-    │       ├── hero-video-cdn-resources.md
-    │       ├── sustainable-ux.md
-    │       └── wcag-3-reference.md
-    └── web-dev-backend-skill/
-        ├── SKILL.md
-        └── references/
-            ├── api-design.md
-            ├── authentication-authorization.md
-            ├── data-modeling.md
-            ├── database-architecture.md
-            ├── deployment-ops.md
-            ├── performance-scaling.md
-            ├── security-hardening.md
-            └── testing-strategy.md
+│
+├── skills/
+│   ├── design-skill/
+│   │   ├── SKILL.md
+│   │   └── references/               # 18 design reference docs
+│   │
+│   ├── web-dev-frontend-skill/
+│   │   ├── SKILL.md
+│   │   └── references/               # 16 frontend reference docs
+│   │
+│   ├── web-dev-backend-skill/
+│   │   ├── SKILL.md
+│   │   └── references/               # 8 backend reference docs
+│   │
+│   ├── utils/                         # Zero-dependency tooling
+│   │   ├── search.js                  # CLI search engine
+│   │   ├── svg-generator.js           # Vector logo generator
+│   │   ├── screenshot.js              # Headless capture + vision
+│   │   ├── design-simulator.js        # Cognitive layout auditor
+│   │   ├── image-analyzer.js          # PNG decoder + analyzer
+│   │   └── self-evolver.js            # Reflexion loop engine
+│   │
+│   └── explorer/                      # Visual dashboard
+│       ├── server.js                  # Zero-dep HTTP server
+│       ├── index.html                 # Bento Grid UI
+│       ├── explorer.css               # OKLCH glassmorphic styles
+│       └── explorer.js                # Client-side logic
+│
+└── .github/                           # Gemini Code Assist CI
 ```
 
 ---
 
-**Last Updated**: 2026-04-12
-**Version**: 2.0.0
+**Last Updated**: 2026-05-28
+**Version**: 3.0.0

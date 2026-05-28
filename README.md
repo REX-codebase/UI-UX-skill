@@ -1,65 +1,127 @@
-# UI-UX-SKILL
+<![CDATA[<h1 align="center">
+  <br>
+  🎬 Avant-Garde Director Skill
+  <br>
+</h1>
+
+<p align="center">
+  <strong>The AI skill system that turns coding agents into disciplined UI/UX engineers.</strong>
+  <br>
+  <em>Every pixel has purpose. Every interaction has logic. Every movement has choreography.</em>
+</p>
 
 <p align="center">
   <a href="https://github.com/aggu000000-lgtm/UI-UX-skill/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
   <a href="https://github.com/vercel-labs/skills"><img src="https://img.shields.io/badge/npx%20skills-Installable-7C3AED" alt="npx skills installable"></a>
   <img src="https://img.shields.io/badge/Agents-45%2B%20Supported-10B981" alt="45+ agents supported">
-  <img src="https://img.shields.io/badge/Skills-3%20Complementary-F59E0B" alt="3 complementary skills">
+  <img src="https://img.shields.io/badge/Zero%20Dependencies-Node.js%20Only-22C55E" alt="Zero Dependencies">
   <img src="https://img.shields.io/badge/Year-2026-6366F1" alt="2026 standards">
 </p>
 
 <p align="center">
-  <a href="https://img.shields.io/badge/🎨%20Motion%20Personalities-5%20Systems-EC4899"><img src="https://img.shields.io/badge/🎨%20Motion%20Personalities-5%20Systems-EC4899" alt="5 Motion Personalities"></a>
-  <a href="https://img.shields.io/badge/♿%20WCAG%202.2%20AA-Enforced%20by%20Default-0EA5E9"><img src="https://img.shields.io/badge/♿%20WCAG%202.2%20AA-Enforced%20by%20Default-0EA5E9" alt="WCAG 2.2 AA Enforced"></a>
-  <a href="https://img.shields.io/badge/🧠%20Dopamine%20Mapping-Neuroscience%20Based-8B5CF6"><img src="https://img.shields.io/badge/🧠%20Dopamine%20Mapping-Neuroscience%20Based-8B5CF6" alt="Dopamine Mapping"></a>
-  <a href="https://img.shields.io/badge/🛡️%20AI%20Slop%20Protocol-1000%20Banned%20Patterns-EF4444"><img src="https://img.shields.io/badge/🛡️%20AI%20Slop%20Protocol-1000%20Banned%20Patterns-EF4444" alt="AI Slop Protocol"></a>
-  <a href="https://img.shields.io/badge/⚡%20Core%20Web%20Vitals-Performance%20Budgets-22C55E"><img src="https://img.shields.io/badge/⚡%20Core%20Web%20Vitals-Performance%20Budgets-22C55E" alt="Core Web Vitals"></a>
-  <a href="https://img.shields.io/badge/🔒%20OWASP%20Top%2010-Security%20Hardened-F97316"><img src="https://img.shields.io/badge/🔒%20OWASP%20Top%2010-Security%20Hardened-F97316" alt="OWASP Top 10"></a>
-</p>
-
-<p align="center">
-  <strong>A discipline for building interfaces that breathe.</strong>
-</p>
-
-<p align="center">
-  A skill system that turns AI into a disciplined UI-UX engineer and creative designer — one that builds with intention, not decoration. Every pixel has purpose. Every interaction has logic. Every movement has choreography. No fluff, no filler, only function that feels right.
+  <img src="https://img.shields.io/badge/🧠%20Self--Evolving%20Agent-Reflexion%20Loop-EC4899" alt="Self-Evolving">
+  <img src="https://img.shields.io/badge/👁️%20Terminal%20Vision-Multimodal%20Bridge-0EA5E9" alt="Terminal Vision">
+  <img src="https://img.shields.io/badge/🛡️%20AI%20Slop%20Protocol-1000%20Banned-EF4444" alt="AI Slop Protocol">
+  <img src="https://img.shields.io/badge/♿%20WCAG%202.2%20AA-Enforced-22C55E" alt="WCAG 2.2 AA">
+  <img src="https://img.shields.io/badge/🎨%20OKLCH-Perceptual%20Color-8B5CF6" alt="OKLCH Colors">
 </p>
 
 ---
 
-## ✨ Unique Features
+## 🧬 What Makes This Different
 
-| Feature | What Makes It Different |
-|---------|------------------------|
-| **🎭 Orchestrator** | Automatic skill routing based on request intent — loads design, frontend, or backend skill as needed |
-| **💾 Token Optimization** | Strict lazy-loading architecture. Never loads all reference files upfront. Defaults to zero-skill loading for simple tasks to preserve context windows |
-| **🤖 GenUI Architecture** | 4-state AI lifecycle ready (`idle` → `thinking` → `streaming` → `stabilizing`). Designed for runtime UI streaming (React Server Components) |
-| **🎨 Motion Personality System** | 5 distinct motion personalities (Whisper, Breathe, Snap, Flow, Pulse) with mathematical easing curves, timing scales, and choreography rules |
-| **🧠 Dopamine Mapping Protocol** | Strategic placement of reward moments based on neuroscience — dopamine budgets, unpredictable delight, anticipation over reward |
-| **🛡️ AI Slop Protocol** | 1000 documented banned patterns from 2025-2026 — generic gradients, default Tailwind classes, card soup, Lorem Ipsum — all strictly forbidden |
-| **🎬 Choreography Grammar** | Complete entry/exit patterns (cascade, converge, diverge, wave, stack, unfold), scroll choreography, and interaction sequences |
-| **🤖 SWE Discipline Mode** | AI acts as a senior engineer — says NO to bad requests, no apologies, no hedging, evidence-based decisions only |
-| **♿ Accessibility by Default** | WCAG 2.2 AA is the baseline — not optional, not aspirational, required. 50-check verification loop before every output |
-| **⚡ Performance Budgets** | Core Web Vitals targets enforced — LCP < 2.5s, INP < 200ms, CLS < 0.1 — verified before shipping |
-| **🔒 Security-First Backend** | OWASP Top 10, parameterized queries, argon2id, JWT rotation, CORS whitelisting, secrets management |
-| **👤 Human Touch Protocol** | Anti-AI patterns — asymmetric layouts, organic data, brand-specific motion, unexpected interactions, texture and imperfection |
-| **📝 1000 Human-Made Design Elements** | Exhaustive CSV of handcrafted design patterns across 50+ categories — typography, texture, color, layout, micro-interactions, illustration, and more |
-| **🔤 1000 Underrated Google Fonts** | Curated font database with use cases, mood profiles, AI-avoidance reasons, and pairing suggestions — zero Inter/Poppins/Roboto defaults |
-| **🎬 MotionSites.ai Choreography Bible** | Complete analysis of MotionSites.ai hero section patterns — timing values, easing curves, prompt templates, and anti-AI detection checklist |
-| **🚀 2026 Standards** | Bento grids, CSS Scroll-Driven animations, Container Queries, OKLCH colors, WebGPU/Three.js, AI-first UI patterns, sustainable UX |
+Most AI skill files are static instruction sheets. This one is a **living cognitive system** — it gives AI agents the ability to *see*, *reason about*, and *self-correct* their own designs.
+
+| Capability | What It Does |
+|-----------|-------------|
+| **🧠 Design Cognition** | Agents understand *why* designs work using Gestalt laws, Hick's Law cognitive budgets, and APCA contrast calculus |
+| **👁️ Terminal Vision** | Non-multimodal agents can "see" their output via truecolor ANSI rendering and ASCII luminance maps |
+| **🔄 Self-Evolving Loop** | Agents build → screenshot → analyze → mutate in an autonomous reflexion cycle until design passes audit |
+| **🎯 SVG Precision Engine** | Mathematical vector logo generation in 4 styles — no external APIs needed |
+| **🔍 Built-in Search** | CLI search across 1000 design elements, 1000 fonts, and royalty-free images — saving thousands of tokens |
+| **🛡️ Anti-AI-Slop** | 1000 documented banned patterns from 2025-2026. No generic gradients, no card soup, no Inter/Roboto |
 
 ---
 
-## 📦 Skills Overview
+## 🖼️ Demo Showcase
 
-This repository contains a master orchestrator + three complementary skills that work together or standalone:
+### Bento Grid Visual Explorer
 
-| Skill | Purpose | Personality | Triggers |
-|-------|---------|------------|----------|
-| **Orchestrator** | Routes to appropriate skill | Decision engine | All requests |
-| **design-skill** | Creative choreography, motion design | Creative designer, warm, passionate | cinematic, scroll animation, motion, dopamine, award-winning |
-| **web-dev-frontend-skill** | Engineering discipline for production-grade UI | Senior engineer, strict, evidence-based | build UI, responsive, accessibility, components |
-| **web-dev-backend-skill** | Backend architecture and server systems | Senior engineer, security-first, scalable | API, database, authentication, deployment |
+<p align="center">
+  <img src="assets/demo-bento-dashboard.png" alt="Bento Grid Visual Explorer Dashboard" width="800">
+</p>
+
+> A glassmorphic Bento dashboard with live font previewing, image search, and design element browsing. Launch it with `node skills/explorer/server.js` and open `http://localhost:3000`.
+
+### Terminal Vision System — AI Eyes Without Multimodality
+
+<p align="center">
+  <img src="assets/demo-terminal-vision.png" alt="Terminal Vision System" width="800">
+</p>
+
+> Text-only agents can "see" what they build. The screenshot tool captures headless browser renders and converts them to truecolor ANSI blocks + ASCII luminance blueprints in stdout — with dominant color palette extraction in RGB, HSL, and OKLCH.
+
+### SVG Logo Generation Engine
+
+<p align="center">
+  <img src="assets/demo-svg-logos.png" alt="SVG Logo Styles" width="800">
+</p>
+
+> Four mathematically precise logo styles generated with zero external dependencies. **Bento** (geometric grid), **Organic** (hand-crafted watercolor), **Brutalist** (isometric wireframe), **Cinematic** (portal glow). One command: `node skills/utils/svg-generator.js --type bento --name "Brand"`.
+
+### Self-Evolving Agent Loop
+
+<p align="center">
+  <img src="assets/demo-self-evolving-loop.png" alt="Self-Evolving Agent Loop" width="800">
+</p>
+
+> Agents don't just build — they **iterate**. The self-evolver coordinates screenshots and design simulation to generate mutation recipes that fix layout balance, reduce cognitive load, and enforce typographic rhythm. Even GPT-3.5 class models can use this loop.
+
+---
+
+## 🏗️ Architecture
+
+<p align="center">
+  <img src="assets/demo-architecture.png" alt="System Architecture" width="800">
+</p>
+
+```
+┌──────────────────────────────────────────────────┐
+│                  ORCHESTRATOR                     │
+│              SKILL.md (root)                      │
+│  Intent detection → Skill routing → Token budget  │
+└──────────┬───────────┬───────────┬───────────────┘
+           │           │           │
+     ┌─────▼─────┐ ┌───▼───┐ ┌────▼────┐
+     │  Design   │ │ Front │ │ Backend │
+     │  Skill    │ │  end  │ │  Skill  │
+     │ 18 refs   │ │16 refs│ │ 8 refs  │
+     └─────┬─────┘ └───┬───┘ └────┬────┘
+           │           │           │
+     ┌─────▼───────────▼───────────▼─────┐
+     │         TOOLING SYSTEM            │
+     ├───────────────────────────────────┤
+     │ 🔍 search.js       CLI search    │
+     │ 🎯 svg-generator   Vector logos  │
+     │ 📸 screenshot.js   Vision bridge │
+     │ 🧮 design-sim      Layout audit  │
+     │ 🖼️ image-analyzer  PNG decoder   │
+     │ 🔄 self-evolver    Reflexion loop│
+     │ 🌐 server.js       Web explorer  │
+     └───────────────────────────────────┘
+```
+
+### Skill Routing
+
+The orchestrator detects request intent and loads **only the relevant skill** to conserve tokens:
+
+| Your Request | Skill Loaded |
+|---|---|
+| "Build a stunning hero with scroll animations" | `design-skill` |
+| "Create a responsive landing page" | `web-dev-frontend-skill` |
+| "Add OAuth to our API" | `web-dev-backend-skill` |
+| "Award-winning SaaS landing page" | `design-skill` → `web-dev-frontend-skill` |
+| "Fix this typo" | No skill loaded (token optimization) |
 
 ---
 
@@ -67,26 +129,13 @@ This repository contains a master orchestrator + three complementary skills that
 
 ### Option 1: npx skills (Recommended)
 
-Install all skills to your project with one command:
-
 ```bash
 npx --package skills -- skills add aggu000000-lgtm/UI-UX-skill -y
 ```
 
 ### Option 2: Manual Install
 
-Place `SKILL.md` (orchestrator) in your project root. The orchestrator will load the appropriate skill based on the user's request.
-
-```
-SKILL.md              # Main orchestrator (load this)
-skills/
-├── design-skill/
-│   └── SKILL.md
-├── web-dev-frontend-skill/
-│   └── SKILL.md
-└── web-dev-backend-skill/
-    └── SKILL.md
-```
+Place `SKILL.md` in your project root. The orchestrator auto-loads the appropriate skill based on request intent.
 
 ### Option 3: Chat-based AI
 
@@ -94,172 +143,292 @@ Paste the contents of `SKILL.md` at the start of your conversation, then describ
 
 ---
 
-## 🔎 Interactive CLI Search & Visual Bento Explorer
+## 🛠️ Built-in Tools
 
-To conserve tokens and preserve context window space for AI agents, this skill system includes built-in programmatic query tools and a gorgeous local web dashboard:
+Every tool is **zero-dependency** — runs on Node.js stdlib alone. No `npm install` required.
 
-### 1. Zero-Dependency CLI Search Engine
-Directly search through elements, fonts, and images using standard Node.js:
-- **Search Handcrafted Elements**: `node skills/utils/search.js --elements "<query>"` (optional filter: `--category "<Category>"`)
-- **Search Underrated Google Fonts**: `node skills/utils/search.js --fonts "<query>"` (optional filters: `--classification "<Serif|Sans Serif|...>"`, `--mood "<Mood>"`)
-- **Search Royalty-Free Images**: `node skills/utils/search.js --images "<query>"` (Returns direct Unsplash CDN URLs and photographer credits; automatically triggers offline fallbacks).
+### 🔍 Search Engine
 
-### 2. Bento Grid 2.0 Visual Explorer Dashboard
-Launch a premium local web interface featuring glassmorphic Bento cards, live Google Fonts previewing, and a masonry layout of real royalty-free images:
+Query 1000 handcrafted design elements, 1000 underrated fonts, and royalty-free images — without burning tokens parsing CSV files:
+
 ```bash
-# Start the lightweight static HTTP server
-node skills/explorer/server.js
+# Search design elements
+node skills/utils/search.js --elements "glassmorphism" --category "Layout"
+
+# Search fonts by mood
+node skills/utils/search.js --fonts "elegant" --classification "Serif" --mood "Luxury"
+
+# Search royalty-free images (Unsplash CDN + offline fallback)
+node skills/utils/search.js --images "mountain landscape" --view
 ```
-Open **`http://localhost:3000`** in your browser to interact with the system visually.
+
+The `--view` flag renders image thumbnails directly in your terminal as colored ANSI blocks — so even text-only agents can "see" search results.
+
+### 🎯 SVG Logo Generator
+
+Generate mathematically precise vector logos in 4 distinct styles:
+
+```bash
+# Geometric Bento style
+node skills/utils/svg-generator.js --type bento --name "Acme" --output logo.svg
+
+# Organic hand-crafted style
+node skills/utils/svg-generator.js --type organic --name "Mindfulness" --output logo.svg
+
+# Brutalist industrial style
+node skills/utils/svg-generator.js --type brutalist --name "SysControl" --output logo.svg
+
+# Cinematic portal style
+node skills/utils/svg-generator.js --type cinematic --name "Infinite" --output logo.svg
+```
+
+| Style | Visual DNA |
+|-------|-----------|
+| **Bento** | OKLCH gradients, concentric mesh, glassmorphic shield, squircle rotation |
+| **Organic** | Paper grain texture, wobble displacement, botanical leaf, watercolor washes |
+| **Brutalist** | Blueprint grid, radar rings, 3D isometric wireframe cube, crosshair ticks |
+| **Cinematic** | Portal loop curves, gradient glow, gaussian blur, serif italic typography |
+
+### 📸 Screenshot & Vision Bridge
+
+Give text-only AI agents the ability to *see* what they build:
+
+```bash
+# Capture and visualize in terminal
+node skills/utils/screenshot.js --url http://localhost:3000 --output screenshot.png --view
+
+# Capture a local HTML file
+node skills/utils/screenshot.js --url ./my-page.html --output capture.png --view --width 1440
+```
+
+**Output includes:**
+- Truecolor ANSI block rendering (colored pixels in terminal)
+- ASCII luminance blueprint (brightness character map)
+- Average luminance, visual weight center, dominant color palette (RGB/HSL/OKLCH)
+
+### 🧮 Cognitive Design Simulator
+
+Programmatic layout auditor that mathematically analyzes your HTML:
+
+```bash
+node skills/utils/design-simulator.js --file ./index.html
+```
+
+**Analyzes:**
+- Visual weight centroid (center-of-mass of layout density)
+- Hick's Law Cognitive Friction Index (elements × interactivity × color complexity)
+- ASCII density map (24×12 grid visualization of visual weight)
+- Structural warnings (centroid skew, missing `max-width: 65ch`, non-spring easing)
+
+### 🔄 Self-Evolving Agent Loop
+
+Autonomous design repair — coordinates screenshot + simulator to generate mutation recipes:
+
+```bash
+node skills/utils/self-evolver.js --file ./index.html --generation 1
+```
+
+**The loop:**
+1. **Build** → Agent writes HTML/CSS
+2. **Capture** → Headless screenshot + terminal vision
+3. **Analyze** → Design simulator scores layout, contrast, cognitive load
+4. **Mutate** → Generates `evolution-prompt.md` with specific CSS repair directives
+5. **Repeat** → Agent reads mutations, applies fixes, re-runs until audit passes
+
+### 🌐 Visual Explorer Dashboard
+
+Premium Bento Grid web interface for browsing all assets:
+
+```bash
+node skills/explorer/server.js
+# Open http://localhost:3000
+```
+
+**Features:** Glassmorphic cards, live Google Fonts previewing, masonry image grid, dark/light mood toggle, category filters, copy-to-clipboard CSS imports.
 
 ---
 
-## 🎯 Automatic Skill Routing
+## 🧠 Design Cognition Framework
 
-The orchestrator automatically detects which skill to load:
+This isn't blind token prediction. Agents using this skill understand the **mathematics** behind why designs work:
 
-| Your Request | Skill Activated |
-|--------------|-----------------|
-| "Build a stunning hero with scroll animations" | design-skill |
-| "Create a responsive landing page" | web-dev-frontend-skill |
-| "Add OAuth to our API" | web-dev-backend-skill |
-| "Make an award-winning SaaS landing page" | design-skill → web-dev-frontend-skill |
-| "Design an API and frontend for a todo app" | web-dev-backend-skill → web-dev-frontend-skill |
+| Principle | Formula / Rule | Application |
+|-----------|---------------|-------------|
+| **Visual Weight** | `W = S × ΔL × (1 + C)` | Size × lightness contrast × chroma determines visual gravity |
+| **Hick's Law** | `T = b × log₂(n + 1)` | Max 7 interactive elements per section, max 3 color hues |
+| **APCA Contrast** | Lc > 75 for body text | Size-dependent perceptual contrast replacing outdated 4.5:1 ratios |
+| **Gestalt Spacing** | 8pt modular grid | Proximity groups, similarity via CSS variables, continuity via subgrid |
+| **Typography Rhythm** | `max-width: 65ch` | Line-height inverse scale: 1.1 display → 1.5 body → 1.8 captions |
+| **Spring Physics** | `cubic-bezier(0.34, 1.56, 0.64, 1)` | Natural motion feel — no linear easing, no jQuery defaults |
+| **Dopamine Budget** | 3 reward moments max | Strategic delight placement based on neuroscience |
 
 ---
 
-## 🎭 Motion Personality System (design-skill)
+## 🎭 Motion Personality System
 
 Every interface gets ONE motion personality. This drives all animation choices:
 
-| Personality | Use For | Easing | Duration | Character |
+| Personality | Best For | Easing | Duration | Character |
 |-------------|---------|--------|----------|-----------|
-| **Whisper** | Luxury, editorial, portfolios | `cubic-bezier(0.25, 0.1, 0.25, 1)` | 400-600ms | Subtle fades, gentle slides |
-| **Breathe** | Wellness, lifestyle, nature | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 300-500ms | Organic expansions, living quality |
-| **Snap** | SaaS, fintech, dashboards | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 150-300ms | Quick, elastic, responsive |
-| **Flow** | Creative agencies, media, art | `cubic-bezier(0.4, 0, 0.2, 1)` | 400-800ms | Uninterrupted, connected, liquid |
-| **Pulse** | Social platforms, real-time data | `cubic-bezier(0.4, 0, 0.6, 1)` | 200-400ms | Rhythmic, heartbeat-like |
+| **Whisper** | Luxury, editorial | `cubic-bezier(0.25, 0.1, 0.25, 1)` | 400-600ms | Subtle fades, gentle slides |
+| **Breathe** | Wellness, lifestyle | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 300-500ms | Organic expansions |
+| **Snap** | SaaS, fintech | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 150-300ms | Quick, elastic |
+| **Flow** | Creative agencies | `cubic-bezier(0.4, 0, 0.2, 1)` | 400-800ms | Liquid, connected |
+| **Pulse** | Social, real-time | `cubic-bezier(0.4, 0, 0.6, 1)` | 200-400ms | Rhythmic, heartbeat |
 
 ---
 
 ## 🛡️ AI Slop Protocol
 
-**Non-negotiable.** 1000 documented AI slop patterns from 2025-2026 are strictly forbidden:
+**1000 documented banned patterns.** Non-negotiable.
 
-### 2026-Specific Banned Patterns
-
-| Category | Banned | Use Instead |
-|----------|--------|-------------|
-| **Layout** | 12-column grids, centered heroes | Bento grids, asymmetric layouts |
-| **Color** | Light-only, purple-blue gradients | Dark mode first, OKLCH |
-| **Animation** | Linear easing, GSAP-only | CSS Scroll-Driven, spring physics |
-| **Typography** | Inter/Roboto defaults | Underrated fonts from CSV |
-
----
-
-## 🏗️ Architecture
-
-### Triple-Reference Compliance Protocol
-
-Before outputting ANY design, frontend, or animation code, cross-reference ALL THREE resources:
-
-1. **1000-human-made-design-elements.csv** — Does this design element feel handcrafted?
-2. **1000-underrated-google-fonts.csv** — Is this font from the CSV?
-3. **skills/design-skill/references/motionsites-analysis.md** — Does this animation follow proven choreography patterns?
-
-### Self-Verification & Accountability Protocol
-
-Before declaring any task complete, verify:
-
-- [ ] WCAG 2.2 AA contrast ratios (4.5:1 normal, 3:1 large/UI)
-- [ ] Every interactive element has visible focus state
-- [ ] Touch targets minimum 44×44px
-- [ ] Keyboard navigation works (Tab, Enter, Escape, Arrow keys)
-- [ ] Layout works at 320px, 768px, 1024px, 1280px, 1536px
-- [ ] `prefers-reduced-motion` is respected
-- [ ] No layout shift on load (CLS < 0.1)
-- [ ] LCP < 2.5s, INP < 200ms
-- [ ] Every component state handled (default, hover, focus, active, disabled, loading, error)
+| Category | ❌ Banned | ✅ Use Instead |
+|----------|----------|---------------|
+| Layout | 12-column grids, centered heroes | Bento grids, asymmetric layouts |
+| Color | Light-only, purple-blue gradients | Dark mode first, OKLCH perceptual color |
+| Animation | Linear easing, GSAP-only | CSS Scroll-Driven, spring physics |
+| Typography | Inter / Roboto / Poppins | Underrated fonts from curated CSV |
+| Components | Card soup, generic modals | Contextual surfaces, bento cells |
+| Icons | Font Awesome defaults | Custom SVG, brand-specific marks |
 
 ---
 
-## 📚 Reference Files
+## 📦 What's Included
 
-### Core Resources
-| File | Purpose |
-|------|---------|
-| [`1000-human-made-design-elements.csv`](1000-human-made-design-elements.csv) | 1000 handcrafted design elements across 50+ categories |
-| [`1000-underrated-google-fonts.csv`](1000-underrated-google-fonts.csv) | 1000 fonts AI rarely uses, with mood profiles and pairing suggestions |
-| [`SKILL.md`](SKILL.md) | Main orchestrator that routes to appropriate skill |
+### Skills (3 complementary)
 
-### Design Skill References
-| File | Purpose |
-|------|---------|
-| [`skills/design-skill/references/choreography-patterns.md`](skills/design-skill/references/choreography-patterns.md) | Cascade, converge, diverge, wave, stack, unfold patterns |
-| [`skills/design-skill/references/bento-grid-layouts.md`](skills/design-skill/references/bento-grid-layouts.md) | Bento grid implementation (2026 dominant pattern) |
-| [`skills/design-skill/references/3d-web-integration.md`](skills/design-skill/references/3d-web-integration.md) | Three.js + WebGPU, Spline AI |
-| [`skills/design-skill/references/ai-first-ui-patterns.md`](skills/design-skill/references/ai-first-ui-patterns.md) | Streaming animations, voice UI, ambient intelligence |
-| [`skills/design-skill/references/css-2026-features.md`](skills/design-skill/references/css-2026-features.md) | Scroll-driven, View Transitions, CSS Nesting |
-| [`skills/design-skill/references/hero-video-cdn-resources.md`](skills/design-skill/references/hero-video-cdn-resources.md) | Verified CDN video URLs for hero sections |
-| [`skills/design-skill/references/wcag-3-reference.md`](skills/design-skill/references/wcag-3-reference.md) | WCAG 3.0 preparation guide |
-| [`skills/design-skill/references/ethical-privacy-ux.md`](skills/design-skill/references/ethical-privacy-ux.md) | Privacy-centered design, consent patterns |
-| [`skills/design-skill/references/sustainable-ux.md`](skills/design-skill/references/sustainable-ux.md) | Energy-efficient design, carbon awareness |
+| Skill | Purpose | References |
+|-------|---------|-----------|
+| **design-skill** | Creative choreography, motion, dopamine mapping | 18 reference docs |
+| **web-dev-frontend-skill** | Production UI engineering, accessibility, performance | 16 reference docs |
+| **web-dev-backend-skill** | API design, security, database architecture | 8 reference docs |
 
-### Frontend Skill References
-| File | Purpose |
-|------|---------|
-| [`skills/web-dev-frontend-skill/references/accessibility-checklist.md`](skills/web-dev-frontend-skill/references/accessibility-checklist.md) | WCAG 2.2 AA checklist (50 checks) |
-| [`skills/web-dev-frontend-skill/references/performance-budgets.md`](skills/web-dev-frontend-skill/references/performance-budgets.md) | Core Web Vitals thresholds |
-| [`skills/web-dev-frontend-skill/references/typography-scale.md`](skills/web-dev-frontend-skill/references/typography-scale.md) | Type scales, fluid typography |
-| [`skills/web-dev-frontend-skill/references/color-systems.md`](skills/web-dev-frontend-skill/references/color-systems.md) | OKLCH colors, dark mode |
-| [`skills/web-dev-frontend-skill/references/interaction-physics.md`](skills/web-dev-frontend-skill/references/interaction-physics.md) | Spring animations, easing curves |
-| [`skills/web-dev-frontend-skill/references/responsive-engineering.md`](skills/web-dev-frontend-skill/references/responsive-engineering.md) | Container queries, fluid layouts |
-| [`skills/web-dev-frontend-skill/references/design-tokens.md`](skills/web-dev-frontend-skill/references/design-tokens.md) | Token architecture |
-| [`skills/web-dev-frontend-skill/references/industry-benchmarks.md`](skills/web-dev-frontend-skill/references/industry-benchmarks.md) | Linear, Stripe, Apple, Lusion patterns |
+### Data Assets
 
-### Backend Skill References
-| File | Purpose |
+| Asset | Size | Content |
+|-------|------|---------|
+| `1000-human-made-design-elements.csv` | 93 KB | 1000 handcrafted elements across 50+ categories |
+| `1000-underrated-google-fonts.csv` | 176 KB | 1000 fonts with mood profiles, pairing suggestions |
+| `ai-slop-banned.csv` | 111 KB | Anti-AI-slop pattern library |
+
+### Tools (6 zero-dependency)
+
+| Tool | Purpose |
 |------|---------|
-| [`skills/web-dev-backend-skill/references/api-design.md`](skills/web-dev-backend-skill/references/api-design.md) | REST, GraphQL, gRPC patterns |
-| [`skills/web-dev-backend-skill/references/database-architecture.md`](skills/web-dev-backend-skill/references/database-architecture.md) | Schema design, indexing, migrations |
-| [`skills/web-dev-backend-skill/references/security-hardening.md`](skills/web-dev-backend-skill/references/security-hardening.md) | OWASP Top 10, security headers |
-| [`skills/web-dev-backend-skill/references/authentication-authorization.md`](skills/web-dev-backend-skill/references/authentication-authorization.md) | OAuth 2.1, JWT, RBAC/ABAC |
-| [`skills/web-dev-backend-skill/references/performance-scaling.md`](skills/web-dev-backend-skill/references/performance-scaling.md) | Caching, async processing, scaling |
-| [`skills/web-dev-backend-skill/references/testing-strategy.md`](skills/web-dev-backend-skill/references/testing-strategy.md) | Unit, integration, E2E testing |
-| [`skills/web-dev-backend-skill/references/deployment-ops.md`](skills/web-dev-backend-skill/references/deployment-ops.md) | CI/CD, IaC, monitoring |
+| `search.js` | CLI search across elements, fonts, images |
+| `svg-generator.js` | Mathematical vector logo generation |
+| `screenshot.js` | Headless browser capture + terminal vision |
+| `design-simulator.js` | Cognitive layout auditor |
+| `image-analyzer.js` | Raw PNG decoder + visual analyzer |
+| `self-evolver.js` | Autonomous reflexion loop coordinator |
 
 ---
 
-## 🏆 2026 Standards
+## 📁 Project Structure
 
-All skills enforce these 2026 standards:
+```
+UI-UX-Skill/
+├── SKILL.md                              # Orchestrator — routes to skills
+├── README.md
+├── LICENSE
+├── 1000-human-made-design-elements.csv   # Handcrafted design patterns
+├── 1000-underrated-google-fonts.csv      # Curated font database
+├── assets/                               # README demo images
+│
+├── skills/
+│   ├── design-skill/
+│   │   ├── SKILL.md                      # Creative design persona
+│   │   └── references/
+│   │       ├── ai-slop-banned.csv        # 1000 banned AI patterns
+│   │       ├── bento-grid-layouts.md
+│   │       ├── choreography-patterns.md
+│   │       ├── css-2026-features.md
+│   │       ├── design-canvas-protocol.md
+│   │       ├── design-cognition-calculus.md  # Math framework
+│   │       ├── design-persona-tones.md
+│   │       ├── motionsites-analysis.md
+│   │       ├── stunning-web-patterns.md
+│   │       ├── 3d-web-integration.md
+│   │       ├── ai-first-ui-patterns.md
+│   │       ├── ethical-privacy-ux.md
+│   │       ├── hero-video-cdn-resources.md
+│   │       ├── sustainable-ux.md
+│   │       └── wcag-3-reference.md
+│   │
+│   ├── web-dev-frontend-skill/
+│   │   ├── SKILL.md                      # Engineering persona
+│   │   └── references/
+│   │       ├── accessibility-checklist.md
+│   │       ├── color-systems.md
+│   │       ├── design-tokens.md
+│   │       ├── industry-benchmarks.md
+│   │       ├── interaction-physics.md
+│   │       ├── performance-budgets.md
+│   │       ├── responsive-engineering.md
+│   │       └── typography-scale.md
+│   │
+│   ├── web-dev-backend-skill/
+│   │   ├── SKILL.md                      # Backend persona
+│   │   └── references/
+│   │       ├── api-design.md
+│   │       ├── authentication-authorization.md
+│   │       ├── database-architecture.md
+│   │       ├── deployment-ops.md
+│   │       ├── performance-scaling.md
+│   │       ├── security-hardening.md
+│   │       └── testing-strategy.md
+│   │
+│   ├── utils/                            # Zero-dependency tooling
+│   │   ├── search.js                     # CLI search engine
+│   │   ├── svg-generator.js              # Vector logo generator
+│   │   ├── screenshot.js                 # Headless capture + vision
+│   │   ├── design-simulator.js           # Cognitive layout auditor
+│   │   ├── image-analyzer.js             # PNG decoder + analyzer
+│   │   └── self-evolver.js               # Reflexion loop engine
+│   │
+│   └── explorer/                         # Visual dashboard
+│       ├── server.js                     # Zero-dep HTTP server
+│       ├── index.html                    # Bento Grid UI
+│       ├── explorer.css                  # OKLCH glassmorphic styles
+│       └── explorer.js                   # Client-side logic
+│
+└── .github/
+    ├── workflows/                        # Gemini Code Assist CI
+    └── commands/                         # Gemini command configs
+```
+
+---
+
+## 🏆 2026 Standards Enforced
 
 | Standard | Implementation |
-|----------|----------------|
-| **Active Grids (Bento 2.0)** | Asymmetric, dynamic card layouts with deep organic squircles |
-| **Generative UI (GenUI)** | Real-time AI streaming states and React Server Components |
-| **APCA & WCAG 3.0** | Advanced Perceptual Contrast Algorithm replacing outdated 4.5:1 ratios |
+|----------|---------------|
+| **Bento Grid 2.0** | Asymmetric, dynamic card layouts with deep organic squircles |
+| **Generative UI** | 4-state AI lifecycle: `idle` → `thinking` → `streaming` → `stabilizing` |
+| **APCA & WCAG 3.0** | Advanced Perceptual Contrast replacing outdated 4.5:1 ratios |
 | **CSS Scroll-Driven** | Native scroll-linked animations via `animation-timeline: view()` |
 | **Container Queries** | Component-level responsiveness via `@container` |
-| **OKLCH Colors** | Perceptually uniform color adjustments and dynamic "Mood Modes" |
-| **WebGPU** | High-framerate 3D integration with Three.js and compute shaders |
-| **Sustainable UX** | Eco-brutalism, edge-side rendering, and carbon-aware performance budgets |
+| **OKLCH Colors** | Perceptually uniform color adjustments and "Mood Modes" |
+| **WebGPU** | Three.js compute shaders for high-framerate 3D |
+| **Sustainable UX** | Eco-brutalism, edge rendering, carbon-aware budgets |
 
 ---
 
 ## 🌍 Supported Agents
 
-Works with **45+ coding agents** including Claude Code, Cursor, Codex, GitHub Copilot, Gemini CLI, Windsurf, OpenCode, Cline, and more.
+Works with **45+ coding agents** including:
+
+Claude Code · Cursor · Codex · GitHub Copilot · Gemini CLI · Windsurf · OpenCode · Cline · Aider · Continue · Void · PearAI · Amp · and more.
 
 ---
 
 ## 💭 Philosophy
 
-> Elegance is not about adding beauty. It is about removing friction.
+> *Elegance is not about adding beauty. It is about removing friction.*
 
 A well-built interface does not announce itself. It disappears into the task. The user does not notice the design — they notice that everything just works.
 
-That is the goal.
+**This skill system doesn't just instruct AI what to build.** It teaches AI *why* designs work, gives it *eyes* to see its own output, and gives it a *feedback loop* to self-correct. That's the difference between decoration and discipline.
 
 ---
 
@@ -268,3 +437,4 @@ That is the goal.
 MIT — Copyright (c) 2026 aggu000000-lgtm
 
 Do what you want with this. Just keep the license intact.
+]]>
