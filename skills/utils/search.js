@@ -253,6 +253,41 @@ function renderResults(results, asJson) {
   });
 }
 
+// Direct DuckDuckGo zero-key web search parser (Zero-dependency HTTPS query)
+function searchWeb(query) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: 'api.duckduckgo.com',
+      port: 443,
+      path: `/?q=${encodeURIComponent(query)}&format=json&no_html=1`,
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          if (res.statusCode !== 200) {
+            return reject(new Error(`Web search HTTP status ${res.statusCode}`));
+          }
+          const parsed = JSON.parse(data);
+          resolve(parsed);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    });
+
+    req.on('error', e => reject(e));
+    req.end();
+  });
+}
+
+
 // Help documentation
 function printHelp() {
   console.log(`
@@ -272,6 +307,7 @@ Options:
   --mood <mood>            Filter Fonts search by mood profile
   --classification <class> Filter Fonts search by classification (Serif, Sans Serif, Monospace, etc.)
   --images <query>         Search royalty-free Unsplash photography & fallbacks
+  --web <query>            Execute a zero-dependency deeply integrated browser web search
   --view                   Fetch and visualize the top image result directly in ANSI truecolor
   --json                   Output strictly in JSON format
   --help                   Display this manual
@@ -307,6 +343,56 @@ async function main() {
       const val = args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : true;
       params[key] = val;
     }
+  }
+
+  // --- Category 4: Web Search ---
+  if (params.web) {
+    if (typeof params.web !== 'string') {
+      console.error('Error: Please provide a query string for --web search.');
+      process.exit(1);
+    }
+    
+    const query = params.web;
+    console.log(`\n=============================================================`);
+    console.log(`🔍 DEEP INTEGRATED BROWSER SEARCH — QUERYING WEB`);
+    console.log(`🔎 Term: "${query}"`);
+    console.log(`=============================================================\n`);
+    
+    try {
+      const data = await searchWeb(query);
+      const results = [];
+      
+      if (data.AbstractText) {
+        results.push({
+          source: data.AbstractSource || 'Wikipedia',
+          summary: data.AbstractText,
+          url: data.AbstractURL
+        });
+      }
+      
+      if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+        data.RelatedTopics.slice(0, 5).forEach(topic => {
+          if (topic.Text) {
+            results.push({
+              source: 'Related Topic',
+              summary: topic.Text,
+              url: topic.FirstURL || ''
+            });
+          }
+        });
+      }
+      
+      if (results.length === 0) {
+        console.log(`🏜️ No direct Wikipedia/Instant Answer results found. Try alternative keywords.`);
+        return;
+      }
+      
+      renderResults(results, isJson);
+    } catch (err) {
+      console.error(`❌ [Search Failure] Web search query failed: ${err.message}`);
+      process.exit(1);
+    }
+    return;
   }
 
   // --- Category 1: Design Elements CSV ---

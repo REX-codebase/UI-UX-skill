@@ -472,22 +472,23 @@ function runAudits(state) {
   };
 }
 
-// Run the Programmatic L5 Planning Auditor
-function auditPlanning(params = {}) {
+// Run the Programmatic System 2 Slow-Thinking Gatekeeper
+function validateSystem2(params = {}) {
   if (params['skip-planning']) {
-    console.log('⚠️ [PLANNING_BYPASS] Skipping L5 SWE Planning Audit (Experimental bypass).');
+    console.log('⚠️ [PLANNING_BYPASS] Skipping L5 SWE Planning & System 2 Audits.');
     return true;
   }
   
-  const auditorScript = path.join(process.cwd(), 'skills', 'utils', 'planning-auditor.js');
+  const slowThinkingScript = path.join(process.cwd(), 'skills', 'utils', 'slow-thinking.js');
   try {
-    require('child_process').execSync(`node "${auditorScript}"`, { stdio: 'inherit' });
+    require('child_process').execSync(`node "${slowThinkingScript}" validate`, { stdio: 'inherit' });
     return true;
   } catch (e) {
-    console.error(`\n❌ [L5_PLANNING_LOCK] Execution blocked due to insufficient L5 SWE planning.`);
+    console.error(`\n❌ [SYSTEM2_LOCK] Execution blocked due to insufficient System 2 deliberation.`);
     process.exit(1);
   }
 }
+
 
 // OS Command Coordinator Main shell
 async function main() {
@@ -617,7 +618,7 @@ Options:
       break;
 
     case 'compile':
-      auditPlanning(params);
+      validateSystem2(params);
       const compiledPath = compileCanvas(state);
       console.log(`Compiled responsive vector canvas layout successfully:`);
       console.log(`📁 File written: ${compiledPath}`);
@@ -630,7 +631,7 @@ Options:
       break;
 
     case 'test':
-      auditPlanning(params);
+      validateSystem2(params);
       // 1. Compile current canvas state to index.html first
       const compiledHtml = compileCanvas(state);
       
@@ -663,8 +664,8 @@ Options:
     case 'search':
       const searchType = args[1];
       const searchQ = params.query || '';
-      if (!['elements', 'fonts', 'images'].includes(searchType)) {
-        console.error('Error: Specify a valid category: elements, fonts, or images.');
+      if (!['elements', 'fonts', 'images', 'web'].includes(searchType)) {
+        console.error('Error: Specify a valid category: elements, fonts, images, or web.');
         process.exit(1);
       }
       // Delegate to existing utility node scripts
@@ -673,6 +674,17 @@ Options:
       
       console.log(`Querying asset libraries: ${searchType} "${searchQ}"...`);
       const child = spawn('node', [searchScript, ...searchArgs], { stdio: 'inherit' });
+      break;
+
+    case 'task':
+      const taskSubCmd = args[1];
+      const slowThinkingScript = path.join(process.cwd(), 'skills', 'utils', 'slow-thinking.js');
+      if (!['init', 'status', 'complete'].includes(taskSubCmd)) {
+        console.error('Error: Unknown task command. Supported: init, status, complete.');
+        process.exit(1);
+      }
+      const taskArgs = args.slice(1);
+      const taskChild = spawn('node', [slowThinkingScript, ...taskArgs], { stdio: 'inherit' });
       break;
 
     case 'serve':
