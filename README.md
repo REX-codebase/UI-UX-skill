@@ -490,8 +490,13 @@ A well-built interface does not announce itself. It disappears into the task. Th
 
 ---
 
-## 📄 License
+## 📄 License & Authorship
 
-MIT — Copyright (c) 2026 aggu000000-lgtm (X: [@silent_butagrim](https://x.com/silent_butagrim))
+This project is built and maintained by a dedicated team of three:
+- **Author**: aggu000000-lgtm (X: [@silent_butagrim](https://x.com/silent_butagrim))
+- **Co-Author**: Antigravity AI (AI Coding Assistant by Google DeepMind)
+- **Co-Author**: Jules Google Bot (Autonomous Workflow Agent)
+
+MIT — Copyright (c) 2026 aggu000000-lgtm, Antigravity AI, Jules Google Bot.
 
 Do what you want with this. Just keep the license intact.
