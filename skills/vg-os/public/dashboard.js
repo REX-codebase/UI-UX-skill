@@ -29,6 +29,31 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Dynamic settings
   let activeCanvasState = null;
+  let globalCssCM = null;
+  let htmlLayerCM = null;
+  let selectedHtmlLayerIndex = -1;
+
+  // Initialize CodeMirrors if not yet
+  function initEditors() {
+    if (!globalCssCM && document.getElementById('globalCssEditor')) {
+      globalCssCM = CodeMirror.fromTextArea(document.getElementById('globalCssEditor'), {
+        mode: 'css',
+        theme: 'dracula',
+        lineNumbers: true,
+        viewportMargin: Infinity
+      });
+      globalCssCM.setSize(null, 150);
+    }
+    if (!htmlLayerCM && document.getElementById('htmlLayerEditor')) {
+      htmlLayerCM = CodeMirror.fromTextArea(document.getElementById('htmlLayerEditor'), {
+        mode: 'htmlmixed',
+        theme: 'dracula',
+        lineNumbers: true,
+        viewportMargin: Infinity
+      });
+      htmlLayerCM.setSize(null, 150);
+    }
+  }
 
   // 1. Viewport size switcher
   viewBtns.forEach(btn => {
@@ -79,14 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Grid overlay syncing helper
   function syncIframeGrid() {
     try {
-      const iframeDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-      const viewport = iframeDoc.getElementById('viewport');
-      if (viewport) {
-        viewport.classList.toggle('show-grid', gridToggle.checked);
+      if (previewFrame.contentWindow) {
+        previewFrame.contentWindow.postMessage({
+          type: 'TOGGLE_GRID',
+          show: gridToggle.checked
+        }, '*');
       }
     } catch (e) {
-      // Cross-origin checks could block if port/host is distinct, 
-      // but locally they share same root server so this is safe.
+      // safe fallback
     }
   }
 
@@ -110,6 +135,16 @@ document.addEventListener('DOMContentLoaded', () => {
       canvasBgVal.innerText = data.canvas.bg;
       canvasBgIndicator.style.backgroundColor = data.canvas.bg;
       
+      initEditors();
+
+      // Only update editors if they don't have focus to avoid interrupting typing
+      if (globalCssCM && !globalCssCM.hasFocus()) {
+        globalCssCM.setValue(data.globalCss || '');
+      }
+
+      // Update HTML Layers dropdown
+      updateHtmlLayersDropdown(data.layers);
+
       // Populate layers list
       renderLayersList(data.layers);
       connectionStatus.innerText = 'CLI Node Connection Synced';
@@ -118,6 +153,105 @@ document.addEventListener('DOMContentLoaded', () => {
       connectionStatus.innerText = 'Connection Interrupted';
     }
   }
+
+  function updateHtmlLayersDropdown(layers) {
+    const select = document.getElementById('htmlLayerSelect');
+    if (!select) return;
+    
+    // Remember currently selected
+    const currentVal = select.value;
+    
+    // Clear old layer options (keep first 2: default and new)
+    while (select.options.length > 2) {
+      select.remove(2);
+    }
+    
+    let foundCurrent = false;
+    layers.forEach((layer, idx) => {
+      if (layer.type === 'html') {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.text = layer.name || `html-${idx}`;
+        select.add(opt);
+        if (String(idx) === currentVal) foundCurrent = true;
+      }
+    });
+
+    if (foundCurrent) {
+      select.value = currentVal;
+    } else if (currentVal !== 'new') {
+      select.value = "";
+      document.getElementById('htmlLayerEditorGroup').style.display = 'none';
+    }
+  }
+
+  // Handle HTML dropdown change
+  document.getElementById('htmlLayerSelect')?.addEventListener('change', (e) => {
+    const val = e.target.value;
+    const group = document.getElementById('htmlLayerEditorGroup');
+    if (!val) {
+      group.style.display = 'none';
+      selectedHtmlLayerIndex = -1;
+    } else {
+      group.style.display = 'block';
+      initEditors();
+      if (val === 'new') {
+        selectedHtmlLayerIndex = -1;
+        htmlLayerCM.setValue('<div>New HTML Layer</div>');
+      } else {
+        selectedHtmlLayerIndex = parseInt(val, 10);
+        const layer = activeCanvasState.layers[selectedHtmlLayerIndex];
+        htmlLayerCM.setValue(layer.content || '');
+      }
+    }
+  });
+
+  // Save Global CSS
+  document.getElementById('saveGlobalCssBtn')?.addEventListener('click', async () => {
+    if (!activeCanvasState) return;
+    const newCss = globalCssCM.getValue();
+    activeCanvasState.globalCss = newCss;
+    try {
+      await fetch('/api/state', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(activeCanvasState)
+      });
+      // Optionally trigger reload frame (server auto compiles)
+      previewFrame.src = '/compiled/index.html?t=' + Date.now();
+    } catch(e) { console.error('Save Global CSS error', e); }
+  });
+
+  // Save HTML Layer
+  document.getElementById('saveHtmlLayerBtn')?.addEventListener('click', async () => {
+    if (!activeCanvasState) return;
+    const newHtml = htmlLayerCM.getValue();
+    
+    if (selectedHtmlLayerIndex >= 0) {
+      // Update existing
+      activeCanvasState.layers[selectedHtmlLayerIndex].content = newHtml;
+    } else {
+      // Create new
+      activeCanvasState.layers.push({
+        type: 'html',
+        name: `html-${activeCanvasState.layers.length}`,
+        x: 0, y: 0, w: 200, h: 200,
+        zIndex: (activeCanvasState.layers.length + 1) * 10,
+        content: newHtml
+      });
+      // Immediately reset so next save updates this new one? No, we just rely on fetchState loop
+    }
+    
+    try {
+      await fetch('/api/state', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(activeCanvasState)
+      });
+      previewFrame.src = '/compiled/index.html?t=' + Date.now();
+      // fetchState will pull the new state down shortly
+    } catch(e) { console.error('Save HTML Layer error', e); }
+  });
 
   // 5. Render list of layers
   function renderLayersList(layers) {
@@ -135,16 +269,20 @@ document.addEventListener('DOMContentLoaded', () => {
       let fillVal = layer.fill || layer.color || '#fff';
       if (fillVal.length > 25) fillVal = fillVal.substring(0, 22) + '...';
 
+      const safeName = (layer.name || 'layer-' + idx).toString().replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+      const safeType = (layer.type || '').toString().replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+      const safeFill = fillVal.toString().replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+
       item.innerHTML = `
         <div class="layer-meta-top">
-          <span class="layer-name">${layer.name || 'layer-' + idx}</span>
-          <span class="layer-badge">${layer.type}</span>
+          <span class="layer-name">${safeName}</span>
+          <span class="layer-badge">${safeType}</span>
         </div>
         <div class="layer-coords">
           X: ${layer.x} Y: ${layer.y} | W: ${layer.w} H: ${layer.h}
         </div>
         <div class="layer-coords" style="color: var(--accent-cyan); font-size:10px; margin-top: 2px;">
-          Fill: ${fillVal}
+          Fill: ${safeFill}
         </div>
       `;
 
@@ -163,20 +301,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Injects neon inspection frames into the compiled webpage iframe
   function highlightIframeElement(elemId, activate) {
     try {
-      const iframeDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-      // We can search elements by layer name (as the compiled output sets id matching layer name)
-      const el = iframeDoc.getElementById(elemId);
-      if (el) {
-        if (activate) {
-          el.style.outline = '3px solid var(--accent-cyan, #00f5a0)';
-          el.style.boxShadow = '0 0 20px rgba(0, 245, 160, 0.6)';
-          el.style.transition = 'all 0.2s ease-out';
-          el.style.transform = 'scale(1.02)';
-        } else {
-          el.style.outline = '';
-          el.style.boxShadow = '';
-          el.style.transform = '';
-        }
+      if (previewFrame.contentWindow) {
+        previewFrame.contentWindow.postMessage({
+          type: 'HIGHLIGHT',
+          id: elemId,
+          activate: activate
+        }, '*');
       }
     } catch (e) {
       // safe fallback

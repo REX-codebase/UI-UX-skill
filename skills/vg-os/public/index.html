@@ -8,6 +8,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- CodeMirror -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
   <link rel="stylesheet" href="dashboard.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖥️</text></svg>">
 </head>
@@ -38,7 +46,7 @@
     </header>
 
     <!-- Navigation / Control Sidebar (Bento Cell 2) -->
-    <aside class="bento-card control-card">
+    <aside class="bento-card control-card" style="display:flex; flex-direction:column; overflow-y:auto; max-height:80vh;">
       <h2>Canvas Settings</h2>
       <div class="canvas-details-form">
         <div class="form-group">
@@ -53,6 +61,24 @@
             <div id="canvasBgIndicator" class="color-circle"></div>
             <span id="canvasBgVal">#0b0c10</span>
           </div>
+        </div>
+      </div>
+
+      <h2 class="sub-h">Global CSS Overrides</h2>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <textarea id="globalCssEditor" style="display:none;"></textarea>
+        <button id="saveGlobalCssBtn" class="btn-primary" style="margin-top: 10px; width: 100%;">Save Global CSS</button>
+      </div>
+
+      <h2 class="sub-h">Custom HTML Layers</h2>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <select id="htmlLayerSelect" style="width:100%; padding: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;">
+          <option value="">-- Select or Create HTML Layer --</option>
+          <option value="new">+ Create New HTML Layer</option>
+        </select>
+        <div id="htmlLayerEditorGroup" style="display:none;">
+          <textarea id="htmlLayerEditor" style="display:none;"></textarea>
+          <button id="saveHtmlLayerBtn" class="btn-primary" style="margin-top: 10px; width: 100%;">Save HTML Layer</button>
         </div>
       </div>
 
@@ -86,7 +112,7 @@
       </div>
 
       <div class="iframe-container" id="iframeWrapper">
-        <iframe id="previewFrame" src="/compiled/index.html" title="Compiled App View"></iframe>
+        <iframe id="previewFrame" sandbox="allow-scripts allow-forms allow-popups" src="/compiled/index.html" title="Compiled App View"></iframe>
       </div>
     </main>
 

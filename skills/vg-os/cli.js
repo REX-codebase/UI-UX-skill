@@ -259,6 +259,9 @@ function compileCanvas(state) {
         white-space: pre-wrap;
       }`;
       elementsHtml += `    <div class="canvas-item ${classId}" id="${layer.name || 'text-' + idx}">${layer.content || ''}</div>\n`;
+    } else if (layer.type === 'html') {
+      style += `\n    .${classId} { overflow: hidden; }`;
+      elementsHtml += `    <div class="canvas-item ${classId}" id="${layer.name || 'html-' + idx}">\n      ${layer.content || ''}\n    </div>\n`;
     } else if (layer.type === 'vector') {
       style += `\n    .${classId} { color: ${layer.fill || 'currentColor'}; opacity: ${layer.opacity || 1}; }`;
       if (layer.stroke && layer.stroke !== 'none') {
@@ -352,6 +355,7 @@ function compileCanvas(state) {
     .canvas-viewport.show-grid .canvas-grid {
       display: block;
     }
+    ${state.globalCss ? `\n    /* Global CSS Overrides */\n    ${state.globalCss}\n` : ''}
   </style>
 </head>
 <body>
@@ -375,6 +379,30 @@ ${elementsHtml}  </div>
     }
     window.addEventListener('resize', adjustScale);
     adjustScale();
+
+    // Secure communication with parent dashboard
+    window.addEventListener('message', (e) => {
+      const data = e.data;
+      if (!data) return;
+      if (data.type === 'TOGGLE_GRID') {
+        const vp = document.getElementById('viewport');
+        if (vp) vp.classList.toggle('show-grid', data.show);
+      } else if (data.type === 'HIGHLIGHT') {
+        const el = document.getElementById(data.id);
+        if (el) {
+          if (data.activate) {
+            el.style.outline = '3px solid #00f5a0';
+            el.style.boxShadow = '0 0 20px rgba(0, 245, 160, 0.6)';
+            el.style.transition = 'all 0.2s ease-out';
+            el.style.transform = 'scale(1.02)';
+          } else {
+            el.style.outline = '';
+            el.style.boxShadow = '';
+            el.style.transform = '';
+          }
+        }
+      }
+    });
   </script>
 </body>
 </html>`;
@@ -709,8 +737,8 @@ Options:
 
     case 'draw':
       const shapeType = args[1];
-      if (!['rect', 'circle', 'text', 'vector'].includes(shapeType)) {
-        console.error('Error: Specify a valid vector shape format: rect, circle, text, or vector.');
+      if (!['rect', 'circle', 'text', 'vector', 'html'].includes(shapeType)) {
+        console.error('Error: Specify a valid vector shape format: rect, circle, text, vector, or html.');
         process.exit(1);
       }
       const newLayer = {
@@ -737,6 +765,8 @@ Options:
         newLayer.weight = parseInt(params.weight, 10) || 400;
         newLayer.color = params.color || '#ffffff';
         newLayer.align = params.align || 'left';
+      } else if (shapeType === 'html') {
+        newLayer.content = params.content || '';
       } else if (shapeType === 'vector') {
         newLayer.paths = [];
         newLayer.viewBox = params.viewBox || '0 0 100 100';
