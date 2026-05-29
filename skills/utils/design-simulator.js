@@ -627,6 +627,7 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
   let oklchMatch;
   let minLightness = 1.0;
   let maxLightness = 0.0;
+  let maxChroma = 0.0;
   let oklchCount = 0;
   while ((oklchMatch = oklchRegex.exec(cssText + htmlContent)) !== null) {
     let lVal = oklchMatch[1];
@@ -634,6 +635,10 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
     if (lVal.includes('%')) l = l / 100;
     if (l < minLightness) minLightness = l;
     if (l > maxLightness) maxLightness = l;
+    
+    let c = parseFloat(oklchMatch[2]);
+    if (c > maxChroma) maxChroma = c;
+    
     oklchCount++;
   }
 
@@ -644,6 +649,15 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
     } else {
       bonusScore += 8;
     }
+
+    if (maxChroma < 0.12 && profile !== 'Brutalist') {
+      tasteScoreDeduction += 10;
+      warnings.push({
+        type: 'COLOR_CHROMA_FLAT_WARN',
+        severity: 'medium',
+        message: `Flat desaturated chroma profile detected (max oklch chroma is ${maxChroma.toFixed(2)}, target >= 0.12). True human layouts utilize rich, energetic color expressions on accent targets. Boost the chroma coordinate of your active elements to establish premium visual weight.`
+      });
+    }
   } else {
     tasteScoreDeduction += 12;
     warnings.push({
@@ -651,6 +665,36 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
       severity: 'high',
       message: `Standard color space detected. Modern luxury designs leverage the perceptually uniform oklch() color space, which prevents hue shifting under different light intensities. Define a deep ambient light-depth palette (lightness range from oklch(0.15 ...) to oklch(0.98 ...)) to achieve premium lighting aesthetics.`
     });
+  }
+
+  // Muddy sRGB Midpoint Gradient Check
+  const hasGradient = /linear-gradient|radial-gradient|conic-gradient/i.test(cssText + htmlContent);
+  const hasPerceptualInterpolation = /in\s+(oklch|oklab|hcl|lch)/i.test(cssText + htmlContent);
+  if (hasGradient && !hasPerceptualInterpolation) {
+    tasteScoreDeduction += 8;
+    warnings.push({
+      type: 'COLOR_MUDDY_GRADIENT_WARN',
+      severity: 'medium',
+      message: `Muddy sRGB midpoint gradient detected. Browser default gradients interpolate in sRGB space, creating a dull gray 'dead zone' at transition midpoints. Enforce premium human color blending by explicitly declaring the oklch interpolation space: "linear-gradient(in oklch to right, ...)" or "radial-gradient(in oklch, ...)".`
+    });
+  }
+
+  // Neural Expressive Blur Spot Mesh Check
+  let hasHighBlur = false;
+  const blurMatches = (cssText + htmlContent).match(/blur\(\s*[0-9.]+\s*(px)?\s*\)/gi);
+  if (blurMatches) {
+    for (const bm of blurMatches) {
+      const valMatch = /blur\(\s*([0-9.]+)/i.exec(bm);
+      if (valMatch && parseFloat(valMatch[1]) >= 40) {
+        hasHighBlur = true;
+        break;
+      }
+    }
+  }
+
+  const hasDynamicMesh = hasHighBlur && /radial-gradient|conic-gradient/i.test(cssText + htmlContent);
+  if (hasDynamicMesh) {
+    bonusScore += 15; // Major bonus for Gemini-style expressive neural light mesh
   }
 
   const hasConic = /conic-gradient/i.test(cssText + htmlContent);
