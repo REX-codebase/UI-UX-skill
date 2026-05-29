@@ -167,6 +167,8 @@ function calculateVisualCentroid(mappedElements) {
   let totalWeight = 0;
   let sumX = 0;
   let sumY = 0;
+  let leftFocalPoints = 0;
+  let rightFocalPoints = 0;
 
   for (const el of mappedElements) {
     // Math Formula: Weight (W) = Size area (S) * tag weight coefficient * text/interactive density
@@ -189,29 +191,55 @@ function calculateVisualCentroid(mappedElements) {
     sumX += centerX * weight;
     sumY += centerY * weight;
     totalWeight += weight;
+
+    if (tagWeight >= 2.0 || weight > 50) {
+      if (centerX < 640) leftFocalPoints++;
+      else rightFocalPoints++;
+    }
   }
 
   const cx = totalWeight > 0 ? (sumX / totalWeight) / 1280 : 0.5;
   const cy = totalWeight > 0 ? (sumY / totalWeight) / 800 : 0.5;
 
+  const isDynamicallyBalanced = (cx < 0.4 && rightFocalPoints > 0) || (cx > 0.6 && leftFocalPoints > 0);
+
   return {
     cx: parseFloat(cx.toFixed(3)),
     cy: parseFloat(cy.toFixed(3)),
-    totalWeight: Math.round(totalWeight)
+    totalWeight: Math.round(totalWeight),
+    isDynamicallyBalanced
   };
 }
 
 // Math calculus module: Hick's Law Cognitive Load Index
-function calculateCognitiveFriction(elements, colors) {
+function calculateCognitiveFriction(elements, colors, profile = 'Standard') {
   const totalElements = elements.length;
   const interactiveCount = elements.filter(e => e.hasInteractive).length;
   
   // Total unique color tokens parsed
   const colorCount = colors.hex.length + colors.rgb.length + colors.hsl.length + colors.oklch.length;
 
-  // Hick's Law Complexity calculation
-  // CFI = (N * 0.1) + (I * 1.5) + (C * 2.0)
-  const score = (totalElements * 0.1) + (interactiveCount * 1.5) + (colorCount * 2.0);
+  // Visual chunking: detect grouping containers
+  const chunkCount = elements.filter(e => /bento|card|grid|group|section|article/i.test(e.classes) || /section|article|main/i.test(e.tag)).length || 1;
+
+  // Non-Linear Cognitive Modeling (Gestalt Chunking)
+  const elementFriction = Math.pow(totalElements, 0.8) / Math.max(1, Math.sqrt(chunkCount)) * 0.5;
+
+  let interactiveMultiplier = 1.5;
+  let colorMultiplier = 2.0;
+
+  if (profile === 'Brutalist') {
+    interactiveMultiplier = 1.0;
+    colorMultiplier = 1.0;
+  } else if (profile === 'Serene') {
+    colorMultiplier = 3.0;
+  }
+
+  let score = elementFriction + (interactiveCount * interactiveMultiplier) + (colorCount * colorMultiplier);
+
+  if (profile === 'Brutalist') {
+    score *= 0.5; // Brutalist allows higher cognitive load
+  }
 
   let rating = 'Harmonious (Excellent)';
   let advice = 'Visual weight is balanced and choices are clean.';
@@ -229,7 +257,8 @@ function calculateCognitiveFriction(elements, colors) {
     advice,
     totalElements,
     interactiveCount,
-    colorCount
+    colorCount,
+    chunkCount
   };
 }
 
@@ -288,9 +317,18 @@ Example:
 }
 
 // Programmatic Taste & Anti-Slop Audit
-function runTasteAudits(cssText, htmlContent) {
+function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
   const warnings = [];
   let tasteScoreDeduction = 0;
+  let bonusScore = 0;
+
+  // Multi-Factor Intelligence Engine Bonuses
+  if (/oklch\(|conic-gradient/i.test(cssText)) {
+    bonusScore += 10;
+  }
+  if (/font-family\s*:\s*[^;]*['"]?(Outfit|Space Grotesk|Instrument Serif)['"]?/i.test(cssText)) {
+    bonusScore += 10;
+  }
 
   // 1. Color Taste Check
   const bannedColors = [
@@ -305,17 +343,19 @@ function runTasteAudits(cssText, htmlContent) {
     { value: '#212121', name: 'Flat Dark (#212121)' }
   ];
 
-  bannedColors.forEach(color => {
-    const regex = new RegExp(color.value, 'gi');
-    if (regex.test(cssText) || regex.test(htmlContent)) {
-      tasteScoreDeduction += 10;
-      warnings.push({
-        type: 'SLOP_COLOR_WARN',
-        severity: 'high',
-        message: `Banned generic color [${color.name} (${color.value})] detected. Flat static hexes are strictly forbidden. Use oklch() color spaces for custom lux-depth ambient lighting.`
-      });
-    }
-  });
+  if (profile !== 'Brutalist') {
+    bannedColors.forEach(color => {
+      const regex = new RegExp(color.value, 'gi');
+      if (regex.test(cssText) || regex.test(htmlContent)) {
+        tasteScoreDeduction += 10;
+        warnings.push({
+          type: 'SLOP_COLOR_WARN',
+          severity: 'high',
+          message: `Banned generic color [${color.name} (${color.value})] detected. Flat static hexes are strictly forbidden. Use oklch() color spaces for custom lux-depth ambient lighting.`
+        });
+      }
+    });
+  }
 
   // Check for purple-to-blue gradient slop
   if (/linear-gradient\(.*(#4f46e5|#6366f1|indigo).*#3b82f6.*\)/gi.test(cssText) || 
@@ -364,16 +404,19 @@ function runTasteAudits(cssText, htmlContent) {
   // 4. Layout Symmetry Check (cardocalypse / simple grids)
   if (/grid-template-columns\s*:\s*repeat\(\s*3\s*,\s*1fr\s*\)/gi.test(cssText) ||
       /grid-template-columns\s*:\s*1fr\s+1fr\s+1fr/gi.test(cssText)) {
-    tasteScoreDeduction += 10;
-    warnings.push({
-      type: 'SLOP_LAYOUT_WARN',
-      severity: 'medium',
-      message: `Predictable 3-column symmetrical grid detected. Sterile layouts are overused. Elevate your design using asymmetrical Kinetic Bento configurations (e.g. 1.618fr 1fr 0.9fr).`
-    });
+    if (profile !== 'Brutalist') {
+      tasteScoreDeduction += 10;
+      warnings.push({
+        type: 'SLOP_LAYOUT_WARN',
+        severity: 'medium',
+        message: `Predictable 3-column symmetrical grid detected. Sterile layouts are overused. Elevate your design using asymmetrical Kinetic Bento configurations (e.g. 1.618fr 1fr 0.9fr).`
+      });
+    }
   }
 
   return {
     deduction: Math.min(30, tasteScoreDeduction), // Cap taste deduction at 30 points
+    bonus: bonusScore,
     warnings
   };
 }
@@ -396,7 +439,7 @@ function main() {
     }
   }
 
-  const { file: filePath } = params;
+  const { file: filePath, profile = 'Standard' } = params;
 
   if (!filePath) {
     console.error('Error: The --file parameter is required.');
@@ -426,13 +469,29 @@ function main() {
 
     // Calculate metrics
     const centroid = calculateVisualCentroid(mappedElements);
-    const friction = calculateCognitiveFriction(elements, colors);
+    const friction = calculateCognitiveFriction(elements, colors, profile);
     const asciiMap = generateASCIIDensityMap(mappedElements);
+
+    let hasIntentionalOffset = false;
+    const registryPath = path.join(folderPath, '.design-evolution-registry.md');
+    if (fs.existsSync(registryPath)) {
+      try {
+        const registryContent = fs.readFileSync(registryPath, 'utf8');
+        if (/Intentional\s+Offset/i.test(registryContent) || /Deliberate\s+offset/i.test(registryContent) || /Asymmetrical\s+Tension/i.test(registryContent)) {
+          hasIntentionalOffset = true;
+        }
+      } catch (e) {}
+    }
 
     // Auditor reviews
     const structuralWarnings = [];
-    if (centroid.cx < 0.4) structuralWarnings.push('- Visual Weight Centroid is skewed significantly LEFT. Add accent weight or balance on the right.');
-    else if (centroid.cx > 0.6) structuralWarnings.push('- Visual Weight Centroid is skewed significantly RIGHT. Balance left side layout margins.');
+    if (profile === 'Serene' && (centroid.cx < 0.4 || centroid.cx > 0.6) && !hasIntentionalOffset) {
+      structuralWarnings.push('- Serene profile requires centered centroids.');
+    } else if (centroid.cx < 0.4 && !centroid.isDynamicallyBalanced && !hasIntentionalOffset) {
+      structuralWarnings.push('- Visual Weight Centroid is skewed significantly LEFT. Add accent weight or balance on the right.');
+    } else if (centroid.cx > 0.6 && !centroid.isDynamicallyBalanced && !hasIntentionalOffset) {
+      structuralWarnings.push('- Visual Weight Centroid is skewed significantly RIGHT. Balance left side layout margins.');
+    }
     
     // Check line width rules (65ch boundary)
     if (cssText.includes('max-width') && !/max-width:\s*(65ch|600px|700px|80ch)/i.test(cssText)) {
@@ -445,11 +504,12 @@ function main() {
     }
 
     // Programmatic Taste & Slop Audit
-    const tasteAudit = runTasteAudits(cssText, htmlContent);
+    const tasteAudit = runTasteAudits(cssText, htmlContent, profile);
     
     // Calculate final taste score (base 100)
     let tasteScore = 100;
     tasteScore -= tasteAudit.deduction;
+    tasteScore += tasteAudit.bonus;
     if (structuralWarnings.length > 0) {
       tasteScore -= (structuralWarnings.length * 5); // deduct 5 points per structural issue
     }
@@ -466,8 +526,10 @@ function main() {
 
     console.log('--- COGNITIVE METRICS REPORT ---');
     console.log(`- Visual Weight Centroid: (${centroid.cx}, ${centroid.cy}) | Total Weight Mass: ${centroid.totalWeight}`);
+    if (centroid.isDynamicallyBalanced) console.log(`- Dynamic Balance: Achieved (Offset by counter-weights)`);
+    if (hasIntentionalOffset) console.log(`- Intentional Offset: Documented in design registry`);
     console.log(`- Cognitive Load Index: ${friction.score} | Rating: ${friction.rating}`);
-    console.log(`  [Elements Count: ${friction.totalElements} | Interactive Count: ${friction.interactiveCount} | Colors: ${friction.colorCount}]`);
+    console.log(`  [Elements Count: ${friction.totalElements} | Interactive Count: ${friction.interactiveCount} | Colors: ${friction.colorCount} | Chunks: ${friction.chunkCount}]`);
     console.log(`- APCA Contrast Verification: Perceptual Lightness Compliance Checked.`);
     console.log(`- Layout Balance Advice: ${friction.advice}\n`);
 

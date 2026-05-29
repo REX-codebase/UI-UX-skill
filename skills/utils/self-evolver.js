@@ -70,19 +70,23 @@ function compileMutationRecipes(simulatorOutput, screenshotOutput) {
     loadScore = parseFloat(loadMatch[1]);
   }
 
+  const isBalanced = simulatorOutput.includes('Dynamic Balance: Achieved') || simulatorOutput.includes('Intentional Offset: Documented');
+
   // Visual balance logic: Dynamic Prompt mutations
-  if (centroidX < 0.4) {
-    recipes.push({
-      metric: 'Visual Weight Skew (Left-Heaviness)',
-      issue: `Your visual center of mass is shifted significantly LEFT (${centroidX}). This makes the layout feel visually off-balance and lopsided.`,
-      action: 'ACTION: Shift decorative details, accent colors, or interactive grid columns to the right side of the container. Balance left-heavy typography with a strong high-contrast card block or gradient mesh in your right-most Bento columns.'
-    });
-  } else if (centroidX > 0.6) {
-    recipes.push({
-      metric: 'Visual Weight Skew (Right-Heaviness)',
-      issue: `Your visual center of mass is shifted significantly RIGHT (${centroidX}). This pulls attention away from primary reading columns.`,
-      action: 'ACTION: Increase spacing/margins on the right. Expand the scale of the text content and Display elements in the left-hand column to anchor the layout centroid close to (0.5, 0.5).'
-    });
+  if (!isBalanced) {
+    if (centroidX < 0.4) {
+      recipes.push({
+        metric: 'Visual Weight Skew (Left-Heaviness)',
+        issue: `Your visual center of mass is shifted significantly LEFT (${centroidX}). This makes the layout feel visually off-balance and lopsided.`,
+        action: 'ACTION: Shift decorative details, accent colors, or interactive grid columns to the right side of the container. Balance left-heavy typography with a strong high-contrast card block or gradient mesh in your right-most Bento columns.'
+      });
+    } else if (centroidX > 0.6) {
+      recipes.push({
+        metric: 'Visual Weight Skew (Right-Heaviness)',
+        issue: `Your visual center of mass is shifted significantly RIGHT (${centroidX}). This pulls attention away from primary reading columns.`,
+        action: 'ACTION: Increase spacing/margins on the right. Expand the scale of the text content and Display elements in the left-hand column to anchor the layout centroid close to (0.5, 0.5).'
+      });
+    }
   }
 
   // Cognitive friction logic: Hick's Law mutations
