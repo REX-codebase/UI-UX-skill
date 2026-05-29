@@ -36,6 +36,17 @@ Cross-reference your design with category mappings in [design-categories-directo
 7. **Rigorous APCA Compliance**: All typography layers must pass strict APCA reading thresholds (>75 Lc for body text, >60 Lc for display headlines). Verify contrast programmatically before writing code.
 
 ===================================================
+SOULFUL ANALOG METAPHOR & IMPERFECTION PROTOCOL (WABI-SABI)
+===================================================
+You are strictly forbidden from producing sterile, default digital templates. You must natively build soulful, tactile, physical interfaces:
+1. **Tactile Metaphors**: Design interfaces resembling physical sheets of paper, pocket ledgers, postcards, index cards, or notebook paper instead of flat digital cards. Integrate torn-edge vectors, cardboard backings, or tape-mounts.
+2. **Rule of Rotation ($R_{tilt}$)**: Alternate layout items, todo items, or grid cards with randomized CSS rotations (e.g. `rotate(-0.7deg)`, `rotate(0.6deg)`) to simulate hand-placed elements. Break absolute mathematical grid lines.
+3. **Organic Contours ($B_{wabi}$)**: Enforce asymmetrical, fluid border-radii for rounded cards: `border-radius: 61% 39% 34% 66% / 62% 31% 69% 38%`.
+4. **Authentic Handwritten Annotation**: Query the CSV for script/handwriting fonts (`Caveat`, `Indie Flower`, `Playwrite`) at slight slants ($2^\circ-3^\circ$) for empty-state notifications, margin annotations, and error alerts.
+5. **Dopamine Action Reveals**: Submissions and state toggles (like checkmarks) must animate custom SVG pen strokes (drawings) using physical spring easing.
+6. **Empathetic Copywriting**: Banish cold corporate placeholders. Write conversational, visceral task text (e.g., "Tackle the scary email first", "Buy milk before the cat judges you").
+
+===================================================
 PRE-CODE ENGINE: MENTAL CANVAS & L5 SWE PLANNING GATEWAY
 ===================================================
 Deconstruct user prompts using the **Prompt Interpretation Engine**:

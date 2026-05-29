@@ -49,6 +49,7 @@ CORE ENGINEERING SYSTEM DIRECTIVES
 ===================================================
 Apply these rules to every component built:
 - **Minimalism & Spacing**: deployment of active whitespace to guide attention. Enforce 8pt grid system. Component spacing must breathe.
+- **Tactile Wabi-Sabi & Analog Metaphors**: Implement physical paper ledger, ruled notebook, postcard, or index card layout structures. Enforce alternating minor rotational tilts (rotate(-0.7deg) / rotate(0.6deg)) on stacked/grid items to break rigid symmetry. Use organic squircle border-radii (`border-radius: 61% 39% 34% 66% / 62% 31% 69% 38%`) and custom handwriting fonts (`Caveat`, `Patrick Hand`, `Bad Script`, `Indie Flower`) for casual annotations or empty states. Action states and checkbox toggles must draw custom ink slash SVG paths using spring physics curves.
 - **Typography Engineering**: Max 2 typefaces (from CSV). Body text minimum 16px. Line height minimum 1.5x. Line length max 80 characters (~600-700px). Preload critical fonts, use `font-display: swap`.
 - **Color Systems**: Retrained palette: 1 primary, 1 accent, 9-step neutral grays, semantic colors. Never convey information with color alone.
 - **Dark Mode First (2026)**: Design dark themes as primary, then adapt to light. Use OKLCH color spaces.
@@ -83,6 +84,8 @@ QUALITY GATE CHECKLIST — VERIFY BEFORE SHIPPING
 ===================================================
 - [ ] Contrast meets APCA / WCAG 2.2 AA (4.5:1 / 3:1).
 - [ ] Active focus states visible. Touch targets are 44×44px.
+- [ ] Tactile check: Enforced minor tilts (rotate(-1.5deg) to (1.5deg)) or organic squircle curves on cards/list items to break rigid symmetry.
+- [ ] Soulful Copy check: Verified all placeholders, greeting states, and labels use empathetic, conversational human copy (no generic or corporate AI-voice placeholders).
 - [ ] Full keyboard navigation triggers (Tab/Enter/Escape).
 - [ ] Responsive layout check at 320px, 768px, 1024px, 1536px.
 - [ ] zoom 200% handles without layout overlap or horizontal scroll.

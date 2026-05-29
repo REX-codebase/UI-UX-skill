@@ -322,15 +322,388 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
   let tasteScoreDeduction = 0;
   let bonusScore = 0;
 
-  // Multi-Factor Intelligence Engine Bonuses
-  if (/oklch\(|conic-gradient/i.test(cssText)) {
-    bonusScore += 10;
+  // Clean comments from CSS to prevent false positive matches
+  const cleanCSS = cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+
+  // ===========================================================================
+  // 0. CORE DESIGN SYSTEM & STYLE PARSING ENGINE (Supporting CSS Variables)
+  // ===========================================================================
+  const cssRules = [];
+  const ruleRegex = /([^{}]+)\{([^{}]+)\}/g;
+  let match;
+  while ((match = ruleRegex.exec(cleanCSS)) !== null) {
+    const selector = match[1].trim().toLowerCase();
+    const block = match[2].trim();
+    const declarations = {};
+    const decRegex = /([\w-]+)\s*:\s*([^;]+)/g;
+    let decMatch;
+    while ((decMatch = decRegex.exec(block)) !== null) {
+      declarations[decMatch[1].trim().toLowerCase()] = decMatch[2].trim();
+    }
+    cssRules.push({ selector, declarations });
   }
-  if (/font-family\s*:\s*[^;]*['"]?(Outfit|Space Grotesk|Instrument Serif)['"]?/i.test(cssText)) {
+
+  const inlineStyles = [];
+  const inlineStyleRegex = /style=["']([^"']+)["']/gi;
+  let inlineMatch;
+  while ((inlineMatch = inlineStyleRegex.exec(htmlContent)) !== null) {
+    const block = inlineMatch[1].trim();
+    const declarations = {};
+    const decRegex = /([\w-]+)\s*:\s*([^;]+)/g;
+    let decMatch;
+    while ((decMatch = decRegex.exec(block)) !== null) {
+      declarations[decMatch[1].trim().toLowerCase()] = decMatch[2].trim();
+    }
+    inlineStyles.push(declarations);
+  }
+
+  const cssVariables = {};
+  const allDeclarations = [];
+
+  cssRules.forEach(rule => {
+    allDeclarations.push({
+      selector: rule.selector,
+      declarations: rule.declarations
+    });
+    // Extract CSS Custom Properties (variables)
+    Object.keys(rule.declarations).forEach(key => {
+      if (key.startsWith('--')) {
+        cssVariables[key] = rule.declarations[key];
+      }
+    });
+  });
+
+  inlineStyles.forEach(dec => {
+    allDeclarations.push({
+      selector: '[inline]',
+      declarations: dec
+    });
+    // Extract variables from inline styles
+    Object.keys(dec).forEach(key => {
+      if (key.startsWith('--')) {
+        cssVariables[key] = dec[key];
+      }
+    });
+  });
+
+  // Resolve var(--name) references recursively
+  function resolveValue(val) {
+    if (!val) return null;
+    const varMatch = /var\((--[\w-]+)\)/i.exec(val);
+    if (varMatch && cssVariables[varMatch[1]]) {
+      return resolveValue(cssVariables[varMatch[1]]);
+    }
+    return val;
+  }
+
+  // Normalize font-sizes to rem units
+  function normalizeFontSize(sizeStr) {
+    const val = resolveValue(sizeStr);
+    if (!val) return null;
+    
+    // px values
+    const pxMatch = /^([0-9.]+)\s*px$/i.exec(val);
+    if (pxMatch) return parseFloat(pxMatch[1]) / 16;
+    
+    // rem or em values
+    const remMatch = /^([0-9.]+)\s*r?em$/i.exec(val);
+    if (remMatch) return parseFloat(remMatch[1]);
+    
+    // percentages
+    const pctMatch = /^([0-9.]+)\s*%$/i.exec(val);
+    if (pctMatch) return parseFloat(pctMatch[1]) / 100;
+    
+    // clamp/calc/viewport functions
+    if (val.includes('clamp') || val.includes('calc') || val.includes('vw') || val.includes('vh')) {
+      const remMatches = val.match(/([0-9.]+)\s*r?em/gi);
+      if (remMatches && remMatches.length > 0) {
+        return Math.max(...remMatches.map(m => parseFloat(m)));
+      }
+      const pxMatches = val.match(/([0-9.]+)\s*px/gi);
+      if (pxMatches && pxMatches.length > 0) {
+        return Math.max(...pxMatches.map(m => parseFloat(m) / 16));
+      }
+      const numMatch = /([0-9.]+)/.exec(val);
+      if (numMatch) return parseFloat(numMatch[1]);
+    }
+    
+    const plainNumMatch = /^([0-9.]+)$/.exec(val);
+    if (plainNumMatch) return parseFloat(plainNumMatch[1]);
+    
+    return null;
+  }
+
+  // Normalize line-heights to unitless values
+  function normalizeLineHeight(lhStr) {
+    const val = resolveValue(lhStr);
+    if (!val) return null;
+    
+    // Unitless
+    const unitlessMatch = /^([0-9.]+)$/.exec(val);
+    if (unitlessMatch) return parseFloat(unitlessMatch[1]);
+    
+    // Percent
+    const pctMatch = /^([0-9.]+)\s*%$/.exec(val);
+    if (pctMatch) return parseFloat(pctMatch[1]) / 100;
+    
+    // px
+    const pxMatch = /^([0-9.]+)\s*px$/.exec(val);
+    if (pxMatch) return parseFloat(pxMatch[1]) / 16;
+    
+    // rem/em
+    const remMatch = /^([0-9.]+)\s*r?em$/.exec(val);
+    if (remMatch) return parseFloat(remMatch[1]);
+    
+    return null;
+  }
+
+  // ===========================================================================
+  // 1. TYPOGRAPHIC SCALE & LINE-HEIGHT HIERARCHY
+  // ===========================================================================
+  let h1FontSize = null;
+  let pFontSize = null;
+  let pLineHeight = null;
+  let bodyLineHeight = null;
+
+  allDeclarations.forEach(item => {
+    const sel = item.selector;
+    const decs = item.declarations;
+
+    if (sel.includes('h1') && decs['font-size']) {
+      h1FontSize = decs['font-size'];
+    }
+    if ((sel === 'p' || sel.includes('body') || sel.includes('text') || sel.includes('paragraph')) && decs['font-size']) {
+      pFontSize = decs['font-size'];
+    }
+    if (sel === 'p' && decs['line-height']) {
+      pLineHeight = decs['line-height'];
+    }
+    if ((sel === 'body' || sel === 'html') && decs['line-height']) {
+      bodyLineHeight = decs['line-height'];
+    }
+  });
+
+  const h1Size = normalizeFontSize(h1FontSize) || 2.0; // Browser default 2em/32px
+  const pSize = normalizeFontSize(pFontSize) || 1.0;   // Browser default 1em/16px
+  const ratio = h1Size / pSize;
+
+  if (ratio < 1.75) {
+    tasteScoreDeduction += 12;
+    warnings.push({
+      type: 'TYPO_SCALE_WARN',
+      severity: 'high',
+      message: `Flat typographic scale detected (h1-to-paragraph ratio is ${ratio.toFixed(2)}x, target >= 1.75x). The h1 size of [${h1FontSize || 'default'}] compared to paragraph [${pFontSize || 'default'}] lacks dramatic contrast. Upgrade to an avant-garde striking scale (e.g. h1 at 3rem+ or 300%) to establish elegant visual tension.`
+    });
+  } else {
+    bonusScore += 8;
+  }
+
+  const normalizedLH = normalizeLineHeight(pLineHeight) || normalizeLineHeight(bodyLineHeight);
+  if (normalizedLH === null) {
+    tasteScoreDeduction += 10;
+    warnings.push({
+      type: 'TYPO_LINEHEIGHT_WARN',
+      severity: 'medium',
+      message: `Missing custom paragraph line-height. Standard browser defaults are cramped and tire the eye. Set an elegant, breathable paragraph line-height between 1.4 and 1.8 (e.g., line-height: 1.6) to establish a premium reading rhythm.`
+    });
+  } else if (normalizedLH < 1.4 || normalizedLH > 1.85) {
+    tasteScoreDeduction += 8;
+    warnings.push({
+      type: 'TYPO_LINEHEIGHT_WARN',
+      severity: 'medium',
+      message: `Uncomfortable line-height of [${normalizedLH}] detected (comfortable paragraph range: 1.4 to 1.8). A line-height of ${normalizedLH} is either too cramped or excessively sparse, breaking reading rhythm.`
+    });
+  } else {
+    bonusScore += 8;
+  }
+
+  // ===========================================================================
+  // 2. PHYSICAL WABI-SABI PROPERTIES (Organic Asymmetric Aesthetics)
+  // ===========================================================================
+  // Squircle check: checks for slash '/' syntax indicating separate horizontal and vertical radii, or 4 distinct values
+  const hasSquircle = /\bborder-radius\s*:\s*[^;{}]*\/[^;{}]*/i.test(cssText) || 
+                      /\bborder-radius\s*:\s*(?:\d+(?:\.\d+)?\w+\s+){3,}\d+(?:\.\d+)?\w+/i.test(cssText);
+
+  // Slight rotate tilts check: checks for rotate(...) transforms between 0.1deg and 5deg (positive or negative)
+  let hasCardTilt = false;
+  const rotateRegex = /rotate\(\s*(-?[0-9.]+)\s*(deg|rad|turn)?\s*\)/gi;
+  let rotMatch;
+  while ((rotMatch = rotateRegex.exec(cssText + htmlContent)) !== null) {
+    const val = parseFloat(rotMatch[1]);
+    const unit = rotMatch[2] || 'deg';
+    let deg = val;
+    if (unit === 'rad') deg = val * (180 / Math.PI);
+    else if (unit === 'turn') deg = val * 360;
+    
+    if (Math.abs(deg) > 0.1 && Math.abs(deg) <= 5.0) {
+      hasCardTilt = true;
+      break;
+    }
+  }
+
+  // Handwritten cursive check: checks for annotation text styled with cursive fonts
+  const hasHandwritten = /font-family\s*:\s*[^;]*\b(cursive|caveat|architects|sacramento|kalam|patrick|handwritten)\b/i.test(cssText) ||
+                        /class=["'][^"']*\b(annotation|handwritten|scribble|note-handwritten)\b[^"']*["']/i.test(htmlContent);
+
+  // Torn-edge SVG check: checks for polygon clip-paths, torn element classes or torn-edge masking images
+  const hasTornEdge = /clip-path\s*:\s*\b(path|polygon)\b/i.test(cssText) || 
+                      /class=["'][^"']*\b(torn-edge|torn|rough-edge|wabi-sabi)\b[^"']*["']/i.test(htmlContent) ||
+                      /mask-image\s*:\s*url\([^)]*torn[^)]*\)/i.test(cssText);
+
+  const wabiSabiFeatures = [];
+  if (hasSquircle) wabiSabiFeatures.push('Organic squircle border-radii');
+  if (hasCardTilt) wabiSabiFeatures.push('Alternate card tilts/rotations');
+  if (hasHandwritten) wabiSabiFeatures.push('Handwritten annotations');
+  if (hasTornEdge) wabiSabiFeatures.push('Torn-edge SVGs');
+
+  bonusScore += wabiSabiFeatures.length * 6;
+
+  if (wabiSabiFeatures.length < 2) {
+    tasteScoreDeduction += 10;
+    warnings.push({
+      type: 'WABI_SABI_WARN',
+      severity: 'medium',
+      message: `Digital Sterility detected. Found only [${wabiSabiFeatures.join(', ') || 'none'}] of the physical Wabi-Sabi characteristics. Avant-garde interfaces thrive on controlled imperfection. Incorporate organic squircle border-radii (using "/" slash syntax), subtle card tilts (e.g. rotate(-1.5deg)), handwritten annotation notes, or torn-edge SVGs to break the coldness of perfect pixels.`
+    });
+  } else {
+    bonusScore += 8;
+  }
+
+  // ===========================================================================
+  // 3. ADVANCED NEWTONIAN PHYSICS (Dynamic Motion Curves)
+  // ===========================================================================
+  const hasTransitionAll = /\btransition\s*:\s*all\b/i.test(cssText) || 
+                           /\btransition-property\s*:\s*all\b/i.test(cssText);
+
+  if (hasTransitionAll) {
+    tasteScoreDeduction += 15;
+    warnings.push({
+      type: 'PHYSICS_TRANSITION_ALL_WARN',
+      severity: 'high',
+      message: `Performance-killing 'transition: all' detected. Animating all properties triggers continuous browser paint operations and costly layout recalculations. Transition only targeted properties (e.g., "transition: transform 0.4s, opacity 0.4s") to ensure fluid 120 FPS performance.`
+    });
+  }
+
+  const hasGenericTransition = /\btransition\s*:\s*[^;]*(linear|ease-in-out|ease-in|ease-out|0\.3s\s+ease|0\.2s\s+ease)\b/i.test(cssText) ||
+                               /\btransition-timing-function\s*:\s*(linear|ease-in-out|ease-in|ease-out)\b/i.test(cssText);
+
+  if (hasGenericTransition) {
+    tasteScoreDeduction += 10;
+    warnings.push({
+      type: 'PHYSICS_GENERIC_CURVE_WARN',
+      severity: 'medium',
+      message: `Generic mechanical transition curve (linear, ease, or ease-in-out) detected. Standard curves feel robotic and computerized. Swap them out for a customized targeted spring curve to simulate real Newtonian physical friction.`
+    });
+  }
+
+  // Spring Easing check: checks if a cubic-bezier has coordinates Y1 or Y2 outside the 0-1 range (overshoot / anticipation)
+  let hasSpringEasing = false;
+  const bezierRegex = /cubic-bezier\(\s*(-?[0-9.]+)\s*,\s*(-?[0-9.]+)\s*,\s*(-?[0-9.]+)\s*,\s*(-?[0-9.]+)\s*\)/gi;
+  let bezMatch;
+  while ((bezMatch = bezierRegex.exec(cleanCSS)) !== null) {
+    const y1 = parseFloat(bezMatch[2]);
+    const y2 = parseFloat(bezMatch[4]);
+    if (y1 > 1.0 || y2 > 1.0 || y1 < 0.0 || y2 < 0.0) {
+      hasSpringEasing = true;
+      break;
+    }
+  }
+
+  if (hasSpringEasing) {
+    bonusScore += 15;
+  } else {
+    tasteScoreDeduction += 12;
+    warnings.push({
+      type: 'PHYSICS_SPRING_MISSING_WARN',
+      severity: 'high',
+      message: `Missing targeted spring physics. Avant-Garde interfaces require organic physical acceleration. Leverage a high-tension spring easing curve such as "cubic-bezier(0.34, 1.56, 0.64, 1)" (overshooting spring) or "cubic-bezier(0.25, 1.25, 0.25, 1.0)" to animate hover scaling or active states.`
+    });
+  }
+
+  // ===========================================================================
+  // 4. COLOR SPACE LUXURY (Perceptual Lightness Depth)
+  // ===========================================================================
+  const oklchRegex = /oklch\(\s*([0-9.%]+)\s+([0-9.]+)\s+([0-9.]+)/gi;
+  let oklchMatch;
+  let minLightness = 1.0;
+  let maxLightness = 0.0;
+  let oklchCount = 0;
+  while ((oklchMatch = oklchRegex.exec(cssText + htmlContent)) !== null) {
+    let lVal = oklchMatch[1];
+    let l = parseFloat(lVal);
+    if (lVal.includes('%')) l = l / 100;
+    if (l < minLightness) minLightness = l;
+    if (l > maxLightness) maxLightness = l;
+    oklchCount++;
+  }
+
+  if (oklchCount > 0) {
+    const lightnessDepthRange = maxLightness - minLightness;
+    if (lightnessDepthRange >= 0.5) {
+      bonusScore += 15; // Rewarding rich light-depth range
+    } else {
+      bonusScore += 8;
+    }
+  } else {
+    tasteScoreDeduction += 12;
+    warnings.push({
+      type: 'COLOR_OKLCH_MISSING_WARN',
+      severity: 'high',
+      message: `Standard color space detected. Modern luxury designs leverage the perceptually uniform oklch() color space, which prevents hue shifting under different light intensities. Define a deep ambient light-depth palette (lightness range from oklch(0.15 ...) to oklch(0.98 ...)) to achieve premium lighting aesthetics.`
+    });
+  }
+
+  const hasConic = /conic-gradient/i.test(cssText + htmlContent);
+  if (hasConic) {
     bonusScore += 10;
   }
 
-  // 1. Color Taste Check
+  const hasBackdrop = /backdrop-filter/i.test(cssText + htmlContent);
+  if (hasBackdrop) {
+    bonusScore += 10;
+  } else {
+    tasteScoreDeduction += 8;
+    warnings.push({
+      type: 'COLOR_GLASSMORPHISM_MISSING_WARN',
+      severity: 'medium',
+      message: `Missing tactile backdrop-filters. Standard flat transparent backgrounds feel low-end. Apply "backdrop-filter: blur(12px)" combined with low-opacity oklch backgrounds to create high-premium glassmorphic surfaces.`
+    });
+  }
+
+  // ===========================================================================
+  // 5. TACTILE MICRO-INTERACTIONS (Elastic Actions)
+  // ===========================================================================
+  const hasStrokeAnimation = /stroke-dashoffset/i.test(cssText) || 
+                             /stroke-dasharray/i.test(cssText) ||
+                             /keyframes\s+[^{]*stroke/i.test(cssText);
+  if (hasStrokeAnimation) {
+    bonusScore += 10;
+  }
+
+  const hasHoverTransform = /:hover\s*\{[^}]*\b(transform|scale|translate)\b/i.test(cssText) ||
+                            /:hover\s*[^}]*\b(transform|scale|translate)\b/i.test(cssText) ||
+                            /transition\s*:[^;]*transform/i.test(cssText) && /:hover/i.test(cssText);
+
+  if (hasHoverTransform) {
+    if (hasSpringEasing) {
+      bonusScore += 15; // Perfect combination: hover animation + spring curve
+    } else {
+      bonusScore += 8;
+    }
+  } else {
+    tasteScoreDeduction += 10;
+    warnings.push({
+      type: 'INTERACTION_TACTILE_MISSING_WARN',
+      severity: 'medium',
+      message: `Lack of tactile micro-interactions on hover or active states. Add subtle spring-elastic scaling (e.g. active elements scaling down to 0.97 on click and scaling up slightly to 1.03 on hover) to make interactive elements feel responsive and physical.`
+    });
+  }
+
+  // ===========================================================================
+  // ORIGINAL AESTHETIC & ANTI-SLOP AUDITS
+  // ===========================================================================
+  
+  // A. Banned flat color tokens check
   const bannedColors = [
     { value: '#3b82f6', name: 'Tailwind Blue-500' },
     { value: '#2563eb', name: 'Tailwind Blue-600' },
@@ -357,18 +730,18 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
     });
   }
 
-  // Check for purple-to-blue gradient slop
+  // B. Purple-to-blue gradient slop check
   if (/linear-gradient\(.*(#4f46e5|#6366f1|indigo).*#3b82f6.*\)/gi.test(cssText) || 
       /linear-gradient\(.*#3b82f6.*(#4f46e5|#6366f1|indigo).*\)/gi.test(cssText)) {
     tasteScoreDeduction += 15;
     warnings.push({
       type: 'SLOP_COLOR_WARN',
       severity: 'critical',
-      message: `Banned purple-to-blue gradient detected. This is a generic AI confort-zone cliché. Swap for multi-stop conic glow meshes or low-luminance OKLCH background surfaces.`
+      message: `Banned purple-to-blue gradient detected. This is a generic AI comfort-zone cliché. Swap for multi-stop conic glow meshes or low-luminance OKLCH background surfaces.`
     });
   }
 
-  // 2. Typography Taste Check
+  // C. Banned standard typography template check
   const bannedFonts = ['Inter', 'Roboto', 'Poppins', 'Montserrat'];
   bannedFonts.forEach(font => {
     const regex = new RegExp(`font-family\\s*:\\s*[^;]*['"]?${font}['"]?`, 'gi');
@@ -382,7 +755,7 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
     }
   });
 
-  // 3. Animation Taste Check
+  // D. Generic mechanical animation check
   const bannedAnimations = [
     { pattern: /transition\s*:\s*all\s+0\.3s\s+ease-in-out/gi, name: 'transition-all duration-300 ease-in-out' },
     { pattern: /transition\s*:\s*all\s+0\.3s\s+ease\b/gi, name: 'transition-all duration-300 ease' },
@@ -401,7 +774,7 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
     }
   });
 
-  // 4. Layout Symmetry Check (cardocalypse / simple grids)
+  // E. Symmetrical layout grid check
   if (/grid-template-columns\s*:\s*repeat\(\s*3\s*,\s*1fr\s*\)/gi.test(cssText) ||
       /grid-template-columns\s*:\s*1fr\s+1fr\s+1fr/gi.test(cssText)) {
     if (profile !== 'Brutalist') {
@@ -414,8 +787,13 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
     }
   }
 
+  // F. Secondary premium typography check
+  if (/font-family\s*:\s*[^;]*['"]?(Outfit|Space Grotesk|Instrument Serif)['"]?/i.test(cssText)) {
+    bonusScore += 10;
+  }
+
   return {
-    deduction: Math.min(30, tasteScoreDeduction), // Cap taste deduction at 30 points
+    deduction: Math.min(80, tasteScoreDeduction), // Cap taste deduction at 80 points to reflect comprehensive checks
     bonus: bonusScore,
     warnings
   };
