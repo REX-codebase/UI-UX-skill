@@ -49,6 +49,90 @@ function saveState(state) {
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2), 'utf8');
 }
 
+// SVG Path Parser for bounding proxy
+function approximatePathHull(d) {
+  const commands = [];
+  const tokens = d.match(/[a-zA-Z]|[-+]?(?:\d*\.\d+|\d+)(?:[eE][-+]?\d+)?/g) || [];
+  
+  let currentCmd = '';
+  let args = [];
+  
+  for (const token of tokens) {
+    if (/[a-zA-Z]/.test(token)) {
+      if (currentCmd) commands.push({ cmd: currentCmd, args });
+      currentCmd = token;
+      args = [];
+    } else {
+      args.push(parseFloat(token));
+    }
+  }
+  if (currentCmd) commands.push({ cmd: currentCmd, args });
+  
+  let x = 0, y = 0;
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  let pointCount = 0;
+
+  function addPoint(px, py) {
+    if (px < minX) minX = px;
+    if (px > maxX) maxX = px;
+    if (py < minY) minY = py;
+    if (py > maxY) maxY = py;
+    pointCount++;
+  }
+
+  for (const { cmd, args } of commands) {
+    const isRel = cmd === cmd.toLowerCase();
+    const c = cmd.toUpperCase();
+    
+    let i = 0;
+    if (c === 'Z') continue;
+    
+    while (i < args.length) {
+      if (c === 'M' || c === 'L' || c === 'T') {
+        if (isRel && pointCount > 0) { x += args[i]; y += args[i+1]; }
+        else { x = args[i]; y = args[i+1]; }
+        addPoint(x, y);
+        i += 2;
+      } else if (c === 'H') {
+        if (isRel) x += args[i]; else x = args[i];
+        addPoint(x, y);
+        i += 1;
+      } else if (c === 'V') {
+        if (isRel) y += args[i]; else y = args[i];
+        addPoint(x, y);
+        i += 1;
+      } else if (c === 'C') {
+        for (let j = 0; j < 6; j += 2) {
+          let px = isRel ? x + args[i+j] : args[i+j];
+          let py = isRel ? y + args[i+j+1] : args[i+j+1];
+          addPoint(px, py);
+          if (j === 4) { x = px; y = py; }
+        }
+        i += 6;
+      } else if (c === 'S' || c === 'Q') {
+        for (let j = 0; j < 4; j += 2) {
+          let px = isRel ? x + args[i+j] : args[i+j];
+          let py = isRel ? y + args[i+j+1] : args[i+j+1];
+          addPoint(px, py);
+          if (j === 2) { x = px; y = py; }
+        }
+        i += 4;
+      } else if (c === 'A') {
+        let px = isRel ? x + args[i+5] : args[i+5];
+        let py = isRel ? y + args[i+6] : args[i+6];
+        addPoint(px, py);
+        x = px; y = py;
+        i += 7;
+      } else {
+        break; // unknown command, avoid infinite loop
+      }
+    }
+  }
+
+  if (minX === Infinity) { minX = 0; minY = 0; maxX = 100; maxY = 100; }
+  return { minX, minY, maxX, maxY, pointCount };
+}
+
 // Convert Hex to RGB
 function hexToRgb(hex) {
   if (!hex) return { r: 0, g: 0, b: 0 };
@@ -175,6 +259,22 @@ function compileCanvas(state) {
         white-space: pre-wrap;
       }`;
       elementsHtml += `    <div class="canvas-item ${classId}" id="${layer.name || 'text-' + idx}">${layer.content || ''}</div>\n`;
+    } else if (layer.type === 'vector') {
+      style += `\n    .${classId} { color: ${layer.fill || 'currentColor'}; opacity: ${layer.opacity || 1}; }`;
+      if (layer.stroke && layer.stroke !== 'none') {
+        style += `\n    .${classId} svg { stroke: ${layer.stroke}; }`;
+      }
+      
+      let svgPaths = '';
+      if (layer.paths && layer.paths.length > 0) {
+        svgPaths = layer.paths.map(d => `<path d="${d}" fill="${layer.fill || 'currentColor'}" stroke="${layer.stroke || 'none'}" />`).join('\n        ');
+      }
+
+      elementsHtml += `    <div class="canvas-item ${classId}" id="${layer.name || 'vector-' + idx}">
+      <svg viewBox="${layer.viewBox || '0 0 100 100'}" width="100%" height="100%" preserveAspectRatio="none">
+        ${svgPaths}
+      </svg>
+    </div>\n`;
     }
 
     layerCss += style + '\n';
@@ -369,10 +469,23 @@ function renderTerminalVision(state, type = 'color') {
       if (layer.type === 'text') {
         textContrast = `${calcAPCA(layer.color || '#fff', parentBg)} APCA`;
       }
+      
+      let center = { x: layer.x + layer.w / 2, y: layer.y + layer.h / 2 };
+      if (layer.type === 'vector' && layer.meta && layer.meta.boundingBox) {
+         const vb = (layer.viewBox || '0 0 100 100').split(' ').map(Number);
+         const vbW = vb[2] || 100;
+         const vbH = vb[3] || 100;
+         const scaleX = layer.w / vbW;
+         const scaleY = layer.h / vbH;
+         center.x = layer.x + (layer.meta.boundingBox.x + layer.meta.boundingBox.w / 2) * scaleX;
+         center.y = layer.y + (layer.meta.boundingBox.y + layer.meta.boundingBox.h / 2) * scaleY;
+      }
+
       return {
         id: layer.name || `${layer.type}-${idx}`,
         type: layer.type,
         box: { top: layer.y, left: layer.x, width: layer.w, height: layer.h },
+        visualCenter: center,
         fill: layer.fill || layer.color || '#fff',
         contrast: textContrast,
         interactive: !!layer.interactive
@@ -462,6 +575,20 @@ function runAudits(state) {
       }
     }
   }
+
+  // Audit 5: Vector Metadata Check
+  state.layers.forEach((layer, idx) => {
+    if (layer.type === 'vector') {
+      if (!layer.meta || layer.meta.fillDensity === undefined || !layer.meta.boundingBox) {
+        score -= 10;
+        reports.push({
+          type: 'VECTOR_METADATA_MISSING',
+          severity: 'high',
+          message: `Vector element [${layer.name || idx}] is missing mandatory bounding box or fill density metadata.`
+        });
+      }
+    }
+  });
 
   return {
     testSuite: 'Avant-Garde OS Visual Auditor',
@@ -582,8 +709,8 @@ Options:
 
     case 'draw':
       const shapeType = args[1];
-      if (!['rect', 'circle', 'text'].includes(shapeType)) {
-        console.error('Error: Specify a valid vector shape format: rect, circle, or text.');
+      if (!['rect', 'circle', 'text', 'vector'].includes(shapeType)) {
+        console.error('Error: Specify a valid vector shape format: rect, circle, text, or vector.');
         process.exit(1);
       }
       const newLayer = {
@@ -610,6 +737,43 @@ Options:
         newLayer.weight = parseInt(params.weight, 10) || 400;
         newLayer.color = params.color || '#ffffff';
         newLayer.align = params.align || 'left';
+      } else if (shapeType === 'vector') {
+        newLayer.paths = [];
+        newLayer.viewBox = params.viewBox || '0 0 100 100';
+        newLayer.fill = params.fill || 'currentColor';
+        newLayer.stroke = params.stroke || 'none';
+        newLayer.opacity = parseFloat(params.opacity) || 1;
+
+        if (params.file) {
+          const svgContent = fs.readFileSync(path.resolve(params.file), 'utf8');
+          const vbMatch = svgContent.match(/viewBox=["']([^"']+)["']/);
+          if (vbMatch) newLayer.viewBox = vbMatch[1];
+          const pathMatches = [...svgContent.matchAll(/<path[^>]*d=["']([^"']+)["'][^>]*>/g)];
+          pathMatches.forEach(m => newLayer.paths.push(m[1]));
+        } else if (params.path) {
+          newLayer.paths.push(params.path);
+        }
+
+        // Calculate bounding proxy across all paths
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        let totalPoints = 0;
+        newLayer.paths.forEach(d => {
+          const hull = approximatePathHull(d);
+          if (hull.minX < minX) minX = hull.minX;
+          if (hull.minY < minY) minY = hull.minY;
+          if (hull.maxX > maxX) maxX = hull.maxX;
+          if (hull.maxY > maxY) maxY = hull.maxY;
+          totalPoints += hull.pointCount;
+        });
+        
+        if (minX === Infinity) { minX = 0; minY = 0; maxX = 100; maxY = 100; }
+        const w = maxX - minX;
+        const h = maxY - minY;
+        
+        newLayer.meta = {
+          boundingBox: { x: minX, y: minY, w, h },
+          fillDensity: Math.min(1.0, totalPoints * 0.05)
+        };
       }
 
       state.layers.push(newLayer);
