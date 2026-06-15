@@ -65,6 +65,68 @@ Please evaluate three distinct architectural paths:
   fs.writeFileSync(destPath, template, 'utf8');
 }
 
+function auditResearch(content) {
+  const logs = [];
+  const hasContractHeader = /## 4\.\s+Contract Specifications|#+\s+.*Contract Specifications/i.test(content);
+  const hasSchemas = /Inputs|Outputs|State\s*Lifecycle|contract/i.test(content);
+  
+  if (!hasContractHeader) {
+    logs.push('Missing "## 4. Contract Specifications" heading.');
+  }
+  if (!hasSchemas) {
+    logs.push('Missing strict Interface / API contracts or State Lifecycle definitions.');
+  }
+  return logs;
+}
+
+function auditSimulation(content) {
+  const logs = [];
+  const hasMultiPathHeader = /## 1\.\s+Multi-Path|#+\s+.*Multi-Path/i.test(content);
+  const hasMarkdownTable = /\|.*\|.*\n\s*\|[\s:-|]+\|\n\s*\|.*\|/i.test(content) || /\|.*Path Options.*\|/i.test(content);
+  
+  if (!hasMultiPathHeader) {
+    logs.push('Missing "## 1. Multi-Path Evaluation" heading.');
+  }
+  if (!hasMarkdownTable) {
+    logs.push('Missing Multi-Path Trade-Off Scoring table matrix. You must document scoring metrics.');
+  }
+
+  const hasRationaleHeader = /## 2\.\s+Selected Path|#+\s+.*Selected Path/i.test(content);
+  const hasChosenDeclaration = /-?\s*\*\*Chosen:\*\*\s*\w+/i.test(content) || /Chosen\s*:/i.test(content);
+  
+  if (!hasRationaleHeader) {
+    logs.push('Missing "## 2. Selected Path Rationale" heading.');
+  }
+  if (!hasChosenDeclaration) {
+    logs.push('Missing specific chosen path declaration (e.g. - **Chosen:** Path B).');
+  }
+  return logs;
+}
+
+function auditThreatModel(content) {
+  const logs = [];
+  const hasThreatHeader = /## 3\.\s+Defensive Threat|#+\s+.*Defensive Threat/i.test(content);
+  const failureCount = (content.match(/Failure\s*\d|Mitigation/gi) || []).length;
+  
+  if (!hasThreatHeader) {
+    logs.push('Missing "## 3. Defensive Threat-Model" heading.');
+  }
+  if (failureCount < 4) { // Needs at least a few instances of Failure and Mitigation
+    logs.push('Insufficient threat modeling. You must list at least 3 failure boundaries (Failure 1, 2, 3) and their code-level Mitigations.');
+  }
+
+  const hasCritiqueHeader = /## 5\.\s+Peer Critique|#+\s+.*Peer Critique/i.test(content);
+  const hasSreCritique = /SRE|Breaker|Critique|Modification/i.test(content);
+  
+  if (!hasCritiqueHeader) {
+    logs.push('Missing "## 5. Peer Critique & Mutations" heading.');
+  }
+  if (!hasSreCritique) {
+    logs.push('Missing Split-Brain peer critique notes. Document Pass 2 SRE concerns and your Pass 3 mutations.');
+  }
+  return logs;
+}
+
 function main() {
   ensureDirs();
 
@@ -90,73 +152,12 @@ function main() {
 
   try {
     const content = fs.readFileSync(targetFile, 'utf8');
-    const logs = [];
-    let isCompliant = true;
-
-    // 1. Multi-Path Evaluation Check
-    const hasMultiPathHeader = /## 1\.\s+Multi-Path|#+\s+.*Multi-Path/i.test(content);
-    const hasMarkdownTable = /\|.*\|.*\n\s*\|[\s:-|]+\|\n\s*\|.*\|/i.test(content) || /\|.*Path Options.*\|/i.test(content);
-    
-    if (!hasMultiPathHeader) {
-      isCompliant = false;
-      logs.push('❌ [PLAN_ERROR] Missing "## 1. Multi-Path Evaluation" heading.');
-    }
-    if (!hasMarkdownTable) {
-      isCompliant = false;
-      logs.push('❌ [PLAN_ERROR] Missing Multi-Path Trade-Off Scoring table matrix. You must document scoring metrics.');
-    }
-
-    // 2. Chosen Path Rationale Check
-    const hasRationaleHeader = /## 2\.\s+Selected Path|#+\s+.*Selected Path/i.test(content);
-    const hasChosenDeclaration = /-?\s*\*\*Chosen:\*\*\s*\w+/i.test(content) || /Chosen\s*:/i.test(content);
-    
-    if (!hasRationaleHeader) {
-      isCompliant = false;
-      logs.push('❌ [PLAN_ERROR] Missing "## 2. Selected Path Rationale" heading.');
-    }
-    if (!hasChosenDeclaration) {
-      isCompliant = false;
-      logs.push('❌ [PLAN_ERROR] Missing specific chosen path declaration (e.g. - **Chosen:** Path B).');
-    }
-
-    // 3. Defensive Threat-Model Check
-    const hasThreatHeader = /## 3\.\s+Defensive Threat|#+\s+.*Defensive Threat/i.test(content);
-    const failureCount = (content.match(/Failure\s*\d|Mitigation/gi) || []).length;
-    
-    if (!hasThreatHeader) {
-      isCompliant = false;
-      logs.push('❌ [PLAN_ERROR] Missing "## 3. Defensive Threat-Model" heading.');
-    }
-    if (failureCount < 4) { // Needs at least a few instances of Failure and Mitigation
-      isCompliant = false;
-      logs.push('❌ [PLAN_ERROR] Insufficient threat modeling. You must list at least 3 failure boundaries (Failure 1, 2, 3) and their code-level Mitigations.');
-    }
-
-    // 4. Contract Specifications Check
-    const hasContractHeader = /## 4\.\s+Contract Specifications|#+\s+.*Contract Specifications/i.test(content);
-    const hasSchemas = /Inputs|Outputs|State\s*Lifecycle|contract/i.test(content);
-    
-    if (!hasContractHeader) {
-      isCompliant = false;
-      logs.push('❌ [PLAN_ERROR] Missing "## 4. Contract Specifications" heading.');
-    }
-    if (!hasSchemas) {
-      isCompliant = false;
-      logs.push('❌ [PLAN_ERROR] Missing strict Interface / API contracts or State Lifecycle definitions.');
-    }
-
-    // 5. Peer Critique & Mutations Check
-    const hasCritiqueHeader = /## 5\.\s+Peer Critique|#+\s+.*Peer Critique/i.test(content);
-    const hasSreCritique = /SRE|Breaker|Critique|Modification/i.test(content);
-    
-    if (!hasCritiqueHeader) {
-      isCompliant = false;
-      logs.push('❌ [PLAN_ERROR] Missing "## 5. Peer Critique & Mutations" heading.');
-    }
-    if (!hasSreCritique) {
-      isCompliant = false;
-      logs.push('❌ [PLAN_ERROR] Missing Split-Brain peer critique notes. Document Pass 2 SRE concerns and your Pass 3 mutations.');
-    }
+    const logs = [
+      ...auditSimulation(content),
+      ...auditThreatModel(content),
+      ...auditResearch(content)
+    ];
+    let isCompliant = logs.length === 0;
 
     // Print results
     if (isCompliant) {
@@ -167,7 +168,7 @@ function main() {
     } else {
       console.log('❌ [PLAN_DEFIANT] L5 SWE Design Document failed compliance checks!');
       console.log('Your planning file lacks critical architectural reasoning points:\n');
-      logs.forEach(log => console.log(log));
+      logs.forEach(log => console.log('❌ [PLAN_ERROR] ' + log));
       console.log(`\n📁 Please open and complete:`);
       console.log(`   👉 ${targetFile}`);
       console.log(`\n*AI Agent: Modify this planning file to resolve every error. You are BLOCKED from writing code until the auditor passes!*\n`);
@@ -183,3 +184,10 @@ function main() {
 if (require.main === module) {
   main();
 }
+
+module.exports = {
+  writePlanningTemplate,
+  auditResearch,
+  auditSimulation,
+  auditThreatModel
+};

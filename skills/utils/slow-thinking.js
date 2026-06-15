@@ -9,6 +9,8 @@
 
 const fs = require('fs');
 const path = require('path');
+const auditor = require('./planning-auditor');
+const evolver = require('./self-evolver');
 
 const WORKSPACE_DIR = path.join(process.cwd(), '.vg-canvas');
 const PLANNING_DIR = path.join(WORKSPACE_DIR, 'planning');
@@ -18,6 +20,29 @@ const L5_PLAN_FILE = path.join(PLANNING_DIR, 'l5-planning.md');
 function ensureDirs() {
   if (!fs.existsSync(WORKSPACE_DIR)) fs.mkdirSync(WORKSPACE_DIR, { recursive: true });
   if (!fs.existsSync(PLANNING_DIR)) fs.mkdirSync(PLANNING_DIR, { recursive: true });
+}
+
+function getL5Content() {
+  if (!fs.existsSync(L5_PLAN_FILE)) {
+    auditor.writePlanningTemplate(L5_PLAN_FILE);
+  }
+  return fs.readFileSync(L5_PLAN_FILE, 'utf8');
+}
+
+function handleAuditFailure(buffer, milestoneKey, errorType, failures) {
+  buffer.milestones[milestoneKey].status = 'REPAIR';
+  saveBuffer(buffer);
+  
+  console.log(`\n❌ [MILESTONE_AUDIT_FAIL] Audit failed for ${milestoneKey}.`);
+  console.log(`Generating targeted repair recipes...`);
+
+  const logicFailures = failures.map(msg => ({ type: errorType, message: msg }));
+  const recipes = evolver.compileLogicRecipes(logicFailures);
+  const outPath = evolver.writeStatefulEvolutionPrompt(L5_PLAN_FILE, null, null, recipes, buffer.currentCycle);
+
+  console.log(`\n📁 Saved Stateful Reflexion Prompt to: ${outPath}`);
+  console.log(`\n*AI Agent: Please update the planning file and retry completing the cycle. You are BLOCKED from advancing.*`);
+  process.exit(1);
 }
 
 // Ingest current task status or initialize a new System 2 buffer
@@ -146,6 +171,15 @@ function completeCycle(cycleNumber, findings = '') {
       console.error('Error: Please provide detailed research findings (--findings "<text>"). minimum 10 characters.');
       process.exit(1);
     }
+    
+    // Research-Audit
+    const content = getL5Content();
+    const failures = auditor.auditResearch(content);
+    if (failures.length > 0) {
+      handleAuditFailure(buffer, 'cycle1_research', 'Research Dependency Missing', failures);
+      return;
+    }
+
     buffer.milestones.cycle1_research.status = 'COMPLETED';
     buffer.milestones.cycle1_research.findings = findings;
     buffer.currentCycle = 2;
@@ -162,6 +196,15 @@ function completeCycle(cycleNumber, findings = '') {
       console.error('Error: Please specify the Multi-Path scoring drafts (Path A, B) inside l5-planning.md before completing Cycle 2.');
       process.exit(1);
     }
+
+    // Simulation-Audit
+    const content = getL5Content();
+    const failures = auditor.auditSimulation(content);
+    if (failures.length > 0) {
+      handleAuditFailure(buffer, 'cycle2_simulation', 'Simulation Design Missing', failures);
+      return;
+    }
+
     buffer.milestones.cycle2_simulation.status = 'COMPLETED';
     buffer.milestones.cycle2_simulation.drafts_declared = true;
     buffer.currentCycle = 3;
@@ -177,6 +220,15 @@ function completeCycle(cycleNumber, findings = '') {
       console.error('Error: Please define your 3 failure scenarios and mitigations inside l5-planning.md before completing Cycle 3.');
       process.exit(1);
     }
+
+    // Threat-Audit
+    const content = getL5Content();
+    const failures = auditor.auditThreatModel(content);
+    if (failures.length > 0) {
+      handleAuditFailure(buffer, 'cycle3_threat_model', 'Threat-Model Insufficient', failures);
+      return;
+    }
+
     buffer.milestones.cycle3_threat_model.status = 'COMPLETED';
     buffer.milestones.cycle3_threat_model.mitigations_declared = true;
     buffer.currentCycle = 4; // Unlocked!

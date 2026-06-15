@@ -155,6 +155,15 @@ function compileMutationRecipes(simulatorOutput, screenshotOutput) {
   return { recipes, centroidX, centroidY, loadScore };
 }
 
+// Generates logic repair recipes for slow-thinking audits
+function compileLogicRecipes(logicFailures) {
+  return logicFailures.map((failure, idx) => ({
+    metric: `Cognitive Logic Audit (${failure.type || 'Planning Error'})`,
+    issue: failure.message || failure,
+    action: `ACTION: Update the l5-planning.md document to satisfy this requirement.`
+  }));
+}
+
 // Compiles and writes the stateful markdown prompt file
 function writeStatefulEvolutionPrompt(targetPath, simulatorOutput, screenshotOutput, recipes, generation = 1) {
   const folder = path.dirname(targetPath);
@@ -162,26 +171,30 @@ function writeStatefulEvolutionPrompt(targetPath, simulatorOutput, screenshotOut
 
   // Extract ASCII grids from outputs
   let simulatorAsciiGrid = '';
-  const simStart = simulatorOutput.indexOf('--- VISUAL DENSITY BALANCE CANVAS ---');
-  const simEnd = simulatorOutput.indexOf('-------------------------------------');
-  if (simStart !== -1 && simEnd !== -1) {
-    simulatorAsciiGrid = simulatorOutput.substring(simStart, simEnd + 37);
+  if (simulatorOutput) {
+    const simStart = simulatorOutput.indexOf('--- VISUAL DENSITY BALANCE CANVAS ---');
+    const simEnd = simulatorOutput.indexOf('-------------------------------------');
+    if (simStart !== -1 && simEnd !== -1) {
+      simulatorAsciiGrid = simulatorOutput.substring(simStart, simEnd + 37);
+    }
   }
 
   let screenshotAsciiGrid = '';
-  const scrStart = screenshotOutput.indexOf('--- TEXT-ONLY LUMINANCE BLUEPRINT MAP');
-  const scrEnd = screenshotOutput.indexOf('--- SEMANTIC ANALYSIS REPORT ---');
-  if (scrStart !== -1 && scrEnd !== -1) {
-    screenshotAsciiGrid = screenshotOutput.substring(scrStart, scrEnd);
+  if (screenshotOutput) {
+    const scrStart = screenshotOutput.indexOf('--- TEXT-ONLY LUMINANCE BLUEPRINT MAP');
+    const scrEnd = screenshotOutput.indexOf('--- SEMANTIC ANALYSIS REPORT ---');
+    if (scrStart !== -1 && scrEnd !== -1) {
+      screenshotAsciiGrid = screenshotOutput.substring(scrStart, scrEnd);
+    }
   }
 
   const promptContent = `# 🧬 Design Evolution Reflexion Prompt (Generation #${generation})
 
 You are currently in a **Stateful design self-reflection and prompt mutation loop**. 
 
-Your generated HTML/CSS layout code has been audited programmatically. Your visual/cognitive sensory interfaces (headless capture and design-simulator calculus) have analyzed your layouts and returned the visual coordinate maps and design critiques below. 
+Your generated HTML/CSS layout code or L5 Planning document has been audited programmatically. Your visual/cognitive sensory interfaces (headless capture and design-simulator calculus) or logic milestone gates have analyzed your outputs and returned the design critiques below. 
 
-Even as a text-only or simpler LLM (like GPT-3.5), you do not need to guess how things render on screen! Read this spatial blueprint and apply the precise genetic repair instructions to self-heal your layouts.
+Even as a text-only or simpler LLM (like GPT-3.5), you do not need to guess how things render on screen! Read this spatial blueprint or logic audit and apply the precise genetic repair instructions to self-heal your layouts or plans.
 
 ---
 
@@ -189,12 +202,12 @@ Even as a text-only or simpler LLM (like GPT-3.5), you do not need to guess how 
 
 ### 1. Spatial Weight Density Grid (Calculated from DOM)
 \`\`\`
-${simulatorAsciiGrid || 'Visual Balance grid calculated successfully.'}
+${simulatorAsciiGrid || 'Visual Balance grid skipped/not applicable.'}
 \`\`\`
 
 ### 2. Luminance Density Grid (Captured from Headless Screenshot)
 \`\`\`
-${screenshotAsciiGrid || 'Luminance layout captured successfully.'}
+${screenshotAsciiGrid || 'Luminance layout skipped/not applicable.'}
 \`\`\`
 *Visual weights scale: Lightness/Accents are mapped to characters ( .:-=+*#%@) showing you exact spatial focus points.*
 
@@ -202,12 +215,12 @@ ${screenshotAsciiGrid || 'Luminance layout captured successfully.'}
 
 ## 🧠 Cognitive Metrics Audit
 
-${simulatorOutput.substring(simulatorOutput.indexOf('--- COGNITIVE METRICS REPORT ---'), simulatorOutput.indexOf('--- STRUCTURAL DESIGN CRITIQUE ---')).trim()}
+${simulatorOutput && simulatorOutput.includes('--- COGNITIVE METRICS REPORT ---') ? simulatorOutput.substring(simulatorOutput.indexOf('--- COGNITIVE METRICS REPORT ---'), simulatorOutput.indexOf('--- STRUCTURAL DESIGN CRITIQUE ---')).trim() : 'Cognitive metrics skipped/not applicable.'}
 
 ---
 
-## 🛠️ Prompt Mutation & CSS Repair Recipes
-Read these exact instructions and apply them directly to your CSS rules to evolve the visual layout:
+## 🛠️ Prompt Mutation & Repair Recipes
+Read these exact instructions and apply them directly to your CSS rules or Markdown planning document to resolve the audit failures:
 
 ${recipes.map((r, i) => `### [Recipe ${i + 1}] ${r.metric}
 - **Defect Detected**: ${r.issue}
@@ -216,14 +229,11 @@ ${recipes.map((r, i) => `### [Recipe ${i + 1}] ${r.metric}
 ---
 
 ## 🚀 Evolutionary Directive & Handshake
-1. **Analyze** the sensory layouts and the CSS repair directives above.
-2. **Modify** your HTML and CSS stylesheet rules immediately to resolve every warning and balance your layout gravity centroid.
+1. **Analyze** the sensory layouts, metrics, and repair directives above.
+2. **Modify** your code or planning file immediately to resolve every warning.
 3. **Save** the updated files.
-4. **Re-run the Auditor** to verify your design score:
-   \`\`\`bash
-   node skills/utils/self-evolver.js --file "${path.basename(targetPath)}"
-   \`\`\`
-5. **Goal**: Iterate until the simulator critique reports **✨ Clean design compliance!**
+4. **Re-run the Command** to verify your compliance!
+5. **Goal**: Iterate until the system reports **✨ Clean design compliance!**
 `;
 
   fs.writeFileSync(outPromptPath, promptContent, 'utf8');
@@ -311,3 +321,10 @@ function main() {
 if (require.main === module) {
   main();
 }
+
+module.exports = {
+  runVisualCritiques,
+  compileMutationRecipes,
+  compileLogicRecipes,
+  writeStatefulEvolutionPrompt
+};
