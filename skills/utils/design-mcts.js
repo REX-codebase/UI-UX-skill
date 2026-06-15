@@ -326,7 +326,7 @@ class MCTSNode {
 class MonteCarloTreeSearch {
   constructor(rootState, options = {}) {
     this.root = new MCTSNode(rootState);
-    this.iterations = options.iterations || 1000;
+    this.iterations = options.iterations || 50;
     this.exploration = options.exploration || 1.414; // UCB1 constant
     this.timeout = options.timeout || 60000; // 60 seconds
     this.bestScore = 0;
@@ -351,7 +351,7 @@ class MonteCarloTreeSearch {
       iteration++;
       
       // Progress update
-      if (iteration % 100 === 0) {
+      if (iteration % 5 === 0 || iteration === 1) {
         process.stdout.write(`\rIteration: ${iteration}/${this.iterations} | Best Score: ${this.bestScore.toFixed(1)}/100`);
       }
       
@@ -684,21 +684,46 @@ class MonteCarloTreeSearch {
       // Use design-simulator to analyze the design
       const { stdout } = await exec(`node ${path.join(__dirname, 'design-simulator.js')} --file ${tempFile}`);
       
-      // Parse the output for metrics
-      let score = 50; // Base score
+      let tasteScore = 50;
+      let cognitiveLoadScore = 50;
       
-      // Check for positive indicators
-      if (stdout.includes('Visual Weight Centroid')) score += 10;
-      if (stdout.includes('Cognitive Load Index')) score += 10;
-      if (stdout.includes('Rating: Visual Overload') === false) score += 10;
+      const tasteMatch = stdout.match(/Taste & Aesthetic Score:\s*([\d.]+)\/100/i);
+      if (tasteMatch) {
+        tasteScore = parseFloat(tasteMatch[1]);
+      }
       
-      // Check for warnings
-      if (stdout.includes('Warning:') || stdout.includes('warning:')) score -= 15;
+      const cogMatch = stdout.match(/Cognitive Load Index:\s*([\d.]+)/i);
+      if (cogMatch) {
+        const load = parseFloat(cogMatch[1]);
+        // Lower cognitive load is better.
+        // If load is 0, score is 100. If load is 50+, score is 0.
+        cognitiveLoadScore = Math.max(0, 100 - (load * 2));
+      }
       
-      // Normalize
-      return Math.max(0, Math.min(100, score));
+      // Combine metrics for the continuous cognitive score
+      return (tasteScore + cognitiveLoadScore) / 2;
     } catch (error) {
-      // Fallback: return average score
+      // Even if it errors, try parsing stdout first
+      const stdout = error.stdout || '';
+      
+      let tasteScore = 50;
+      let cognitiveLoadScore = 50;
+      
+      const tasteMatch = stdout.match(/Taste & Aesthetic Score:\s*([\d.]+)\/100/i);
+      if (tasteMatch) {
+        tasteScore = parseFloat(tasteMatch[1]);
+      }
+      
+      const cogMatch = stdout.match(/Cognitive Load Index:\s*([\d.]+)/i);
+      if (cogMatch) {
+        const load = parseFloat(cogMatch[1]);
+        cognitiveLoadScore = Math.max(0, 100 - (load * 2));
+      }
+      
+      if (tasteMatch || cogMatch) {
+        return (tasteScore + cognitiveLoadScore) / 2;
+      }
+      
       return 50;
     }
   }
@@ -706,22 +731,22 @@ class MonteCarloTreeSearch {
   // Evaluate anti-slop quality
   async evaluateAntiSlop(tempFile) {
     try {
-      const { stdout, stderr } = await exec(`node ${path.join(__dirname, 'anti-slop-checker.js')} --file ${tempFile} 2>&1`);
+      const { stdout } = await exec(`node ${path.join(__dirname, 'anti-slop-checker.js')} --file ${tempFile} 2>&1`);
       
       // Extract the score from output
-      const scoreMatch = stdout.match(/Premium Score: (\d+)\/100/);
+      const scoreMatch = stdout.match(/PREMIUM SCORE:\s*(\d+)\/100/i);
       if (scoreMatch) {
         return parseInt(scoreMatch[1]);
       }
       
-      // If checker found violations, penalize
-      if (stdout.includes('VIOLATIONS FOUND')) {
-        const violationCount = (stdout.match(/❌/g) || []).length;
-        return Math.max(0, 100 - (violationCount * 10));
-      }
-      
-      return 100;
+      return 50;
     } catch (error) {
+      // If there's an error but we have stdout, try parsing it
+      const stdout = error.stdout || '';
+      const scoreMatch = stdout.match(/PREMIUM SCORE:\s*(\d+)\/100/i);
+      if (scoreMatch) {
+        return parseInt(scoreMatch[1]);
+      }
       return 50;
     }
   }
@@ -797,7 +822,7 @@ async function main() {
   
   // Parse arguments
   const options = {
-    iterations: 1000,
+    iterations: 50,
     exploration: 1.414,
     timeout: 60000,
     output: null,
@@ -831,7 +856,7 @@ async function main() {
     console.log('\nUsage:');
     console.log('  node skills/utils/design-mcts.js [options]');
     console.log('\nOptions:');
-    console.log('  --iterations <n>    Number of MCTS iterations (default: 1000)');
+    console.log('  --iterations <n>    Number of MCTS iterations (default: 50)');
     console.log('  --exploration <x>   UCB1 exploration constant (default: 1.414)');
     console.log('  --timeout <ms>      Maximum runtime in ms (default: 60000)');
     console.log('  --output <file>     Save best design to file');
