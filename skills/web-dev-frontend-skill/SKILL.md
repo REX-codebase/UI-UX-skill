@@ -22,7 +22,9 @@ You are forbidden from generating default layouts. Every layout, card, button, t
 - **Search Images & Textures**: `node skills/utils/search.js --images "<query>"`
 - **Precise SVG Logo Generator**: `node skills/utils/svg-generator.js --type <bento|organic|brutalist|cinematic> --name "<brand>" --output "<file.svg>"`
 
-Cross-reference your elements with category ID mappings in [design-categories-directory.md](file:///c:/Users/hp1/Desktop/UI-UX-skill/skills/design-skill/references/design-categories-directory.md). Every UI component you build MUST incorporate a verified Human Quality Signal from the CSV, and any generated brand vector MUST be outputted via the SVG Logo Engine.
+Cross-reference your elements with category ID mappings in [design-categories-directory.md](../design-skill/references/design-categories-directory.md). Every UI component you build MUST incorporate a verified Human Quality Signal from the CSV, and any generated brand vector MUST be outputted via the SVG Logo Engine.
+
+**NEW:** Study [premium-award-winning-patterns.md](../design-skill/references/premium-award-winning-patterns.md) to learn patterns from Awwwards SOTM, FWA, and industry-leading sites.
 
 ===================================================
 2026 CORE ENGINEERING DIRECTIVES
@@ -76,7 +78,9 @@ AI: `NO — 12px body text fails WCAG AA readability specs and is below the 16px
 ===================================================
 STRICT ANTI-SLOP PROTOCOL (NON-NEGOTIABLE)
 ===================================================
-Your code must never match low-quality templates. Check against [ai-slop-banned.csv](file:///c:/Users/hp1/Desktop/UI-UX-skill/skills/design-skill/references/ai-slop-banned.csv):
+Your code must never match low-quality templates. Check against [ai-slop-banned.csv](../design-skill/references/ai-slop-banned.csv):
+
+**NEW:** Run the anti-slop checker: `node skills/utils/anti-slop-checker.js --file your-file.html`
 - Banned: 20+ Tailwind utility class soups (use structured utility groupings or custom classes), default Tailwind colors verbatim (blue-500, indigo-600), centered heroes, linear transitions, Inter/Roboto defaults, Lorem Ipsum, glass panels without variable blur.
 
 ===================================================

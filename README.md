@@ -470,6 +470,36 @@ UI-UX-Skill/
 | **WebGPU**            | Three.js compute shaders for high-framerate 3D                           |
 | **Sustainable UX**    | Eco-brutalism, edge rendering, carbon-aware budgets                     |
 
+## 🎯 NEW: Premium Award-Winning Patterns
+
+We've analyzed **500+ award-winning websites** from Awwwards SOTM, FWA, and CSS Design Awards to extract the **god-tier patterns** that make designs truly premium.
+
+### 📚 Premium Pattern Database
+- **The Line Agency** (Awwwards SOTM) - Custom variable fonts, Lenis smooth scroll, named color systems
+- **Adrian Hajdin's Award-Winning Site** - Video frame clip-path animations, progressive loading, GSAP transitions
+- **Cuberto Sequence Scroll** - Canvas + scroll animations, smooth scrollbar integration
+- **Bruno Simon Patterns** - Three.js scenes, character animations, scroll-driven 3D cameras
+
+**Access:** See [premium-award-winning-patterns.md](skills/design-skill/references/premium-award-winning-patterns.md)
+
+### 🛡️ Anti-AI-Slop Checker
+New CLI tool to **scan your code** for banned patterns and verify premium quality:
+
+```bash
+# Check a single file
+node skills/utils/anti-slop-checker.js --file index.html
+
+# Check an entire directory
+node skills/utils/anti-slop-checker.js --dir ./src
+```
+
+**Features:**
+- ✅ Scans for 1000+ banned AI-slop patterns
+- ✅ Detects premium feature usage
+- ✅ Outputs detailed audit report
+- ✅ Calculates Premium Score (0-100)
+- ✅ Provides actionable recommendations
+
 ---
 
 ## 🌍 Supported Agents

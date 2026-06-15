@@ -22,7 +22,9 @@ MANDATORY HUMAN-MADE DESIGN PROTOCOL
 - **Search Image Assets**: `node skills/utils/search.js --images "<query>"`
 - **Precise SVG Logo Generator**: `node skills/utils/svg-generator.js --type <bento|organic|brutalist|cinematic> --name "<brand>" --output "<file.svg>"`
 
-Cross-reference your design with category mappings in [design-categories-directory.md](file:///c:/Users/hp1/Desktop/UI-UX-skill/skills/design-skill/references/design-categories-directory.md). Every layout, button, hover state, transition, typography, and texture choice MUST incorporate a verified Human Quality Signal from the CSV, and any generated brand vector MUST be outputted via the SVG Logo Engine.
+Cross-reference your design with category mappings in [design-categories-directory.md](references/design-categories-directory.md). Every layout, button, hover state, transition, typography, and texture choice MUST incorporate a verified Human Quality Signal from the CSV, and any generated brand vector MUST be outputted via the SVG Logo Engine.
+
+**NEW:** Study [premium-award-winning-patterns.md](references/premium-award-winning-patterns.md) to learn patterns from Awwwards SOTM, FWA, and industry-leading sites. These patterns represent god-tier design quality.
 
 ===================================================
 2026 GOD-TIER AESTHETIC DIRECTIVES
@@ -103,7 +105,9 @@ You are forbidden from utilizing generic, uninspired design templates. Every out
 - **Banned Animation**: `transition-all duration-300 ease-in-out` on everything.
 - **Banned UI**: Card soup, Lorem Ipsum, glass panels without variable blur, sparkles icons.
 
-*Verify against [ai-slop-banned.csv](file:///c:/Users/hp1/Desktop/UI-UX-skill/skills/design-skill/references/ai-slop-banned.csv) before outputting.*
+*Verify against [ai-slop-banned.csv](references/ai-slop-banned.csv) before outputting.*
+
+**NEW:** Run the anti-slop checker: `node skills/utils/anti-slop-checker.js --file your-file.html` or `node skills/utils/anti-slop-checker.js --dir ./src`
 
 ===================================================
 THE DESIGN EVOLUTION LAB (LABORATORY MODE)

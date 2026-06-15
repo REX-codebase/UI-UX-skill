@@ -176,6 +176,11 @@ Zero-dependency programmatic layout auditor that analyzes structural DOM geometr
 - **Command**: `node skills/utils/design-simulator.js --file <filepath>`
 - **Directives**: Audits every created/modified HTML layout file, outputs an ASCII layout weight canvas, and generates a structured design critique to enforce spatial balance and Gestalt spacing.
 
+### 6. Anti-AI-Slop Checker
+Scans your code for banned patterns and verifies premium quality:
+- **Command**: `node skills/utils/anti-slop-checker.js --file <filepath>` or `node skills/utils/anti-slop-checker.js --dir <directory>`
+- **Directives**: Checks against 1000+ banned patterns from [ai-slop-banned.csv](skills/design-skill/references/ai-slop-banned.csv) and verifies premium feature usage. Outputs a detailed audit report with a Premium Score (0-100).
+
 ---
 
 ## CROSS-SKILL INTEGRATION
