@@ -126,14 +126,24 @@ function captureHeadless(browserPath, targetUrl, outputPath, width = 1280, heigh
       stderrData += data.toString();
     });
 
-    // Active polling to check if the screenshot file is written, allowing instant exit
     let resolved = false;
+    const timeoutId = setTimeout(() => {
+      clearInterval(pollInterval);
+      if (resolved) return;
+      child.kill();
+      setTimeout(() => {
+        cleanup();
+        reject(new Error(`Headless browser screenshot capture timed out (15s limit reached).\\nStderr:\\n${stderrData}`));
+      }, 150);
+    }, 15000);
+
     const pollInterval = setInterval(() => {
       if (fs.existsSync(outputPath)) {
         try {
           const stats = fs.statSync(outputPath);
           if (stats.size > 0) {
             clearInterval(pollInterval);
+            clearTimeout(timeoutId);
             resolved = true;
             child.kill(); // clean up and terminate browser
             setTimeout(() => {
@@ -149,6 +159,7 @@ function captureHeadless(browserPath, targetUrl, outputPath, width = 1280, heigh
 
     child.on('close', (code) => {
       clearInterval(pollInterval);
+      clearTimeout(timeoutId);
       if (resolved) return;
       setTimeout(() => {
         cleanup();
@@ -159,17 +170,6 @@ function captureHeadless(browserPath, targetUrl, outputPath, width = 1280, heigh
         }
       }, 150);
     });
-
-    // Enforce 15-second timeout safeguard to prevent hanging
-    setTimeout(() => {
-      clearInterval(pollInterval);
-      if (resolved) return;
-      child.kill();
-      setTimeout(() => {
-        cleanup();
-        reject(new Error(`Headless browser screenshot capture timed out (15s limit reached).\nStderr:\n${stderrData}`));
-      }, 150);
-    }, 15000);
   });
 }
 
