@@ -33,7 +33,7 @@ function triggerCliCompile() {
   const cliPath = path.join(__dirname, 'cli.js');
   const { execSync } = require('child_process');
   try {
-    execSync(`node "${cliPath}" compile`, { stdio: 'ignore' });
+    execSync(`node "${cliPath}" compile --skip-planning`, { stdio: 'ignore' });
     return true;
   } catch (e) {
     console.error('Failed to execute canvas compile command:', e);
@@ -46,7 +46,7 @@ function getCliAudits() {
   const cliPath = path.join(__dirname, 'cli.js');
   const { execSync } = require('child_process');
   try {
-    const raw = execSync(`node "${cliPath}" test`, { stdio: ['ignore', 'pipe', 'ignore'] }).toString();
+    const raw = execSync(`node "${cliPath}" test --skip-planning`, { stdio: ['ignore', 'pipe', 'ignore'] }).toString();
     // Parse logs and score manually from CLI or run code directly
     // Running internal auditor calculations directly is more robust:
     const cliModule = require('./cli');
