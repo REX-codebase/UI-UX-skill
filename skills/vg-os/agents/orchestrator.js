@@ -73,6 +73,35 @@ function saveTasks(tasks) {
   fs.writeFileSync(TASKS_FILE, JSON.stringify(tasks, null, 2), 'utf8');
 }
 
+// Helper: Generate structural summary of state
+function generateStructuralSummary(node) {
+  if (Array.isArray(node)) {
+    return node.map(generateStructuralSummary);
+  }
+  if (node !== null && typeof node === 'object') {
+    const summary = {};
+    // Allowed keys to maintain hierarchy and identity
+    const structuralKeys = ['id', 'name', 'type', 'children', 'layers', 'canvas', 'role', 'tag', 'component', 'className', 'tagName'];
+    
+    for (const key of Object.keys(node)) {
+      if (key === 'canvas') {
+        summary[key] = node[key]; // Keep canvas metadata intact
+      } else if (structuralKeys.includes(key)) {
+        if (typeof node[key] === 'object' && node[key] !== null) {
+          summary[key] = generateStructuralSummary(node[key]);
+        } else {
+          // Exclude internal IDs by simple heuristic (starts with _ or is exactly internalId)
+          if (!key.startsWith('_') && key !== 'internalId') {
+            summary[key] = node[key];
+          }
+        }
+      }
+    }
+    return summary;
+  }
+  return node;
+}
+
 // Generate Markdown Handoff file for a subagent role
 function createHandoff(role, taskDescription) {
   ensureAgentDirs();
@@ -103,10 +132,10 @@ function createHandoff(role, taskDescription) {
 
 ---
 
-## 🌐 Current Canvas State
-Below is the active coordinate-based drawing canvas state (\`state.json\`):
+## 🌐 Current Structural Canvas State
+Below is the structural summary of the active canvas state (\`state.json\`). Deep properties are omitted to save context space. Target elements using their structural identifiers:
 \`\`\`json
-${JSON.stringify(canvasState, null, 2)}
+${JSON.stringify(generateStructuralSummary(canvasState), null, 2)}
 \`\`\`
 
 ---
