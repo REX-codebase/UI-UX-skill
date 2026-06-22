@@ -335,6 +335,14 @@ class MonteCarloTreeSearch {
     
     // Cache for evaluation
     this.evaluationCache = new Map();
+    
+    // Evaluation weights
+    this.weights = options.weights || {
+      cognitive: 0.4,
+      antiSlop: 0.3,
+      visual: 0.2,
+      novelty: 0.1
+    };
   }
   
   // Main search loop
@@ -346,37 +354,106 @@ class MonteCarloTreeSearch {
     console.log(`Exploration: ${this.exploration}`);
     console.log(`Timeout: ${this.timeout}ms\n`);
     
-    let iteration = 0;
-    while (iteration < this.iterations && Date.now() - this.startTime < this.timeout) {
-      iteration++;
-      
-      // Progress update
-      if (iteration % 5 === 0 || iteration === 1) {
-        process.stdout.write(`\rIteration: ${iteration}/${this.iterations} | Best Score: ${this.bestScore.toFixed(1)}/100`);
+    const intentFile = path.join(__dirname, '../../.vg-canvas/mcts_intent.json');
+    const intentDir = path.dirname(intentFile);
+    let intentWatcher;
+    let pendingIntentUpdate = false;
+    
+    try {
+      this.ensureDir(intentDir);
+      if (!fs.existsSync(intentFile)) {
+        fs.writeFileSync(intentFile, JSON.stringify({}), 'utf8');
       }
-      
-      // MCTS cycle
-      let node = this.select(this.root);
-      node = this.expand(node);
-      const reward = await this.simulate(node);
-      this.backpropagate(node, reward);
-      
-      // Track best
-      if (reward > this.bestScore) {
-        this.bestScore = reward;
-        this.bestState = node.state;
-      }
+      intentWatcher = fs.watch(intentDir, (eventType, filename) => {
+        if (filename === 'mcts_intent.json') {
+          pendingIntentUpdate = true;
+        }
+      });
+    } catch (error) {
+      console.warn('Could not set up file watcher for intent file:', error.message);
     }
     
-    console.log(`\n\n${'='.repeat(80)}`);
-    console.log(`   🎯 SEARCH COMPLETE`);
-    console.log('='.repeat(80) + '\n');
-    console.log(`Iterations: ${iteration}`);
-    console.log(`Time: ${(Date.now() - this.startTime) / 1000}s`);
-    console.log(`Best Score: ${this.bestScore.toFixed(1)}/100`);
-    console.log(`Explored States: ${this.countNodes(this.root)}\n`);
-    
-    return this.bestState;
+    try {
+      let iteration = 0;
+      while (iteration < this.iterations && Date.now() - this.startTime < this.timeout) {
+        // Check for interrupt signals / intent updates at iteration boundaries
+        if (pendingIntentUpdate) {
+          pendingIntentUpdate = false;
+          try {
+            if (fs.existsSync(intentFile)) {
+              const fileContent = await fs.promises.readFile(intentFile, 'utf8');
+              if (fileContent.trim()) {
+                const intentData = JSON.parse(fileContent);
+                
+                if (intentData.stop === true) {
+                  console.log(`\n⚠️  [INTERRUPT] Received early stop signal. Exiting search loop gracefully.`);
+                  break;
+                }
+                
+                let updated = false;
+                if (intentData.exploration !== undefined && this.exploration !== intentData.exploration) {
+                  this.exploration = intentData.exploration;
+                  updated = true;
+                }
+                if (intentData.iterations !== undefined && this.iterations !== intentData.iterations) {
+                  this.iterations = intentData.iterations;
+                  updated = true;
+                }
+                if (intentData.timeout !== undefined) {
+                  this.timeout = intentData.timeout;
+                  updated = true;
+                }
+                if (intentData.weights) {
+                  this.weights = { ...this.weights, ...intentData.weights };
+                  // Clear cache so evaluations reflect new design constraints/priorities
+                  this.evaluationCache.clear();
+                  updated = true;
+                }
+                
+                if (updated) {
+                  console.log(`\n🔄 [INTERRUPT] Steering signal applied mid-run: ${JSON.stringify(intentData)}`);
+                }
+              }
+            }
+          } catch (error) {
+            // File might be mid-write or invalid JSON, ignore and it may trigger again on next change
+          }
+        }
+
+        iteration++;
+        
+        // Progress update
+        if (iteration % 5 === 0 || iteration === 1) {
+          process.stdout.write(`\rIteration: ${iteration}/${this.iterations} | Best Score: ${this.bestScore.toFixed(1)}/100`);
+        }
+        
+        // MCTS cycle
+        let node = this.select(this.root);
+        node = this.expand(node);
+        const reward = await this.simulate(node);
+        this.backpropagate(node, reward);
+        
+        // Track best
+        if (reward > this.bestScore) {
+          this.bestScore = reward;
+          this.bestState = node.state;
+        }
+      }
+      
+      console.log(`\n\n${'='.repeat(80)}`);
+      console.log(`   🎯 SEARCH COMPLETE`);
+      console.log('='.repeat(80) + '\n');
+      console.log(`Iterations: ${iteration}`);
+      console.log(`Time: ${(Date.now() - this.startTime) / 1000}s`);
+      console.log(`Best Score: ${this.bestScore.toFixed(1)}/100`);
+      console.log(`Explored States: ${this.countNodes(this.root)}\n`);
+      
+      return this.bestState;
+    } finally {
+      if (intentWatcher) {
+        intentWatcher.close();
+      }
+    }
   }
   
   // Selection: Traverse tree using UCB1
@@ -428,10 +505,10 @@ class MonteCarloTreeSearch {
     } else {
       // Combine scores (weighted average)
       finalScore = (
-        cognitiveScore * 0.4 +
-        antiSlopScore * 0.3 +
-        visualScore * 0.2 +
-        noveltyScore * 0.1
+        cognitiveScore * this.weights.cognitive +
+        antiSlopScore * this.weights.antiSlop +
+        visualScore * this.weights.visual +
+        noveltyScore * this.weights.novelty
       );
     }
     
