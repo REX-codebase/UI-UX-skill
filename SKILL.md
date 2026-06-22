@@ -93,27 +93,6 @@ You must spend your first turn running the **L5 SWE Planning Protocol** and gene
 
 **Loads**: `skills/design-skill/SKILL.md`
 
-**Reference Assets**:
-- [3D Web Integration](skills/design-skill/references/3d-web-integration.md)
-- [AI First UI Patterns](skills/design-skill/references/ai-first-ui-patterns.md)
-- [AI Slop Banned](skills/design-skill/references/ai-slop-banned.csv)
-- [Bento Grid Layouts](skills/design-skill/references/bento-grid-layouts.md)
-- [Choreography Patterns](skills/design-skill/references/choreography-patterns.md)
-- [CSS 2026 Features](skills/design-skill/references/css-2026-features.md)
-- [Design Canvas Protocol](skills/design-skill/references/design-canvas-protocol.md)
-- [Design Categories Directory](skills/design-skill/references/design-categories-directory.md)
-- [Design Cognition Calculus](skills/design-skill/references/design-cognition-calculus.md)
-- [Design Persona Tones](skills/design-skill/references/design-persona-tones.md)
-- [Ethical Privacy UX](skills/design-skill/references/ethical-privacy-ux.md)
-- [Hero Video CDN Resources](skills/design-skill/references/hero-video-cdn-resources.md)
-- [Motion Timing Scale](skills/design-skill/references/motion-timing-scale.md)
-- [Motionsites Analysis](skills/design-skill/references/motionsites-analysis.md)
-- [Premium Award Winning Patterns](skills/design-skill/references/premium-award-winning-patterns.md)
-- [Prompt Interpretation Guide](skills/design-skill/references/prompt-interpretation-guide.md)
-- [Stunning Web Patterns](skills/design-skill/references/stunning-web-patterns.md)
-- [Sustainable UX](skills/design-skill/references/sustainable-ux.md)
-- [WCAG 3 Reference](skills/design-skill/references/wcag-3-reference.md)
-
 ---
 
 ### Frontend Skill (web-dev-frontend-skill)

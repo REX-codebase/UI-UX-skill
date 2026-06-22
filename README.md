@@ -45,76 +45,6 @@ Most AI skill files are static instruction sheets. This one is a **living cognit
 
 ## 🖼️ Demo Showcase
 
-### Premium UI Gallery
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/premium-demo-1-dark.gif">
-    <source media="(prefers-color-scheme: light)" srcset="assets/premium-demo-1-light.gif">
-    <img alt="Premium Component 1" src="assets/premium-demo-1-light.gif" width="800">
-  </picture>
-  <br>
-  <em>Premium Bento Layout Animation</em><br>
-  <a href="test-premium-example.html">View Premium Demo Source</a>
-</p>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/premium-demo-2-dark.gif">
-    <source media="(prefers-color-scheme: light)" srcset="assets/premium-demo-2-light.gif">
-    <img alt="Premium Component 2" src="assets/premium-demo-2-light.gif" width="800">
-  </picture>
-  <br>
-  <em>God-Tier Typography and Spacing</em><br>
-  <a href="test-premium-example.html">View Premium Demo Source</a>
-</p>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/premium-demo-3-dark.gif">
-    <source media="(prefers-color-scheme: light)" srcset="assets/premium-demo-3-light.gif">
-    <img alt="Premium Component 3" src="assets/premium-demo-3-light.gif" width="800">
-  </picture>
-  <br>
-  <em>Mathematical Motion and Easing</em><br>
-  <a href="test-premium-example.html">View Premium Demo Source</a>
-</p>
-
-### AI Slop vs Anti-Slop (Premium) Visual Comparison
-
-<table>
-<tr>
-<td align="center" width="50%">
-  <strong>Standard AI Layout (Slop)</strong>
-</td>
-<td align="center" width="50%">
-  <strong>Anti-Slop Design (Premium)</strong>
-</td>
-</tr>
-<tr>
-<td align="center" width="50%">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/slop-vs-premium-dark.gif">
-    <source media="(prefers-color-scheme: light)" srcset="assets/slop-vs-premium-light.gif">
-    <img alt="Standard AI Layout" src="assets/slop-vs-premium-light.gif" width="400">
-  </picture>
-  <br>
-  <em>Generic, unstructured, low contrast</em><br>
-  <a href="test-slop-example.html">View Slop Demo Source</a>
-</td>
-<td align="center" width="50%">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/premium-demo-1-dark.gif">
-    <source media="(prefers-color-scheme: light)" srcset="assets/premium-demo-1-light.gif">
-    <img alt="Premium AI Layout" src="assets/premium-demo-1-light.gif" width="400">
-  </picture>
-  <br>
-  <em>Structured, OKLCH colors, perfect density</em><br>
-  <a href="test-premium-example.html">View Premium Demo Source</a>
-</td>
-</tr>
-</table>
-
 ### SVG Logo Generation Engine — Real Output
 
 Generated with `node skills/utils/svg-generator.js`. These are **real SVGs** from the engine, not mockups:
@@ -396,15 +326,13 @@ This isn't blind token prediction. Agents using this skill understand the **math
 
 Every interface gets ONE motion personality. This drives all animation choices:
 
-| Personality | Best For            | Easing                              | Duration  | Character                    | Preview |
-|-------------|---------------------|-------------------------------------|-----------|------------------------------|---------|
-| **Whisper** | Luxury, editorial   | `cubic-bezier(0.25, 0.1, 0.25, 1)`  | 400-600ms | Subtle fades, gentle slides  | <picture><source media="(prefers-color-scheme: dark)" srcset="assets/motion-whisper-dark.gif"><source media="(prefers-color-scheme: light)" srcset="assets/motion-whisper-light.gif"><img src="assets/motion-whisper-light.gif" width="100" alt="Whisper easing curve"></picture> |
-| **Breathe** | Wellness, lifestyle | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 300-500ms | Organic expansions           | <picture><source media="(prefers-color-scheme: dark)" srcset="assets/motion-breathe-dark.gif"><source media="(prefers-color-scheme: light)" srcset="assets/motion-breathe-light.gif"><img src="assets/motion-breathe-light.gif" width="100" alt="Breathe easing curve"></picture> |
-| **Snap**    | SaaS, fintech       | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 150-300ms | Quick, elastic               | <picture><source media="(prefers-color-scheme: dark)" srcset="assets/motion-snap-dark.gif"><source media="(prefers-color-scheme: light)" srcset="assets/motion-snap-light.gif"><img src="assets/motion-snap-light.gif" width="100" alt="Snap easing curve"></picture> |
-| **Flow**    | Creative agencies   | `cubic-bezier(0.4, 0, 0.2, 1)`      | 400-800ms | Liquid, connected            | <picture><source media="(prefers-color-scheme: dark)" srcset="assets/motion-flow-dark.gif"><source media="(prefers-color-scheme: light)" srcset="assets/motion-flow-light.gif"><img src="assets/motion-flow-light.gif" width="100" alt="Flow easing curve"></picture> |
-| **Pulse**   | Social, real-time   | `cubic-bezier(0.4, 0, 0.6, 1)`      | 200-400ms | Rhythmic, heartbeat          | <picture><source media="(prefers-color-scheme: dark)" srcset="assets/motion-pulse-dark.gif"><source media="(prefers-color-scheme: light)" srcset="assets/motion-pulse-light.gif"><img src="assets/motion-pulse-light.gif" width="100" alt="Pulse easing curve"></picture> |
-
-*See all motion personalities combined in the [Premium Design Demo](test-premium-example.html).*
+| Personality | Best For            | Easing                              | Duration  | Character                    |
+|-------------|---------------------|-------------------------------------|-----------|------------------------------|
+| **Whisper** | Luxury, editorial   | `cubic-bezier(0.25, 0.1, 0.25, 1)`  | 400-600ms | Subtle fades, gentle slides  |
+| **Breathe** | Wellness, lifestyle | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 300-500ms | Organic expansions           |
+| **Snap**    | SaaS, fintech       | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 150-300ms | Quick, elastic               |
+| **Flow**    | Creative agencies   | `cubic-bezier(0.4, 0, 0.2, 1)`      | 400-800ms | Liquid, connected            |
+| **Pulse**   | Social, real-time   | `cubic-bezier(0.4, 0, 0.6, 1)`      | 200-400ms | Rhythmic, heartbeat          |
 
 ---
 
