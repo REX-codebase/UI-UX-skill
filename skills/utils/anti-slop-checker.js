@@ -26,15 +26,18 @@ function loadBannedPatterns() {
   for (const line of lines) {
     if (!line.trim()) continue;
     
-    const [id, category, pattern, description, severity] = line.split(',').map(s => s.trim());
+    const [id, category, pattern, rawSeverity, ...descriptionParts] = line.split(',').map(s => s.trim());
     
     if (id && pattern) {
+      const severityStr = rawSeverity || 'High';
+      const severity = severityStr.charAt(0).toUpperCase() + severityStr.slice(1).toLowerCase();
+
       patterns.push({
         id,
         category: category || 'General',
         pattern,
-        description: description || '',
-        severity: severity || 'High'
+        description: descriptionParts.join(', ') || '',
+        severity
       });
     }
   }
