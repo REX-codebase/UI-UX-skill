@@ -8,6 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 // Load banned patterns from CSV
 function loadBannedPatterns() {
@@ -50,6 +51,32 @@ function loadBannedPatterns() {
   
   return patterns;
 }
+
+const SEMANTIC_SLOP_PATTERNS = [
+  { id: 'S001', category: 'Content', pattern: /Lorem\s+Ipsum|lorem\s+ipsum/i, description: 'Placeholder text', severity: 'Critical' },
+  { id: 'S002', category: 'Content', pattern: /dolor\s+sit\s+amet/i, description: 'Placeholder text', severity: 'Critical' },
+  { id: 'S003', category: 'Content', pattern: /Welcome\s+to\s+our\s+website/i, description: 'Generic welcome', severity: 'High' },
+  { id: 'S004', category: 'Content', pattern: /Click\s+here\s+to\s+learn\s+more/i, description: 'Generic CTA', severity: 'High' },
+  { id: 'S005', category: 'Content', pattern: /Read\s+more/i, description: 'Generic CTA', severity: 'High' },
+  { id: 'S006', category: 'Content', pattern: /John\s+Doe/i, description: 'Placeholder name', severity: 'High' },
+  { id: 'S007', category: 'Content', pattern: /Jane\s+Doe/i, description: 'Placeholder name', severity: 'High' },
+  { id: 'S008', category: 'Content', pattern: /foo\s+bar/i, description: 'Placeholder dev text', severity: 'High' },
+  { id: 'S009', category: 'Content', pattern: /insert\s+text\s+here/i, description: 'Placeholder instruction', severity: 'Critical' },
+  { id: 'S010', category: 'Content', pattern: /your\s+text\s+here/i, description: 'Placeholder instruction', severity: 'Critical' },
+  { id: 'S011', category: 'Content', pattern: /coming\s+soon/i, description: 'Unfinished content', severity: 'Medium' },
+  { id: 'S012', category: 'Content', pattern: /under\s+construction/i, description: 'Unfinished content', severity: 'Medium' },
+  { id: 'S013', category: 'Content', pattern: /Hello\s+World/i, description: 'Placeholder dev text', severity: 'High' },
+  { id: 'S014', category: 'Content', pattern: /Test\s+title/i, description: 'Placeholder dev text', severity: 'High' },
+  { id: 'S015', category: 'Content', pattern: /Sample\s+text/i, description: 'Placeholder dev text', severity: 'High' },
+  { id: 'S016', category: 'Content', pattern: /dummy\s+text/i, description: 'Placeholder text', severity: 'Critical' },
+  { id: 'S017', category: 'Content', pattern: /Example\s+Domain/i, description: 'Placeholder domain', severity: 'High' },
+  { id: 'S018', category: 'Content', pattern: /123\s+Main\s+St/i, description: 'Placeholder address', severity: 'High' },
+  { id: 'S019', category: 'Content', pattern: /anytown,\s+usa/i, description: 'Placeholder address', severity: 'High' },
+  { id: 'S020', category: 'Content', pattern: /555-0199/i, description: 'Placeholder phone', severity: 'High' },
+  { id: 'S021', category: 'Content', pattern: /example\.com/i, description: 'Placeholder domain', severity: 'High' },
+  { id: 'S022', category: 'Content', pattern: /user@example\.com/i, description: 'Placeholder email', severity: 'High' },
+  { id: 'S023', category: 'Content', pattern: /placeholder/i, description: 'Placeholder indicator', severity: 'High' }
+];
 
 // Additional hardcoded patterns from premium analysis
 const PREMIUM_BANNED_PATTERNS = [
@@ -122,7 +149,8 @@ const PREMIUM_BANNED_PATTERNS = [
     pattern: /ease-in-out|linear/i,
     description: 'Linear easing - use spring curves instead',
     severity: 'High'
-  }
+  },
+  ...SEMANTIC_SLOP_PATTERNS
 ];
 
 // Premium patterns that should be present
@@ -212,7 +240,7 @@ function findLineNumber(content, regex) {
       return i + 1;
     }
   }
-  return null;
+  console.error(err); return null;
 }
 
 function getSeverityColor(severity) {
@@ -225,80 +253,96 @@ function getSeverityColor(severity) {
   return colors[severity] || '⚪';
 }
 
-function printReport(violations, premiumFeatures, fileCount) {
-  console.log('\n' + '='.repeat(80));
-  console.log('   🛡️  UI-UX-SKILL ANTI-AI-SLOP AUDIT REPORT');
-  console.log('='.repeat(80) + '\n');
-  
-  // Summary
-  console.log('📊 SUMMARY');
-  console.log('-'.repeat(80));
-  console.log(`Files Scanned: ${fileCount}`);
-  console.log(`Violations Found: ${violations.length}`);
-  console.log(`Premium Features: ${premiumFeatures.length}`);
-  
-  const severityCounts = {
-    Critical: violations.filter(v => v.severity === 'Critical').length,
-    High: violations.filter(v => v.severity === 'High').length,
-    Medium: violations.filter(v => v.severity === 'Medium').length,
-    Low: violations.filter(v => v.severity === 'Low').length
-  };
-  
-  console.log(`\nSeverity Breakdown:`);
-  console.log(`  ${getSeverityColor('Critical')} Critical: ${severityCounts.Critical}`);
-  console.log(`  ${getSeverityColor('High')} High: ${severityCounts.High}`);
-  console.log(`  ${getSeverityColor('Medium')} Medium: ${severityCounts.Medium}`);
-  console.log(`  ${getSeverityColor('Low')} Low: ${severityCounts.Low}`);
-  
-  // Premium Features
-  if (premiumFeatures.length > 0) {
-    console.log('\n✨ PREMIUM FEATURES DETECTED');
-    console.log('-'.repeat(80));
-    premiumFeatures.forEach(feature => {
-      console.log(`  ✅ ${feature.id}: ${feature.description} (${feature.category})`);
-    });
-  }
-  
-  // Violations
-  if (violations.length > 0) {
-    console.log('\n❌ VIOLATIONS FOUND');
-    console.log('-'.repeat(80));
+async function performGeometricAudit(htmlFilePath) {
+  try {
+    const screenshot = require('./screenshot');
+    const imageAnalyzer = require('./image-analyzer');
     
-    violations.forEach(violation => {
-      const lineInfo = violation.line ? ` (Line ${violation.line})` : '';
-      console.log(`\n${getSeverityColor(violation.severity)} [${violation.severity}] ${violation.id}`);
-      console.log(`   File: ${violation.file}${lineInfo}`);
-      console.log(`   Category: ${violation.category}`);
-      console.log(`   Issue: ${violation.description}`);
-      console.log(`   Pattern: ${violation.pattern}`);
+    const outputPath = path.join(path.dirname(htmlFilePath), `.audit-screenshot-${Date.now()}.png`);
+    
+    // Capture screenshot
+    await screenshot.captureScreenshot({
+      url: htmlFilePath,
+      output: outputPath,
+      width: 1280,
+      height: 800
     });
-  } else {
-    console.log('\n✅ NO VIOLATIONS FOUND - God Tier Quality!');
-  }
-  
-  // Score
-  const score = calculateScore(violations, premiumFeatures, fileCount);
-  console.log('\n' + '='.repeat(80));
-  console.log(`   🎯 PREMIUM SCORE: ${score}/100`);
-  console.log('='.repeat(80) + '\n');
-  
-  // Recommendations
-  if (violations.length > 0) {
-    console.log('💡 RECOMMENDATIONS:');
-    console.log('-'.repeat(80));
-    console.log('1. Replace all Inter/Roboto/Poppins with underrated fonts');
-    console.log('2. Convert hex colors to OKLCH');
-    console.log('3. Replace linear easing with spring curves');
-    console.log('4. Use Bento Grid 2.0 instead of generic grids');
-    console.log('5. Add organic clip-path animations');
-    console.log('6. Implement Lenis or Locomotive Scroll');
-    console.log('7. Use custom SVG icons instead of Font Awesome');
-    console.log('8. Replace "Loading..." with custom animations');
-    console.log('\n');
+    
+    if (!fs.existsSync(outputPath)) {
+      console.error(err); return null;
+    }
+    
+    const buffer = fs.readFileSync(outputPath);
+    const pngInfo = imageAnalyzer.parsePNG(buffer);
+    
+    // Calculate Symmetry
+    const { width, height, pixels } = pngInfo;
+    const midX = Math.floor(width / 2);
+    const midY = Math.floor(height / 2);
+    
+    let leftLum = 0, rightLum = 0;
+    let topLum = 0, bottomLum = 0;
+    
+    // Quadrants for dead zone analysis
+    // Q1: Top-Left, Q2: Top-Right, Q3: Bottom-Left, Q4: Bottom-Right
+    let q1Whitespace = 0, q2Whitespace = 0, q3Whitespace = 0, q4Whitespace = 0;
+    const whitespaceThreshold = 245; // Lum > 245 is considered whitespace
+    
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const p = pixels[y][x];
+        const lum = 0.299 * p.r + 0.587 * p.g + 0.114 * p.b;
+        
+        // Symmetry halves
+        if (x < midX) leftLum += lum;
+        else rightLum += lum;
+        
+        if (y < midY) topLum += lum;
+        else bottomLum += lum;
+        
+        // Dead zone calculation
+        if (lum > whitespaceThreshold) {
+          if (y < midY && x < midX) q1Whitespace++;
+          else if (y < midY && x >= midX) q2Whitespace++;
+          else if (y >= midY && x < midX) q3Whitespace++;
+          else q4Whitespace++;
+        }
+      }
+    }
+    
+    const hImbalance = Math.abs(leftLum - rightLum) / Math.max(leftLum + rightLum, 1);
+    const vImbalance = Math.abs(topLum - bottomLum) / Math.max(topLum + bottomLum, 1);
+    
+    const hSymmetryScore = 1.0 - hImbalance;
+    const vSymmetryScore = 1.0 - vImbalance;
+    const symmetryCoefficient = (hSymmetryScore + vSymmetryScore) / 2;
+    
+    const quadrantArea = midX * midY;
+    const deadZones = [];
+    if (q1Whitespace / quadrantArea > 0.5) deadZones.push('Top-Left');
+    if (q2Whitespace / quadrantArea > 0.5) deadZones.push('Top-Right');
+    if (q3Whitespace / quadrantArea > 0.5) deadZones.push('Bottom-Left');
+    if (q4Whitespace / quadrantArea > 0.5) deadZones.push('Bottom-Right');
+    
+    // Cleanup
+    fs.unlinkSync(outputPath);
+    
+    return {
+      symmetryCoefficient: Number(symmetryCoefficient.toFixed(3)),
+      horizontalImbalance: Number(hImbalance.toFixed(3)),
+      verticalImbalance: Number(vImbalance.toFixed(3)),
+      deadZones,
+      flags: {
+        highImbalance: hImbalance > 0.3,
+        hasDeadZones: deadZones.length > 0
+      }
+    };
+  } catch (err) {
+    console.error(err); return null;
   }
 }
 
-function calculateScore(violations, premiumFeatures, fileCount) {
+function calculateScore(violations, premiumFeatures, fileCount, allGeometricFindings) {
   // Base score
   let score = 100;
   
@@ -322,6 +366,27 @@ function calculateScore(violations, premiumFeatures, fileCount) {
     }
   });
   
+  // Geometric penalties
+  if (allGeometricFindings) {
+    for (const geo of Object.values(allGeometricFindings)) {
+      if (geo.flags.highImbalance) {
+        score -= 20;
+      }
+      if (geo.flags.hasDeadZones) {
+        score -= 15 * geo.deadZones.length;
+      }
+      if (geo.symmetryCoefficient > 0.9) {
+        score += 10;
+      }
+    }
+  }
+  
+  // Force 0 if generic placeholder text patterns are found
+  const hasSlop = violations.some(v => v.id.startsWith('S0') || v.id === 'P006');
+  if (hasSlop) {
+    score = 0;
+  }
+  
   // Normalize
   score = Math.max(0, Math.min(100, score));
   
@@ -332,18 +397,16 @@ function printHelp() {
   console.log('\n📖 UI-UX-Skill Anti-AI-Slop Checker');
   console.log('='.repeat(50));
   console.log('\nUsage:');
-  console.log('  node skills/utils/anti-slop-checker.js --file <path>');
+  console.log('  node skills/utils/anti-slop-checker.js --file <path> [--export json]');
   console.log('  node skills/utils/anti-slop-checker.js --dir <directory>');
   console.log('\nOptions:');
   console.log('  --file <path>    Check a single file');
   console.log('  --dir <path>     Check all files in a directory');
+  console.log('  --export json    Export findings as structured JSON');
   console.log('  --help           Show this help message');
-  console.log('\nExamples:');
-  console.log('  node skills/utils/anti-slop-checker.js --file index.html');
-  console.log('  node skills/utils/anti-slop-checker.js --dir ./src');
 }
 
-function main() {
+async function main() {
   const args = process.argv.slice(2);
   
   if (args.length === 0) {
@@ -352,6 +415,7 @@ function main() {
   }
   
   let filePaths = [];
+  let exportFormat = null;
   
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--file' && args[i + 1]) {
@@ -361,6 +425,9 @@ function main() {
       const dirPath = args[i + 1];
       const files = getAllFiles(dirPath);
       filePaths = filePaths.concat(files);
+      i++;
+    } else if (args[i] === '--export' && args[i + 1]) {
+      exportFormat = args[i + 1].toLowerCase();
       i++;
     } else if (args[i] === '--help') {
       printHelp();
@@ -373,56 +440,163 @@ function main() {
     process.exit(1);
   }
   
-  // Load patterns
   const bannedPatterns = loadBannedPatterns();
   const allPatterns = [...bannedPatterns, ...PREMIUM_BANNED_PATTERNS];
   
-  // Check all files
   let allViolations = [];
   let allPremiumFeatures = [];
+  let allGeometricFindings = {};
   
   for (const filePath of filePaths) {
     try {
       const result = checkFile(filePath, allPatterns, PREMIUM_REQUIRED_PATTERNS);
       allViolations = allViolations.concat(result.violations);
       allPremiumFeatures = allPremiumFeatures.concat(result.premiumFeatures);
+      
+      // Perform geometric audit if it's an HTML file
+      if (filePath.endsWith('.html')) {
+         const geometricFindings = await performGeometricAudit(filePath);
+         if (geometricFindings) {
+            allGeometricFindings[filePath] = geometricFindings;
+         }
+      }
+      
     } catch (error) {
-      console.error(`❌ Error reading file: ${filePath}`);
+      if (exportFormat !== 'json') {
+        console.error(`❌ Error reading file: ${filePath}`);
+      }
     }
   }
   
-  // Print report
-  printReport(allViolations, allPremiumFeatures, filePaths.length);
+  const totalScore = calculateScore(allViolations, allPremiumFeatures, filePaths.length, allGeometricFindings);
   
-  // Exit with error code if violations found
-  // if (allViolations.length > 0) {
-  //   process.exit(1);
-  // }
+  if (exportFormat === 'json') {
+    const report = {
+      score: totalScore,
+      filesScanned: filePaths.length,
+      violations: allViolations,
+      premiumFeatures: allPremiumFeatures,
+      geometricFindings: allGeometricFindings,
+      recommendations: []
+    };
+    
+    if (allViolations.length > 0) {
+       report.recommendations.push('Replace generic slop content and basic fonts');
+    }
+    
+    for (const [file, geo] of Object.entries(allGeometricFindings)) {
+       if (geo.flags.highImbalance) {
+          report.recommendations.push(`Fix visual imbalance in ${file}: Horizontal imbalance > 30%`);
+       }
+       if (geo.flags.hasDeadZones) {
+          report.recommendations.push(`Distribute whitespace better in ${file}. Dead zones found in: ${geo.deadZones.join(', ')}`);
+       }
+    }
+    
+    console.log(JSON.stringify(report, null, 2));
+    return;
+  }
+  
+  // Standard Print Report
+  console.log('\n' + '='.repeat(80));
+  console.log('   🛡️  UI-UX-SKILL ANTI-AI-SLOP AUDIT REPORT');
+  console.log('='.repeat(80) + '\n');
+  
+  console.log('📊 SUMMARY');
+  console.log('-'.repeat(80));
+  console.log(`Files Scanned: ${filePaths.length}`);
+  console.log(`Violations Found: ${allViolations.length}`);
+  console.log(`Premium Features: ${allPremiumFeatures.length}`);
+  
+  const severityCounts = {
+    Critical: allViolations.filter(v => v.severity === 'Critical').length,
+    High: allViolations.filter(v => v.severity === 'High').length,
+    Medium: allViolations.filter(v => v.severity === 'Medium').length,
+    Low: allViolations.filter(v => v.severity === 'Low').length
+  };
+  
+  console.log(`\nSeverity Breakdown:`);
+  console.log(`  ${getSeverityColor('Critical')} Critical: ${severityCounts.Critical}`);
+  console.log(`  ${getSeverityColor('High')} High: ${severityCounts.High}`);
+  console.log(`  ${getSeverityColor('Medium')} Medium: ${severityCounts.Medium}`);
+  console.log(`  ${getSeverityColor('Low')} Low: ${severityCounts.Low}`);
+  
+  if (Object.keys(allGeometricFindings).length > 0) {
+    console.log('\n📐 GEOMETRIC MATH AUDIT');
+    console.log('-'.repeat(80));
+    for (const [file, geo] of Object.entries(allGeometricFindings)) {
+       console.log(`  File: ${file}`);
+       console.log(`  Symmetry Coefficient: ${geo.symmetryCoefficient}`);
+       console.log(`  Horizontal Imbalance: ${(geo.horizontalImbalance * 100).toFixed(1)}% ${geo.flags.highImbalance ? '❌ (Exceeds 30%)' : '✅'}`);
+       console.log(`  Whitespace Dead Zones: ${geo.deadZones.length > 0 ? '❌ ' + geo.deadZones.join(', ') : '✅ None'}`);
+    }
+  }
+  
+  if (allPremiumFeatures.length > 0) {
+    console.log('\n✨ PREMIUM FEATURES DETECTED');
+    console.log('-'.repeat(80));
+    allPremiumFeatures.forEach(feature => {
+      console.log(`  ✅ ${feature.id}: ${feature.description} (${feature.category})`);
+    });
+  }
+  
+  if (allViolations.length > 0) {
+    console.log('\n❌ VIOLATIONS FOUND');
+    console.log('-'.repeat(80));
+    allViolations.forEach(violation => {
+      const lineInfo = violation.line ? ` (Line ${violation.line})` : '';
+      console.log(`\n${getSeverityColor(violation.severity)} [${violation.severity}] ${violation.id}`);
+      console.log(`   File: ${violation.file}${lineInfo}`);
+      console.log(`   Category: ${violation.category}`);
+      console.log(`   Issue: ${violation.description}`);
+      console.log(`   Pattern: ${violation.pattern}`);
+    });
+  } else {
+    console.log('\n✅ NO VIOLATIONS FOUND - God Tier Quality!');
+  }
+  
+  console.log('\n' + '='.repeat(80));
+  console.log(`   🎯 PREMIUM SCORE: ${totalScore}/100`);
+  console.log('='.repeat(80) + '\n');
+  
+  if (allViolations.length > 0 || Object.values(allGeometricFindings).some(g => g.flags.highImbalance || g.flags.hasDeadZones)) {
+    console.log('💡 RECOMMENDATIONS:');
+    console.log('-'.repeat(80));
+    let recCount = 1;
+    if (allViolations.length > 0) {
+      console.log(`${recCount++}. Replace all generic/placeholder text with meaningful copy`);
+      console.log(`${recCount++}. Convert hex colors to OKLCH`);
+      console.log(`${recCount++}. Use Custom SVG icons instead of Font Awesome`);
+    }
+    for (const [file, geo] of Object.entries(allGeometricFindings)) {
+      if (geo.flags.highImbalance) {
+         console.log(`${recCount++}. Fix visual imbalance in layout (${file}) to achieve >70% symmetry`);
+      }
+      if (geo.flags.hasDeadZones) {
+         console.log(`${recCount++}. Add density to whitespace dead zones (${geo.deadZones.join(', ')}) in ${file}`);
+      }
+    }
+    console.log('\n');
+  }
 }
 
 function getAllFiles(dirPath) {
   const files = [];
-  
   function walk(dir) {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
-    
     for (const entry of entries) {
       const fullPath = path.join(dir, entry.name);
-      
       if (entry.isDirectory()) {
         walk(fullPath);
       } else if (entry.isFile()) {
-        // Only check HTML, CSS, JS, JSX, TSX files
         if (['.html', '.css', '.js', '.jsx', '.tsx', '.ts'].includes(path.extname(fullPath))) {
           files.push(fullPath);
         }
       }
     }
   }
-  
   walk(dirPath);
   return files;
 }
 
-// Run
 main();
