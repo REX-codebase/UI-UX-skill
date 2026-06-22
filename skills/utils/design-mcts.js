@@ -418,22 +418,22 @@ class MonteCarloTreeSearch {
     // Evaluate using multiple metrics
     const cognitiveScore = await this.evaluateCognitive(tempFile);
     
-    if (cognitiveScore === -1) {
-      this.evaluationCache.set(node.state.id, 0);
-      return 0;
-    }
-    
     const antiSlopScore = await this.evaluateAntiSlop(tempFile);
     const visualScore = this.evaluateVisual(node.state);
     const noveltyScore = this.evaluateNovelty(node.state);
     
-    // Combine scores (weighted average)
-    const finalScore = (
-      cognitiveScore * 0.4 +
-      antiSlopScore * 0.3 +
-      visualScore * 0.2 +
-      noveltyScore * 0.1
-    );
+    let finalScore;
+    if (cognitiveScore === -1) {
+      finalScore = 0;
+    } else {
+      // Combine scores (weighted average)
+      finalScore = (
+        cognitiveScore * 0.4 +
+        antiSlopScore * 0.3 +
+        visualScore * 0.2 +
+        noveltyScore * 0.1
+      );
+    }
     
     // Cache the result
     this.evaluationCache.set(node.state.id, finalScore);
