@@ -19,6 +19,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
+const crypto = require('crypto');
 
 // ============================================================================
 // DESIGN STATE REPRESENTATION
@@ -72,9 +73,20 @@ class DesignState {
     };
     
     // Metadata
-    this.id = config.id || `design_${Date.now()}`;
     this.generation = config.generation || 0;
     this.parentId = config.parentId || null;
+    this.id = config.id || this.generateId();
+  }
+  
+  generateId() {
+    const data = JSON.stringify({
+      colors: this.colors,
+      typography: this.typography,
+      layout: this.layout,
+      animation: this.animation,
+      components: this.components
+    });
+    return crypto.createHash('sha256').update(data).digest('hex');
   }
   
   randomOKLCH() {
@@ -205,9 +217,9 @@ class DesignState {
       case 14: newState.components.navigation = newState.randomNavStyle(); break;
     }
     
-    newState.id = `design_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     newState.generation = this.generation + 1;
     newState.parentId = this.id;
+    newState.id = newState.generateId();
     
     return newState;
   }
@@ -603,9 +615,9 @@ class MonteCarloTreeSearch {
         return newState.mutate();
     }
     
-    newState.id = `design_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     newState.generation = state.generation + 1;
     newState.parentId = state.id;
+    newState.id = newState.generateId();
     
     return newState;
   }
