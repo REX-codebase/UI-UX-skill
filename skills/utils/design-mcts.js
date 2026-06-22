@@ -417,6 +417,12 @@ class MonteCarloTreeSearch {
     
     // Evaluate using multiple metrics
     const cognitiveScore = await this.evaluateCognitive(tempFile);
+    
+    if (cognitiveScore === -1) {
+      this.evaluationCache.set(node.state.id, 0);
+      return 0;
+    }
+    
     const antiSlopScore = await this.evaluateAntiSlop(tempFile);
     const visualScore = this.evaluateVisual(node.state);
     const noveltyScore = this.evaluateNovelty(node.state);
@@ -684,6 +690,8 @@ class MonteCarloTreeSearch {
       // Use design-simulator to analyze the design
       const { stdout } = await exec(`node ${path.join(__dirname, 'design-simulator.js')} --file ${tempFile}`);
       
+      if (stdout.includes('[SPATIAL_VIOLATION]')) return -1;
+      
       let tasteScore = 50;
       let cognitiveLoadScore = 50;
       
@@ -705,6 +713,8 @@ class MonteCarloTreeSearch {
     } catch (error) {
       // Even if it errors, try parsing stdout first
       const stdout = error.stdout || '';
+      
+      if (stdout.includes('[SPATIAL_VIOLATION]')) return -1;
       
       let tasteScore = 50;
       let cognitiveLoadScore = 50;

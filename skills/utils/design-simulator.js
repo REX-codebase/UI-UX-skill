@@ -937,9 +937,31 @@ function main() {
     }
     tasteScore = Math.max(0, tasteScore);
 
-    const tasteRating = tasteScore >= 90 ? 'God-Tier Taste (Zenith)' : 
+    const spatialCollisions = [];
+    for (let i = 0; i < mappedElements.length; i++) {
+      for (let j = i + 1; j < mappedElements.length; j++) {
+        const el1 = mappedElements[i];
+        const el2 = mappedElements[j];
+
+        if (!el1.hasInteractive || !el2.hasInteractive) continue;
+
+        const overlapX = el1.x < el2.x + el2.w && el1.x + el1.w > el2.x;
+        const overlapY = el1.y < el2.y + el2.h && el1.y + el1.h > el2.y;
+
+        if (overlapX && overlapY) {
+          spatialCollisions.push({ el1, el2 });
+        }
+      }
+    }
+
+    let tasteRating = tasteScore >= 90 ? 'God-Tier Taste (Zenith)' : 
                         tasteScore >= 75 ? 'Mainstream Average (Passable)' : 
                         'AI-Slop Detected (Failing)';
+
+    if (spatialCollisions.length > 0) {
+      tasteScore = 0;
+      tasteRating = 'Spatial Violation';
+    }
 
     // Print ASCII gravity visual canvas
     console.log('--- VISUAL DENSITY BALANCE CANVAS ---');
@@ -957,9 +979,15 @@ function main() {
 
     console.log('--- GOD-TIER TASTE AUDIT ---');
     console.log(`- Taste & Aesthetic Score: ${tasteScore}/100 | Rating: ${tasteRating}`);
-    if (tasteAudit.warnings.length === 0 && structuralWarnings.length === 0) {
+    if (tasteAudit.warnings.length === 0 && structuralWarnings.length === 0 && spatialCollisions.length === 0) {
       console.log('✅ Absolute design compliance! Zero layout, color slop, or typography violations.');
     } else {
+      if (spatialCollisions.length > 0) {
+        console.log(`❌ [SPATIAL_VIOLATION] Fatal layout overlap detected. Final score overwritten to 0.`);
+        spatialCollisions.forEach(col => {
+          console.log(`   -> Spatial Violation: Element ID ${col.el1.id} (${col.el1.tag}) overlaps with Element ID ${col.el2.id} (${col.el2.tag})`);
+        });
+      }
       tasteAudit.warnings.forEach(warn => {
         const prefix = warn.severity === 'critical' ? '❌' : '⚠️';
         console.log(`${prefix} [${warn.type}] ${warn.message}`);
@@ -971,7 +999,7 @@ function main() {
     console.log('');
 
     console.log('--- STRUCTURAL DESIGN CRITIQUE ---');
-    if (tasteAudit.warnings.length === 0 && structuralWarnings.length === 0) {
+    if (tasteAudit.warnings.length === 0 && structuralWarnings.length === 0 && spatialCollisions.length === 0) {
       console.log('✨ Clean design compliance! All visual weights, Gestalt spacing patterns, and typographic rhythm rules pass.');
     } else {
       console.log('Defects were detected in the layout code. Apply the dedicated CSS repair directives to achieve God-Tier taste.');
