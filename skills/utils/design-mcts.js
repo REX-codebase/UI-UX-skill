@@ -315,7 +315,7 @@ class MCTSNode {
   isTerminal() {
     // Design is terminal when we've expanded enough
     // In practice, we stop at a certain depth
-    return this.state.generation >= 10; // Max 10 mutations from root
+    return this.state.generation >= 30; // Max 30 mutations from root
   }
 }
 
@@ -420,7 +420,7 @@ class MonteCarloTreeSearch {
     
     const antiSlopScore = await this.evaluateAntiSlop(tempFile);
     const visualScore = this.evaluateVisual(node.state);
-    const noveltyScore = this.evaluateNovelty(node.state);
+    const noveltyScore = this.evaluateNovelty(node);
     
     let finalScore;
     if (cognitiveScore === -1) {
@@ -797,13 +797,30 @@ class MonteCarloTreeSearch {
   }
   
   // Evaluate novelty (diversity from parent)
-  evaluateNovelty(state) {
-    if (!state.parentId) return 100; // Root node is most novel
+  evaluateNovelty(node) {
+    if (!node.parent || !node.parent.state) return 100; // Root node is most novel
     
-    // Count how many parameters changed from parent
-    // In a real implementation, we'd track the parent state
-    // For now, return based on generation depth
-    return Math.max(0, 100 - (state.generation * 5));
+    const state = node.state;
+    const parentState = node.parent.state;
+
+    // Calculate a similarity hash based on layout type and grid ratios
+    const getLayoutHash = (s) => `${s.layout.type}-${s.layout.grid.join(':')}`;
+    const childHash = getLayoutHash(state);
+    const parentHash = getLayoutHash(parentState);
+
+    let score = 50; // baseline
+
+    // Reward higher generation counts (depth-positive)
+    score += state.generation * 2;
+
+    // Child states with identical layout hashes to their parent receive a lower novelty priority
+    if (childHash === parentHash) {
+      score -= 30; // lower novelty priority
+    } else {
+      score += 20; // unique hashes
+    }
+
+    return Math.max(0, Math.min(100, score));
   }
   
   // Count all nodes in tree
