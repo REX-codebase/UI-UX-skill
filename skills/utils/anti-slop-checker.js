@@ -26,9 +26,15 @@ function loadBannedPatterns() {
   for (const line of lines) {
     if (!line.trim()) continue;
     
-    const [id, category, pattern, rawSeverity, ...descriptionParts] = line.split(',').map(s => s.trim());
+    const match = line.match(/^([^,]+),([^,]+),(.+),(critical|high|medium|low),(.*)$/i);
     
-    if (id && pattern) {
+    if (match) {
+      const id = match[1].trim();
+      const category = match[2].trim();
+      const pattern = match[3].trim();
+      const rawSeverity = match[4].trim();
+      const description = match[5].trim();
+      
       const severityStr = rawSeverity || 'High';
       const severity = severityStr.charAt(0).toUpperCase() + severityStr.slice(1).toLowerCase();
 
@@ -36,7 +42,7 @@ function loadBannedPatterns() {
         id,
         category: category || 'General',
         pattern,
-        description: descriptionParts.join(', ') || '',
+        description: description || '',
         severity
       });
     }
