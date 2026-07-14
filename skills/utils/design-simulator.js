@@ -836,8 +836,14 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
     bonusScore += 10;
   }
 
+  let finalDeduction = tasteScoreDeduction;
+  if (tasteScoreDeduction > 80) {
+    // Logarithmic decay function to preserve differences without flatlining
+    finalDeduction = 80 + 2.5 * Math.log(tasteScoreDeduction - 80 + 1);
+  }
+
   return {
-    deduction: Math.min(80, tasteScoreDeduction), // Cap taste deduction at 80 points to reflect comprehensive checks
+    deduction: finalDeduction,
     bonus: bonusScore,
     warnings
   };
