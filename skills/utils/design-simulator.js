@@ -934,14 +934,19 @@ function main() {
     // Programmatic Taste & Slop Audit
     const tasteAudit = runTasteAudits(cssText, htmlContent, profile);
     
-    // Calculate final taste score (base 100)
+    // Calculate a bounded source-level signal. Positive style detections are
+    // deliberately capped: a pile of fashionable effects must not erase
+    // source-level risks or turn this into a score-gaming exercise.
     let tasteScore = 100;
     tasteScore -= tasteAudit.deduction;
-    tasteScore += tasteAudit.bonus;
+    tasteScore += Math.min(15, tasteAudit.bonus);
     if (structuralWarnings.length > 0) {
       tasteScore -= (structuralWarnings.length * 5); // deduct 5 points per structural issue
     }
-    tasteScore = Math.max(0, tasteScore);
+    // Heuristic signals may add bonuses, but a score is always bounded and is
+    // not a claim of rendered visual quality. Browser evidence and review are
+    // required before a release decision.
+    tasteScore = Math.max(0, Math.min(100, tasteScore));
 
     const spatialCollisions = [];
     for (let i = 0; i < mappedElements.length; i++) {
@@ -960,9 +965,9 @@ function main() {
       }
     }
 
-    let tasteRating = tasteScore >= 90 ? 'God-Tier Taste (Zenith)' : 
-                        tasteScore >= 75 ? 'Mainstream Average (Passable)' : 
-                        'AI-Slop Detected (Failing)';
+    let tasteRating = tasteScore >= 90 ? 'Strong static signals — verify in browser' :
+                        tasteScore >= 75 ? 'Static signals need refinement' :
+                        'Static signals need substantial refinement';
 
     if (spatialCollisions.length > 0) {
       tasteScore = 0;
@@ -983,8 +988,9 @@ function main() {
     console.log(`- APCA Contrast Verification: Perceptual Lightness Compliance Checked.`);
     console.log(`- Layout Balance Advice: ${friction.advice}\n`);
 
-    console.log('--- GOD-TIER TASTE AUDIT ---');
-    console.log(`- Taste & Aesthetic Score: ${tasteScore}/100 | Rating: ${tasteRating}`);
+    console.log('--- STATIC DESIGN SIGNAL AUDIT ---');
+    console.log(`- Static Design Signal Score: ${tasteScore}/100 | Rating: ${tasteRating}`);
+    console.log('- Limitation: This is source-level heuristic evidence, not a rendered visual, accessibility, or performance verdict.');
     if (tasteAudit.warnings.length === 0 && structuralWarnings.length === 0 && spatialCollisions.length === 0) {
       console.log('✅ Absolute design compliance! Zero layout, color slop, or typography violations.');
     } else {

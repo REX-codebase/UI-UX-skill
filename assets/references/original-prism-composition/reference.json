@@ -1,0 +1,24 @@
+{
+  "id": "original-prism-composition",
+  "title": "Original Prism Composition",
+  "source": "first-party",
+  "license": "proprietary-owned",
+  "attribution": "Created for UI-UX-Skill; reusable within this repository under its MIT distribution.",
+  "media": [
+    { "path": "desktop.svg", "role": "desktop-reference", "width": 1440, "height": 900 },
+    { "path": "mobile.svg", "role": "mobile-reference", "width": 390, "height": 844 }
+  ],
+  "visual_traits": {
+    "hierarchy": "left-anchored narrative with one depth focal point",
+    "typography": "high-contrast display paired with neutral interface text",
+    "depth_strategy": "one product-like prism, ambient light, no decorative card grid",
+    "motion_strategy": "optional slow camera drift; primary content remains static and readable"
+  },
+  "breakpoints": ["390x844", "1440x900"],
+  "performance_budget": { "initial_js_kb": 120, "target_fps": 55 },
+  "accessibility_notes": [
+    "The composition is supplementary; the headline and action are semantic HTML.",
+    "Color is not the only indicator of state.",
+    "Motion may be disabled without changing access to content."
+  ]
+}

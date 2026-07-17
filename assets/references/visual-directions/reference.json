@@ -1,0 +1,25 @@
+{
+  "id": "visual-directions-original-set",
+  "title": "Original Visual Direction Set",
+  "source": "first-party",
+  "license": "proprietary-owned",
+  "attribution": "Original AI-generated concept imagery commissioned for this repository. It is reference material only; do not represent it as third-party photography or use it to reproduce another brand.",
+  "media": [
+    { "path": "editorial-material.png", "role": "editorial-direction", "width": 1536, "height": 960 },
+    { "path": "product-precision.png", "role": "product-direction", "width": 1536, "height": 960 },
+    { "path": "wellness-tactile.png", "role": "wellness-direction", "width": 1536, "height": 960 },
+    { "path": "cultural-archive.png", "role": "cultural-direction", "width": 1536, "height": 960 }
+  ],
+  "visual_traits": {
+    "purpose": "Compare distinct art directions before selecting a project-specific visual system.",
+    "directions": ["editorial material", "product precision", "wellness tactile", "cultural archive"],
+    "usage_rule": "Extract hierarchy, density, palette roles and material cues; do not copy protected marks, copy or visual identity."
+  },
+  "breakpoints": ["390x844", "768x1024", "1440x900"],
+  "performance_budget": { "initial_js_kb": 120, "target_fps": 55 },
+  "accessibility_notes": [
+    "Direction images are supplementary and must receive meaningful text alternatives or be decorative.",
+    "No direction relies on color alone to convey product state.",
+    "A selected direction must still be tested in responsive, keyboard and reduced-motion states."
+  ]
+}
