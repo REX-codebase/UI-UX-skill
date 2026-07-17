@@ -510,7 +510,15 @@ Visual references and 3D scenes now use local, machine-readable contracts under 
 node skills/utils/visual-contract-checker.js --assets assets
 ```
 
-The included **Prism Stage** is an original, poster-first 3D asset example with semantic and low-power fallbacks. Contract validation is intentionally not a visual-quality certificate: browser screenshots, accessibility/performance testing, and human review remain release requirements. See the [3D production protocol](skills/design-skill/references/3d-production-protocol.md) and [visual validation protocol](skills/design-skill/references/visual-validation-protocol.md).
+The included **Prism Stage** is an original, poster-first 3D asset example with semantic and low-power fallbacks. The corpus also includes four original direction images—editorial material, product precision, wellness tactile, and cultural archive—for comparing composition before a project picks a visual system. Contract validation is intentionally not a visual-quality certificate: browser screenshots, accessibility/performance testing, and human review remain release requirements. See the [3D production protocol](skills/design-skill/references/3d-production-protocol.md), [AI design quality handbook](skills/design-skill/references/ai-design-quality-research.md), and [visual validation protocol](skills/design-skill/references/visual-validation-protocol.md).
+
+### Authorized screenshot → code reconstruction
+
+```bash
+node skills/utils/reference-to-code.js --image ./authorized-reference.png --output ./reconstruction --title "Project name"
+```
+
+This zero-dependency feature reads an authorized PNG for palette and visual-weight hints, then creates a semantic responsive HTML starter and a machine-readable reconstruction brief. It deliberately does **not** promise exact conversion: a screenshot cannot reveal fonts, DOM, responsive rules, interactions, content semantics, or licensing. Use the generated brief to run render-and-compare repair iterations.
 
 ---
 
