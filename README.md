@@ -502,6 +502,18 @@ node skills/utils/anti-slop-checker.js --dir ./src
 
 ---
 
+## 🧾 Licensed Visual Assets & 3D Contracts
+
+Visual references and 3D scenes now use local, machine-readable contracts under [`assets/`](assets/README.md). Each contract records origin, license, responsive visual evidence, fallback behavior, accessibility notes, and resource budgets.
+
+```bash
+node skills/utils/visual-contract-checker.js --assets assets
+```
+
+The included **Prism Stage** is an original, poster-first 3D asset example with semantic and low-power fallbacks. Contract validation is intentionally not a visual-quality certificate: browser screenshots, accessibility/performance testing, and human review remain release requirements. See the [3D production protocol](skills/design-skill/references/3d-production-protocol.md) and [visual validation protocol](skills/design-skill/references/visual-validation-protocol.md).
+
+---
+
 ## 🌍 Supported Agents
 
 Works with **45+ coding agents** including:

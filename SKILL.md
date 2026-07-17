@@ -177,9 +177,20 @@ Zero-dependency programmatic layout auditor that analyzes structural DOM geometr
 - **Directives**: Audits every created/modified HTML layout file, outputs an ASCII layout weight canvas, and generates a structured design critique to enforce spatial balance and Gestalt spacing.
 
 ### 6. Anti-AI-Slop Checker
-Scans your code for banned patterns and verifies premium quality:
+Scans source code for possible generic or placeholder patterns. It is a heuristic, not a visual-quality certification:
 - **Command**: `node skills/utils/anti-slop-checker.js --file <filepath>` or `node skills/utils/anti-slop-checker.js --dir <directory>`
 - **Directives**: Checks against 1000+ banned patterns from [ai-slop-banned.csv](skills/design-skill/references/ai-slop-banned.csv) and verifies premium feature usage. Outputs a detailed audit report with a Premium Score (0-100).
+
+---
+
+### 7. Visual Asset Contracts & 3D Safety
+Before using visual references or 3D assets, record their license, local files, responsive evidence, fallback behavior, and performance budget under `assets/`. Validate the metadata with:
+
+```bash
+node skills/utils/visual-contract-checker.js --assets assets
+```
+
+This check intentionally validates contracts only. Release work still needs browser screenshots, accessibility/performance testing, and human visual review; see `skills/design-skill/references/visual-validation-protocol.md`.
 
 ---
 

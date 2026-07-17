@@ -123,6 +123,7 @@ When a highly unique design problem cannot be solved by the 1000 standard elemen
 - Utilities: `node skills/utils/svg-generator.js` (Precise Logo Vectors) | `node skills/utils/screenshot.js` (Headless Visual Decoder Vision Loop)
 - Layout: [bento-grid-layouts.md](references/bento-grid-layouts.md) | [responsive-engineering.md](references/responsive-engineering.md)
 - Animation: [css-2026-features.md](references/css-2026-features.md) | [interaction-physics.md](references/interaction-physics.md)
-- 3D & Immersive: [3d-web-integration.md](references/3d-web-integration.md)
+- 3D & Immersive: [3d-web-integration.md](references/3d-web-integration.md) | [3d-production-protocol.md](references/3d-production-protocol.md)
+- Rendered evidence: [visual-validation-protocol.md](references/visual-validation-protocol.md). Source-level scores are signals, not visual-quality certification.
 - AI-First UI: [ai-first-ui-patterns.md](references/ai-first-ui-patterns.md)
 - Accessibility & Ethics: [accessibility-checklist.md](references/accessibility-checklist.md) | [wcag-3-reference.md](references/wcag-3-reference.md) | [ethical-privacy-ux.md](references/ethical-privacy-ux.md) | [sustainable-ux.md](references/sustainable-ux.md)

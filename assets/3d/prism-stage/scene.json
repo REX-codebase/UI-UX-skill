@@ -1,0 +1,26 @@
+{
+  "id": "prism-stage",
+  "title": "Poster-first Prism Stage",
+  "license": "proprietary-owned",
+  "files": { "poster": "poster.svg" },
+  "fallback": {
+    "asset": "fallback.svg",
+    "semantic_html": "<figure><img src=\"fallback.svg\" alt=\"An abstract amber prism, representing product depth.\"><figcaption>Product depth, explained without a WebGL scene.</figcaption></figure>"
+  },
+  "user_preferences": {
+    "reduced_motion": "Render the poster only; never autoplay camera or object motion.",
+    "webgl_unavailable": "Keep the semantic fallback figure visible and do not retry rendering.",
+    "low_power": "Use the poster at device pixel ratio 1 and defer all interactive scene code."
+  },
+  "performance_budget": {
+    "model_compressed_kb": 850,
+    "texture_max_px": 1024,
+    "draw_calls": 35,
+    "target_fps": 55
+  },
+  "implementation_notes": [
+    "If an interactive glTF is added, use Draco or Meshopt geometry compression and KTX2 textures.",
+    "Load the scene only after the poster has painted and only when it is near the viewport.",
+    "The scene must never contain the only representation of essential product information."
+  ]
+}
