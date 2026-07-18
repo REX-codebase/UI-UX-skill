@@ -845,7 +845,11 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
   return {
     deduction: finalDeduction,
     bonus: bonusScore,
-    warnings
+    warnings,
+    colorMetrics: {
+      minLightness,
+      maxLightness
+    }
   };
 }
 
@@ -983,9 +987,13 @@ function main() {
     console.log(`- Visual Weight Centroid: (${centroid.cx}, ${centroid.cy}) | Total Weight Mass: ${centroid.totalWeight}`);
     if (centroid.isDynamicallyBalanced) console.log(`- Dynamic Balance: Achieved (Offset by counter-weights)`);
     if (hasIntentionalOffset) console.log(`- Intentional Offset: Documented in design registry`);
+    const minL = tasteAudit.colorMetrics ? tasteAudit.colorMetrics.minLightness : 0;
+    const maxL = tasteAudit.colorMetrics ? tasteAudit.colorMetrics.maxLightness : 1;
+    const contrastValue = calculatePerceptualContrast(minL * 100, maxL * 100);
+    
     console.log(`- Cognitive Load Index: ${friction.score} | Rating: ${friction.rating}`);
     console.log(`  [Elements Count: ${friction.totalElements} | Interactive Count: ${friction.interactiveCount} | Colors: ${friction.colorCount} | Chunks: ${friction.chunkCount}]`);
-    console.log(`- APCA Contrast Verification: Perceptual Lightness Compliance Checked.`);
+    console.log(`- APCA Contrast Verification: Calculated Lc ${contrastValue} (Primary Pair)`);
     console.log(`- Layout Balance Advice: ${friction.advice}\n`);
 
     console.log('--- STATIC DESIGN SIGNAL AUDIT ---');
