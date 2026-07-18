@@ -317,7 +317,7 @@ Example:
 }
 
 // Programmatic Taste & Anti-Slop Audit
-function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
+function runTasteAudits(cssText, htmlContent, profile = 'Standard', decayThreshold = 80, decayMultiplier = 2.5) {
   const warnings = [];
   let tasteScoreDeduction = 0;
   let bonusScore = 0;
@@ -837,9 +837,9 @@ function runTasteAudits(cssText, htmlContent, profile = 'Standard') {
   }
 
   let finalDeduction = tasteScoreDeduction;
-  if (tasteScoreDeduction > 80) {
+  if (tasteScoreDeduction > decayThreshold) {
     // Logarithmic decay function to preserve differences without flatlining
-    finalDeduction = 80 + 2.5 * Math.log(tasteScoreDeduction - 80 + 1);
+    finalDeduction = decayThreshold + decayMultiplier * Math.log(tasteScoreDeduction - decayThreshold + 1);
   }
 
   return {
@@ -868,6 +868,9 @@ function main() {
   }
 
   const { file: filePath, profile = 'Standard' } = params;
+
+  const decayThreshold = params['decay-threshold'] ? parseFloat(params['decay-threshold']) : 80;
+  const decayMultiplier = params['decay-multiplier'] ? parseFloat(params['decay-multiplier']) : 2.5;
 
   if (!filePath) {
     console.error('Error: The --file parameter is required.');
@@ -932,7 +935,7 @@ function main() {
     }
 
     // Programmatic Taste & Slop Audit
-    const tasteAudit = runTasteAudits(cssText, htmlContent, profile);
+    const tasteAudit = runTasteAudits(cssText, htmlContent, profile, decayThreshold, decayMultiplier);
     
     // Calculate a bounded source-level signal. Positive style detections are
     // deliberately capped: a pile of fashionable effects must not erase

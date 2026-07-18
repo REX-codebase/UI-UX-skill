@@ -341,6 +341,8 @@ class MonteCarloTreeSearch {
     this.iterations = options.iterations || 50;
     this.exploration = options.exploration || 1.414; // UCB1 constant
     this.timeout = options.timeout || 60000; // 60 seconds
+    this.decayThreshold = options.decayThreshold !== undefined ? options.decayThreshold : 80;
+    this.decayMultiplier = options.decayMultiplier !== undefined ? options.decayMultiplier : 2.5;
     this.bestScore = 0;
     this.bestState = null;
     this.startTime = Date.now();
@@ -777,7 +779,7 @@ class MonteCarloTreeSearch {
   async evaluateCognitive(tempFile) {
     try {
       // Use design-simulator to analyze the design
-      const { stdout } = await exec(`node ${path.join(__dirname, 'design-simulator.js')} --file ${tempFile}`);
+      const { stdout } = await exec(`node ${path.join(__dirname, 'design-simulator.js')} --file ${tempFile} --decay-threshold ${this.decayThreshold} --decay-multiplier ${this.decayMultiplier}`);
       
       if (stdout.includes('[SPATIAL_VIOLATION]')) return -1;
       
@@ -941,6 +943,8 @@ async function main() {
     iterations: 50,
     exploration: 1.414,
     timeout: 60000,
+    decayThreshold: 80,
+    decayMultiplier: 2.5,
     output: null,
     json: false,
     help: false,
@@ -955,6 +959,12 @@ async function main() {
       i++;
     } else if (args[i] === '--timeout' && args[i + 1]) {
       options.timeout = parseInt(args[i + 1]);
+      i++;
+    } else if (args[i] === '--decay-threshold' && args[i + 1]) {
+      options.decayThreshold = parseFloat(args[i + 1]);
+      i++;
+    } else if (args[i] === '--decay-multiplier' && args[i + 1]) {
+      options.decayMultiplier = parseFloat(args[i + 1]);
       i++;
     } else if (args[i] === '--output' && args[i + 1]) {
       options.output = args[i + 1];
@@ -975,6 +985,8 @@ async function main() {
     console.log('  --iterations <n>    Number of MCTS iterations (default: 50)');
     console.log('  --exploration <x>   UCB1 exploration constant (default: 1.414)');
     console.log('  --timeout <ms>      Maximum runtime in ms (default: 60000)');
+    console.log('  --decay-threshold <n> Penalty decay threshold (default: 80)');
+    console.log('  --decay-multiplier <n> Penalty decay multiplier (default: 2.5)');
     console.log('  --output <file>     Save best design to file');
     console.log('  --json             Output result as JSON');
     console.log('  --help, -h         Show this help message');
