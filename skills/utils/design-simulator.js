@@ -105,6 +105,7 @@ function calculatePerceptualContrast(fgLightness, bgLightness) {
 function estimateElementCoordinates(elements) {
   const mapped = [];
   let currentY = 20;
+  let maxY = 20;
 
   for (let i = 0; i < elements.length; i++) {
     const el = elements[i];
@@ -118,45 +119,64 @@ function estimateElementCoordinates(elements) {
       h = 70;
       currentY += 80;
     } else if (el.tag === 'footer') {
-      y = 720;
+      y = Math.max(720, maxY + 20);
       h = 60;
+      currentY = y + 80;
     } else if (el.classes.includes('bento') || el.classes.includes('grid') || el.classes.includes('card')) {
       // Simulate asymmetric grid columns for Bento cells
-      const cardIndex = mapped.filter(m => m.tag === el.tag && m.classes.includes('card')).length;
+      const cardIndex = mapped.filter(m => m.classes.includes('bento') || m.classes.includes('grid') || m.classes.includes('card')).length;
       w = 380;
       h = 240;
       x = 40 + (cardIndex % 3) * 400;
-      y = currentY + Math.floor(cardIndex / 3) * 260;
+      
+      // If it's the first card in the grid, we start at currentY
+      // If it's a new row, we push down
+      const row = Math.floor(cardIndex / 3);
+      y = currentY + row * 260;
       
       // Update Y tracking if we wrap grid rows
       if (cardIndex > 0 && cardIndex % 3 === 0) {
-        currentY += 260;
+        // We only increase currentY by 260 when a new row begins
+        // but we need to ensure the grid's total height is accounted for.
+        // It's easier to just use maxY.
       }
     } else if (el.tag === 'h1' || el.tag === 'h2') {
+      // Make sure we start below any grid
+      y = Math.max(currentY, maxY + 20);
+      currentY = y;
       w = 800;
       h = 50;
       currentY += 60;
     } else if (el.tag === 'p') {
+      y = Math.max(currentY, maxY + 10);
+      currentY = y;
       w = 600;
       h = 40;
       currentY += 50;
     } else if (el.hasInteractive) {
+      y = Math.max(currentY, maxY + 10);
+      currentY = y;
       w = 180;
       h = 44;
       x = 40;
       currentY += 50;
     } else {
+      y = Math.max(currentY, maxY + 10);
+      currentY = y;
+      h = 20;
       currentY += 30;
     }
 
     // Keep within bounds
     x = Math.max(0, Math.min(x, 1280));
-    y = Math.max(0, Math.min(y, 800));
 
     mapped.push({
       ...el,
       x, y, w, h
     });
+    
+    // Track the lowest point reached by any element
+    maxY = Math.max(maxY, y + h);
   }
 
   return mapped;
@@ -958,8 +978,7 @@ function main() {
         const el1 = mappedElements[i];
         const el2 = mappedElements[j];
 
-        if (!el1.hasInteractive || !el2.hasInteractive) continue;
-
+        // Check for spatial collisions between all elements
         const overlapX = el1.x < el2.x + el2.w && el1.x + el1.w > el2.x;
         const overlapY = el1.y < el2.y + el2.h && el1.y + el1.h > el2.y;
 
