@@ -987,9 +987,25 @@ function main() {
     console.log(`- Visual Weight Centroid: (${centroid.cx}, ${centroid.cy}) | Total Weight Mass: ${centroid.totalWeight}`);
     if (centroid.isDynamicallyBalanced) console.log(`- Dynamic Balance: Achieved (Offset by counter-weights)`);
     if (hasIntentionalOffset) console.log(`- Intentional Offset: Documented in design registry`);
-    const minL = tasteAudit.colorMetrics ? tasteAudit.colorMetrics.minLightness : 0;
-    const maxL = tasteAudit.colorMetrics ? tasteAudit.colorMetrics.maxLightness : 1;
-    const contrastValue = calculatePerceptualContrast(minL * 100, maxL * 100);
+    let primaryL = tasteAudit.colorMetrics ? tasteAudit.colorMetrics.maxLightness : 1;
+    let bgL = tasteAudit.colorMetrics ? tasteAudit.colorMetrics.minLightness : 0;
+    
+    const combinedContext = cssText + htmlContent;
+    const primaryMatch = /--color-primary:\s*oklch\(\s*([0-9.%]+)/i.exec(combinedContext);
+    if (primaryMatch) {
+      let l = parseFloat(primaryMatch[1]);
+      if (primaryMatch[1].includes('%')) l = l / 100;
+      primaryL = l;
+    }
+    
+    const bgMatch = /--color-background:\s*oklch\(\s*([0-9.%]+)/i.exec(combinedContext);
+    if (bgMatch) {
+      let l = parseFloat(bgMatch[1]);
+      if (bgMatch[1].includes('%')) l = l / 100;
+      bgL = l;
+    }
+
+    const contrastValue = calculatePerceptualContrast(primaryL * 100, bgL * 100);
     
     console.log(`- Cognitive Load Index: ${friction.score} | Rating: ${friction.rating}`);
     console.log(`  [Elements Count: ${friction.totalElements} | Interactive Count: ${friction.interactiveCount} | Colors: ${friction.colorCount} | Chunks: ${friction.chunkCount}]`);
