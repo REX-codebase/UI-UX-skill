@@ -8,7 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 const orchestrator = require('./agents/orchestrator');
 
 const WORKSPACE_DIR = path.join(process.cwd(), '.vg-canvas');
@@ -865,9 +865,18 @@ Options:
       // Delegate to existing utility node scripts
       const searchScript = path.join(process.cwd(), 'skills', 'utils', 'search.js');
       const searchArgs = [`--${searchType}`, searchQ];
+      if (params.json) {
+        searchArgs.push('--json');
+      }
       
-      console.log(`Querying asset libraries: ${searchType} "${searchQ}"...`);
-      const child = spawn('node', [searchScript, ...searchArgs], { stdio: 'inherit' });
+      if (!params.json) {
+        console.log(`Querying asset libraries: ${searchType} "${searchQ}"...`);
+      }
+      const child = spawnSync('node', [searchScript, ...searchArgs], { stdio: 'inherit' });
+      if (child.status !== 0) {
+        if (!params.json) console.error(`\n❌ [ORCHESTRATOR_HALT] Search subprocess failed with exit code ${child.status}.`);
+        process.exit(child.status || 1);
+      }
       break;
 
     case 'task':
@@ -878,7 +887,11 @@ Options:
         process.exit(1);
       }
       const taskArgs = args.slice(1);
-      const taskChild = spawn('node', [slowThinkingScript, ...taskArgs], { stdio: 'inherit' });
+      const taskChild = spawnSync('node', [slowThinkingScript, ...taskArgs], { stdio: 'inherit' });
+      if (taskChild.status !== 0) {
+        console.error(`\n❌ [ORCHESTRATOR_HALT] Task subprocess failed with exit code ${taskChild.status}.`);
+        process.exit(taskChild.status || 1);
+      }
       break;
 
     case 'serve':

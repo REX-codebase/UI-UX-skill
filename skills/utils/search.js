@@ -328,13 +328,18 @@ Examples:
 // Core execution router
 async function main() {
   const args = process.argv.slice(2);
+  const isJson = args.includes('--json');
+
   if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
-    printHelp();
-    return;
+    if (isJson) {
+      console.log(JSON.stringify({ error: "Help requested or no arguments provided." }));
+      process.exit(1);
+    } else {
+      printHelp();
+      return;
+    }
   }
 
-  const isJson = args.includes('--json');
-  
   // Parse command arguments
   const params = {};
   for (let i = 0; i < args.length; i++) {
@@ -348,15 +353,21 @@ async function main() {
   // --- Category 4: Web Search ---
   if (params.web) {
     if (typeof params.web !== 'string') {
-      console.error('Error: Please provide a query string for --web search.');
+      if (isJson) {
+        console.log(JSON.stringify({ error: "Please provide a query string for --web search." }));
+      } else {
+        console.error('Error: Please provide a query string for --web search.');
+      }
       process.exit(1);
     }
     
     const query = params.web;
-    console.log(`\n=============================================================`);
-    console.log(`🔍 DEEP INTEGRATED BROWSER SEARCH — QUERYING WEB`);
-    console.log(`🔎 Term: "${query}"`);
-    console.log(`=============================================================\n`);
+    if (!isJson) {
+      console.log(`\n=============================================================`);
+      console.log(`🔍 DEEP INTEGRATED BROWSER SEARCH — QUERYING WEB`);
+      console.log(`🔎 Term: "${query}"`);
+      console.log(`=============================================================\n`);
+    }
     
     try {
       const data = await searchWeb(query);
@@ -383,13 +394,21 @@ async function main() {
       }
       
       if (results.length === 0) {
-        console.log(`🏜️ No direct Wikipedia/Instant Answer results found. Try alternative keywords.`);
+        if (!isJson) {
+          console.log(`🏜️ No direct Wikipedia/Instant Answer results found. Try alternative keywords.`);
+        } else {
+          console.log(JSON.stringify([]));
+        }
         return;
       }
       
       renderResults(results, isJson);
     } catch (err) {
-      console.error(`❌ [Search Failure] Web search query failed: ${err.message}`);
+      if (isJson) {
+        console.log(JSON.stringify({ error: `Web search query failed: ${err.message}` }));
+      } else {
+        console.error(`❌ [Search Failure] Web search query failed: ${err.message}`);
+      }
       process.exit(1);
     }
     return;
@@ -399,7 +418,11 @@ async function main() {
   if (params.elements) {
     const csvPath = findCSVPath('1000-human-made-design-elements.csv');
     if (!csvPath) {
-      console.error('Error: Could not locate 1000-human-made-design-elements.csv in workspace paths.');
+      if (isJson) {
+        console.log(JSON.stringify({ error: "Could not locate 1000-human-made-design-elements.csv in workspace paths." }));
+      } else {
+        console.error('Error: Could not locate 1000-human-made-design-elements.csv in workspace paths.');
+      }
       process.exit(1);
     }
 
@@ -440,7 +463,11 @@ async function main() {
   if (params.fonts) {
     const csvPath = findCSVPath('1000-underrated-google-fonts.csv');
     if (!csvPath) {
-      console.error('Error: Could not locate 1000-underrated-google-fonts.csv in workspace paths.');
+      if (isJson) {
+        console.log(JSON.stringify({ error: "Could not locate 1000-underrated-google-fonts.csv in workspace paths." }));
+      } else {
+        console.error('Error: Could not locate 1000-underrated-google-fonts.csv in workspace paths.');
+      }
       process.exit(1);
     }
 
@@ -489,7 +516,11 @@ async function main() {
   // --- Category 3: Image / Media Search ---
   if (params.images) {
     if (typeof params.images !== 'string') {
-      console.error('Error: Please provide a query string for --images search.');
+      if (isJson) {
+        console.log(JSON.stringify({ error: "Please provide a query string for --images search." }));
+      } else {
+        console.error('Error: Please provide a query string for --images search.');
+      }
       process.exit(1);
     }
 
@@ -537,7 +568,11 @@ async function main() {
 
     // --- VISUAL MULTI-MODAL BRIDGE MODE ---
     if (finalResults.length === 0) {
-      console.log('No images found to visualize.');
+      if (isJson) {
+        console.log(JSON.stringify({ error: "No images found to visualize." }));
+      } else {
+        console.log('No images found to visualize.');
+      }
       return;
     }
 
@@ -615,6 +650,7 @@ async function main() {
             console.error(`\n[Vision Bridge Error] Unable to decode PNG thumbnail dynamically: ${e.message}`);
             console.log(`Direct Image URL: ${targetImage.url}`);
           }
+          process.exit(1);
         }
       });
     }).on('error', (e) => {
@@ -624,17 +660,28 @@ async function main() {
         console.error(`\n[Vision Bridge Error] Unable to fetch PNG thumbnail stream: ${e.message}`);
         console.log(`Direct Image URL: ${targetImage.url}`);
       }
+      process.exit(1);
     });
 
     return;
   }
 
   // Default warning if option syntax was wrong
-  console.error('Error: Unknown arguments or invalid options configuration.');
-  printHelp();
+  if (isJson) {
+    console.log(JSON.stringify({ error: "Unknown arguments or invalid options configuration." }));
+  } else {
+    console.error('Error: Unknown arguments or invalid options configuration.');
+    printHelp();
+  }
+  process.exit(1);
 }
 
 main().catch(err => {
-  console.error('Execution failure:', err);
+  const isJson = process.argv.includes('--json');
+  if (isJson) {
+    console.log(JSON.stringify({ error: `Execution failure: ${err.message}` }));
+  } else {
+    console.error('Execution failure:', err);
+  }
   process.exit(1);
 });
