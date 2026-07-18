@@ -9,14 +9,30 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const os = require('os');
 
 // Load banned patterns from CSV
 function loadBannedPatterns() {
   const csvPath = path.join(__dirname, '../design-skill/references/ai-slop-banned.csv');
+  const cachePath = path.join(os.tmpdir(), 'anti-slop-cache.json');
   
   if (!fs.existsSync(csvPath)) {
     console.error('❌ ai-slop-banned.csv not found at:', csvPath);
     process.exit(1);
+  }
+  
+  const csvStats = fs.statSync(csvPath);
+  const csvMtime = csvStats.mtimeMs;
+  
+  if (fs.existsSync(cachePath)) {
+    try {
+      const cacheData = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+      if (cacheData.timestamp >= csvMtime) {
+        return cacheData.patterns;
+      }
+    } catch (e) {
+      // Ignore cache read errors
+    }
   }
   
   const csvContent = fs.readFileSync(csvPath, 'utf8');
@@ -47,6 +63,15 @@ function loadBannedPatterns() {
         severity
       });
     }
+  }
+  
+  try {
+    fs.writeFileSync(cachePath, JSON.stringify({
+      timestamp: csvMtime,
+      patterns: patterns
+    }));
+  } catch (e) {
+    // Ignore cache write errors
   }
   
   return patterns;
