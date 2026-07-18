@@ -5,6 +5,10 @@ const zlib = require('zlib');
  * Zero external dependencies. Fully standard PNG unfiltering compliance.
  */
 function parsePNG(buffer) {
+  if (buffer.length > 512000) {
+    throw new Error('Image buffer exceeds the 500KB performance budget.');
+  }
+
   // Check standard PNG signature: 89 50 4E 47 0D 0A 1A 0A
   if (buffer.readUInt32BE(0) !== 0x89504E47 || buffer.readUInt32BE(4) !== 0x0D0A1A0A) {
     throw new Error('Invalid PNG signature.');
