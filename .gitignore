@@ -1,16 +1,1 @@
-.gemini/
-gha-creds-*.json
-node_modules/
-
-# Headless browser profiles (auto-generated)
-.chrome-profile/
-.edge-profile/
-.chrome-profile-*/
-.edge-profile-*/
-
-# Self-evolver output (auto-generated per run)
-evolution-prompt.md
-
-# Test artifacts
-screenshot-test.png
-.vg-canvas/
+Nothing should be ignored based on the provided file changes. The only modified file is README.md, which is a source/config file and should not be added to .gitignore.
