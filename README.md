@@ -5,7 +5,7 @@
 </h1>
 
 <p align="center">
-  <strong>The AI skill system that turns coding agents into disciplined UI/UX engineers.</strong>
+  <strong>The AI skill system that transforms coding agents into disciplined UI/UX engineers.</strong>
   <br>
   <em>Every pixel has purpose. Every interaction has logic. Every movement has choreography.</em>
 </p>
@@ -30,16 +30,16 @@
 
 ## 🧬 What Makes This Different
 
-Most AI skill files are static instruction sheets. This one is a **living cognitive system** — it gives AI agents the ability to *see*, *reason about*, and *self-correct* their own designs.
+Most AI skill files are static instruction sheets. This is a **living cognitive system** — giving AI agents the ability to *see*, *reason about*, and *self-correct* their designs.
 
 | Capability | What It Does |
 |-----------------------------|-------------------------------------------------------------------------------------------------------------------|
 | **🧠 Design Cognition**     | Agents understand *why* designs work using Gestalt laws, Hick's Law cognitive budgets, and APCA contrast calculus |
-| **👁️ Terminal Vision**      | Non-multimodal agents can "see" their output via truecolor ANSI rendering and ASCII luminance maps               |
-| **🔄 Self-Evolving Loop**   | Agents build → screenshot → analyze → mutate in an autonomous reflexion cycle until design passes audit           |
+| **👁️ Terminal Vision**      | Non-multimodal agents "see" output via truecolor ANSI rendering and ASCII luminance maps                        |
+| **🔄 Self-Evolving Loop**   | Autonomous build → screenshot → analyze → mutate cycle until design passes audit                                  |
 | **🎯 SVG Precision Engine** | Mathematical vector logo generation in 4 styles — no external APIs needed                                         |
 | **🔍 Built-in Search**      | CLI search across 1000 design elements, 1000 fonts, and royalty-free images — saving thousands of tokens          |
-| **🛡️ Anti-AI-Slop**         | 1000 documented banned patterns from 2025-2026. No generic gradients, no card soup, no Inter/Roboto               |
+| **🛡️ Anti-AI-Slop**         | 1000 documented banned patterns from 2025-2026. No generic gradients, card soup, or Inter/Roboto                 |
 
 ---
 
@@ -47,7 +47,7 @@ Most AI skill files are static instruction sheets. This one is a **living cognit
 
 ### SVG Logo Generation Engine — Real Output
 
-Generated with `node skills/utils/svg-generator.js`. These are **real SVGs** from the engine, not mockups:
+Generated with `node skills/utils/svg-generator.js`. These are **real SVGs** from the engine:
 
 <table>
 <tr>
@@ -125,7 +125,7 @@ $ node skills/utils/search.js --fonts "elegant" --classification "Serif"
   <img src="assets/demo-bento-dashboard.png" alt="Bento Grid Visual Explorer Dashboard" width="800">
 </p>
 
-> Launch with `node skills/explorer/server.js` and open `http://localhost:3000`. Features glassmorphic Bento cards, live Google Fonts previewing, masonry image grid, and dark/light mood toggle.
+> Launch with `node skills/explorer/server.js` and open `http://localhost:3000`. Features glassmorphic Bento cards, live Google Fonts previewing, masonry image grid, and dark/light mode toggle.
 
 ### Self-Evolving Agent Loop
 
@@ -133,7 +133,7 @@ $ node skills/utils/search.js --fonts "elegant" --classification "Serif"
   <img src="assets/demo-self-evolving-loop.png" alt="Self-Evolving Agent Loop" width="800">
 </p>
 
-> Agents build → screenshot → analyze → mutate in an autonomous reflexion cycle. The self-evolver generates `evolution-prompt.md` with specific CSS repair recipes. Even GPT-3.5 class models can use this loop.
+> Agents build → screenshot → analyze → mutate in an autonomous reflection cycle. The self-evolver generates `evolution-prompt.md` with specific CSS repair recipes. Even GPT-3.5 class models can use this loop.
 
 ---
 
@@ -244,8 +244,8 @@ node skills/utils/svg-generator.js --type cinematic --name "Infinite" --output l
 |---------------|-------------------------------------------------------------------------------|
 | **Bento**     | OKLCH gradients, concentric mesh, glassmorphic shield, squircle rotation      |
 | **Organic**   | Paper grain texture, wobble displacement, botanical leaf, watercolor washes   |
-| **Brutalist** | Blueprint grid, radar rings, 3D isometric wireframe cube, crosshair ticks      |
-| **Cinematic** | Portal loop curves, gradient glow, gaussian blur, serif italic typography    |
+| **Brutalist** | Blueprint grid, radar rings, 3D isometric wireframe cube, crosshair ticks     |
+| **Cinematic** | Portal loop curves, gradient glow, gaussian blur, serif italic typography     |
 
 ### 📸 Screenshot & Vision Bridge
 
@@ -302,7 +302,7 @@ node skills/explorer/server.js
 # Open http://localhost:3000
 ```
 
-**Features:** Glassmorphic cards, live Google Fonts previewing, masonry image grid, dark/light mood toggle, category filters, copy-to-clipboard CSS imports.
+**Features:** Glassmorphic cards, live Google Fonts previewing, masonry image grid, dark/light mode toggle, category filters, copy-to-clipboard CSS imports.
 
 ---
 
@@ -378,7 +378,7 @@ Every interface gets ONE motion personality. This drives all animation choices:
 | `screenshot.js`       | Headless browser capture + terminal vision   |
 | `design-simulator.js` | Cognitive layout auditor                     |
 | `image-analyzer.js`   | Raw PNG decoder + visual analyzer            |
-| `self-evolver.js`     | Autonomous reflexion loop coordinator        |
+| `self-evolver.js`     | Autonomous reflection loop coordinator        |
 
 ---
 
@@ -466,8 +466,8 @@ UI-UX-Skill/
 | **APCA & WCAG 3.0**   | Advanced Perceptual Contrast replacing outdated 4.5:1 ratios            |
 | **CSS Scroll-Driven** | Native scroll-linked animations via `animation-timeline: view()`        |
 | **Container Queries** | Component-level responsiveness via `@container`                         |
-| **OKLCH Colors**      | Perceptually uniform color adjustments and "Mood Modes"                  |
-| **WebGPU**            | Three.js compute shaders for high-framerate 3D                           |
+| **OKLCH Colors**      | Perceptually uniform color adjustments and "mood modes"                 |
+| **WebGPU**            | Three.js compute shaders for high-framerate 3D                          |
 | **Sustainable UX**    | Eco-brutalism, edge rendering, carbon-aware budgets                     |
 
 ## 🎯 NEW: Premium Award-Winning Patterns
@@ -504,7 +504,7 @@ node skills/utils/anti-slop-checker.js --dir ./src
 
 ## 🧾 Licensed Visual Assets & 3D Contracts
 
-Visual references and 3D scenes now use local, machine-readable contracts under [`assets/`](assets/README.md). Each contract records origin, license, responsive visual evidence, fallback behavior, accessibility notes, and resource budgets.
+Visual references and 3D scenes use local, machine-readable contracts under [`assets/`](assets/README.md). Each contract records origin, license, responsive visual evidence, fallback behavior, accessibility notes, and resource budgets.
 
 ```bash
 node skills/utils/visual-contract-checker.js --assets assets
